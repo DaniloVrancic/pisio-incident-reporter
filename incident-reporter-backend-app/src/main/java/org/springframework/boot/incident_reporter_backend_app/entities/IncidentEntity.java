@@ -1,6 +1,6 @@
 package org.springframework.boot.incident_reporter_backend_app.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
@@ -10,7 +10,7 @@ public class IncidentEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @javax.persistence.Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
     }

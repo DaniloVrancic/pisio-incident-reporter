@@ -1,6 +1,6 @@
 package org.springframework.boot.incident_reporter_backend_app.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "incident_subtype", schema = "pisio")
@@ -9,7 +9,7 @@ public class IncidentSubtypeEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @javax.persistence.Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
     }

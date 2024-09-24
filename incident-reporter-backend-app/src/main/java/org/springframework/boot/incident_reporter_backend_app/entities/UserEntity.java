@@ -1,6 +1,6 @@
 package org.springframework.boot.incident_reporter_backend_app.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
