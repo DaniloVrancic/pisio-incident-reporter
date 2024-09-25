@@ -1,6 +1,8 @@
 package org.springframework.boot.incident_reporter_backend_app.entities;
 
 import jakarta.persistence.*;
+import org.springframework.boot.incident_reporter_backend_app.enums.Status;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -55,15 +57,16 @@ public class IncidentEntity {
         this.photoUrl = photoUrl;
     }
 
-    private Object status;
+    private Status status;
 
     @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    public Object getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Object status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -81,8 +84,7 @@ public class IncidentEntity {
 
     private Integer locationId;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    @Basic
     @Column(name = "location_id", nullable = false)
     public Integer getLocationId() {
         return locationId;
