@@ -1,16 +1,15 @@
 package org.springframework.boot.incident_reporter_backend_app.entities;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
-@Table(name = "user", schema = "pisio", catalog = "")
+@Table(name = "user", schema = "pisio")
 public class UserEntity {
     private Integer id;
     private String username;
     private String password;
-    private Timestamp creationDate;
-    private Object role;
+    private String firstName;
+    private String lastName;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -44,23 +43,23 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "creationDate", nullable = true)
-    public Timestamp getCreationDate() {
-        return creationDate;
+    @Column(name = "first_name", nullable = false, length = 32)
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     @Basic
-    @Column(name = "role", nullable = false)
-    public Object getRole() {
-        return role;
+    @Column(name = "last_name", nullable = true, length = 32)
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setRole(Object role) {
-        this.role = role;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
@@ -73,8 +72,8 @@ public class UserEntity {
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
-        if (role != null ? !role.equals(that.role) : that.role != null) return false;
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
 
         return true;
     }
@@ -84,8 +83,8 @@ public class UserEntity {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         return result;
     }
 }

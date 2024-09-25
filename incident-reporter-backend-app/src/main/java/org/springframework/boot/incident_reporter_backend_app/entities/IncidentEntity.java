@@ -92,6 +92,18 @@ public class IncidentEntity {
         this.locationId = locationId;
     }
 
+    private Integer userId;
+
+    @Basic
+    @Column(name = "user_id", nullable = false)
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,4 +135,5 @@ public class IncidentEntity {
         result = 31 * result + (locationId != null ? locationId.hashCode() : 0);
         return result;
     }
+
 }
