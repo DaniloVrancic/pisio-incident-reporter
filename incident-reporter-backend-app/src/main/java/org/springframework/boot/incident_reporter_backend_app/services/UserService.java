@@ -1,0 +1,14 @@
+package org.springframework.boot.incident_reporter_backend_app.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.incident_reporter_backend_app.repositories.UserRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+    
+    public UserService(){}
+}
