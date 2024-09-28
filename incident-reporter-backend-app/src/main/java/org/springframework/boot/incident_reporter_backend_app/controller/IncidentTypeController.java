@@ -1,4 +1,4 @@
-package org.springframework.boot.incident_reporter_backend_app.controllers;
+package org.springframework.boot.incident_reporter_backend_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.incident_reporter_backend_app.entities.IncidentTypeEntity;

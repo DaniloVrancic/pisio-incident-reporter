@@ -1,9 +1,7 @@
-package org.springframework.boot.incident_reporter_backend_app.controllers;
+package org.springframework.boot.incident_reporter_backend_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.incident_reporter_backend_app.entities.IncidentTypeEntity;
 import org.springframework.boot.incident_reporter_backend_app.entities.LocationEntity;
-import org.springframework.boot.incident_reporter_backend_app.services.IncidentTypeService;
 import org.springframework.boot.incident_reporter_backend_app.services.LocationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
