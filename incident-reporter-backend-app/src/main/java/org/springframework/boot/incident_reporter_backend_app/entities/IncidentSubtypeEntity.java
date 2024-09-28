@@ -30,16 +30,16 @@ public class IncidentSubtypeEntity {
         this.subtype = subtype;
     }
 
-    @Basic
-    @Column(name = "incident_type_id", nullable = false)
-    private Integer incidentTypeId;
+    @ManyToOne
+    @JoinColumn(name = "incident_type_id", referencedColumnName = "id", nullable = false)
+    private IncidentTypeEntity incidentType;
 
-    public Integer getIncidentTypeId() {
-        return incidentTypeId;
+    public IncidentTypeEntity getIncidentType() {
+        return incidentType;
     }
 
-    public void setIncidentTypeId(Integer incidentTypeId) {
-        this.incidentTypeId = incidentTypeId;
+    public void setIncidentTypeId(IncidentTypeEntity incidentType) {
+        this.incidentType = incidentType;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class IncidentSubtypeEntity {
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (subtype != null ? !subtype.equals(that.subtype) : that.subtype != null) return false;
-        if (incidentTypeId != null ? !incidentTypeId.equals(that.incidentTypeId) : that.incidentTypeId != null)
+        if (incidentType != null ? !incidentType.equals(that.incidentType) : that.incidentType != null)
             return false;
 
         return true;
@@ -61,7 +61,7 @@ public class IncidentSubtypeEntity {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (subtype != null ? subtype.hashCode() : 0);
-        result = 31 * result + (incidentTypeId != null ? incidentTypeId.hashCode() : 0);
+        result = 31 * result + (incidentType != null ? incidentType.hashCode() : 0);
         return result;
     }
 }

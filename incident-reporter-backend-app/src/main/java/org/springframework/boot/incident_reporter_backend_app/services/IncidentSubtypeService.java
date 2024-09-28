@@ -2,28 +2,28 @@ package org.springframework.boot.incident_reporter_backend_app.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.incident_reporter_backend_app.entities.LocationEntity;
-import org.springframework.boot.incident_reporter_backend_app.entities.UserEntity;
-import org.springframework.boot.incident_reporter_backend_app.repositories.UserRepository;
+import org.springframework.boot.incident_reporter_backend_app.entities.IncidentSubtypeEntity;
+import org.springframework.boot.incident_reporter_backend_app.entities.IncidentTypeEntity;
+import org.springframework.boot.incident_reporter_backend_app.repositories.IncidentSubtypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService {
+public class IncidentSubtypeService {
 
+    private IncidentSubtypeRepository repository;
 
-    private UserRepository repository;
     @Autowired
-    public UserService(UserRepository userRepository){
-        this.repository = userRepository;
+    public IncidentSubtypeService(IncidentSubtypeRepository repository){
+        this.repository = repository;
     }
 
-    public UserEntity add(UserEntity entity){
+    public IncidentSubtypeEntity add(IncidentSubtypeEntity entity){
         return this.repository.save(entity);
     }
 
-    public UserEntity update(UserEntity entity){
+    public IncidentSubtypeEntity update(IncidentSubtypeEntity entity){
 
         this.repository.findById(entity.getId()).orElseThrow(() -> new EntityNotFoundException());
         if(entity.getId() == null || !this.repository.existsById(entity.getId())){
@@ -37,11 +37,11 @@ public class UserService {
         this.repository.deleteById(id);
     }
 
-    public List<UserEntity> findAllEntities(){
+    public List<IncidentSubtypeEntity> findAllEntities(){
         return this.repository.findAll();
     }
 
-    public UserEntity findById(Integer id){
+    public IncidentSubtypeEntity findById(Integer id){
         return this.repository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }

@@ -34,17 +34,17 @@ public class IncidentEntity {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "incident_type_id", nullable = false)
-    private Integer incidentTypeId;
+    @ManyToOne
+    @JoinColumn(name = "incident_type_id", referencedColumnName = "id", nullable = false)
+    private IncidentTypeEntity incidentType;
 
 
-    public Integer getIncidentTypeId() {
-        return incidentTypeId;
+    public IncidentTypeEntity getIncidentType() {
+        return incidentType;
     }
 
-    public void setIncidentTypeId(Integer incidentTypeId) {
-        this.incidentTypeId = incidentTypeId;
+    public void setIncidentType(IncidentTypeEntity incidentType) {
+        this.incidentType = incidentType;
     }
 
     @Basic
@@ -94,20 +94,21 @@ public class IncidentEntity {
         return location;
     }
 
-    public void setLocationId(LocationEntity location) {
+    public void setLocation(LocationEntity location) {
         this.location = location;
     }
 
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false)
+    private UserEntity user;
 
 
-    @Column(name = "user_id", nullable = false)
-    public Integer getUserId() {
-        return userId;
+    public UserEntity getUserId() {
+        return this.user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUserId(UserEntity user) {
+        this.user = user;
     }
 
     @Override
@@ -119,7 +120,7 @@ public class IncidentEntity {
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (incidentTypeId != null ? !incidentTypeId.equals(that.incidentTypeId) : that.incidentTypeId != null)
+        if (incidentType != null ? !incidentType.equals(that.incidentType) : that.incidentType != null)
             return false;
         if (photoUrl != null ? !photoUrl.equals(that.photoUrl) : that.photoUrl != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
@@ -134,7 +135,7 @@ public class IncidentEntity {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (incidentTypeId != null ? incidentTypeId.hashCode() : 0);
+        result = 31 * result + (incidentType != null ? incidentType.hashCode() : 0);
         result = 31 * result + (photoUrl != null ? photoUrl.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (timeOfIncident != null ? timeOfIncident.hashCode() : 0);
