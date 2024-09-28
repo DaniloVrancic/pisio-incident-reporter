@@ -5,15 +5,27 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "user", schema = "pisio")
 public class UserEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
+    @Basic
+    @Column(name = "username", nullable = false, length = 64)
     private String username;
+
+    @Basic
+    @Column(name = "password", nullable = false, length = 512)
     private String password;
+
+    @Basic
+    @Column(name = "first_name", nullable = false, length = 32)
     private String firstName;
+
+    @Basic
+    @Column(name = "last_name", nullable = true, length = 32)
     private String lastName;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
+
     public Integer getId() {
         return id;
     }
@@ -22,8 +34,6 @@ public class UserEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "username", nullable = false, length = 64)
     public String getUsername() {
         return username;
     }
@@ -32,8 +42,7 @@ public class UserEntity {
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "password", nullable = false, length = 512)
+
     public String getPassword() {
         return password;
     }
@@ -42,8 +51,6 @@ public class UserEntity {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "first_name", nullable = false, length = 32)
     public String getFirstName() {
         return firstName;
     }
@@ -52,8 +59,6 @@ public class UserEntity {
         this.firstName = firstName;
     }
 
-    @Basic
-    @Column(name = "last_name", nullable = true, length = 32)
     public String getLastName() {
         return lastName;
     }

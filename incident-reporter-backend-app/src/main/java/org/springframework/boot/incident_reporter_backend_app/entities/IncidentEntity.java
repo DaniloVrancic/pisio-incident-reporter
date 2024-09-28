@@ -8,11 +8,11 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "incident", schema = "pisio")
 public class IncidentEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
     }
@@ -21,10 +21,11 @@ public class IncidentEntity {
         this.id = id;
     }
 
-    private String description;
-
     @Basic
     @Column(name = "description", nullable = true, length = -1)
+    private String description;
+
+
     public String getDescription() {
         return description;
     }
@@ -33,10 +34,11 @@ public class IncidentEntity {
         this.description = description;
     }
 
-    private Integer incidentTypeId;
-
     @Basic
     @Column(name = "incident_type_id", nullable = false)
+    private Integer incidentTypeId;
+
+
     public Integer getIncidentTypeId() {
         return incidentTypeId;
     }
@@ -45,10 +47,11 @@ public class IncidentEntity {
         this.incidentTypeId = incidentTypeId;
     }
 
-    private String photoUrl;
-
     @Basic
     @Column(name = "photo_url", nullable = true, length = 512)
+    private String photoUrl;
+
+
     public String getPhotoUrl() {
         return photoUrl;
     }
@@ -57,11 +60,11 @@ public class IncidentEntity {
         this.photoUrl = photoUrl;
     }
 
-    private Status status;
-
     @Basic
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
+    private Status status;
+
     public Status getStatus() {
         return status;
     }
@@ -82,21 +85,22 @@ public class IncidentEntity {
         this.timeOfIncident = timeOfIncident;
     }
 
-    private Integer locationId;
+    @ManyToOne
+    @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = false)
+    private LocationEntity location;
 
-    @Basic
-    @Column(name = "location_id", nullable = false)
-    public Integer getLocationId() {
-        return locationId;
+
+    public LocationEntity getLocation() {
+        return location;
     }
 
-    public void setLocationId(Integer locationId) {
-        this.locationId = locationId;
+    public void setLocationId(LocationEntity location) {
+        this.location = location;
     }
 
     private Integer userId;
 
-    @Basic
+
     @Column(name = "user_id", nullable = false)
     public Integer getUserId() {
         return userId;
@@ -121,7 +125,7 @@ public class IncidentEntity {
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (timeOfIncident != null ? !timeOfIncident.equals(that.timeOfIncident) : that.timeOfIncident != null)
             return false;
-        if (locationId != null ? !locationId.equals(that.locationId) : that.locationId != null) return false;
+        if (location != null ? !location.equals(that.location) : that.location != null) return false;
 
         return true;
     }
@@ -134,7 +138,7 @@ public class IncidentEntity {
         result = 31 * result + (photoUrl != null ? photoUrl.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (timeOfIncident != null ? timeOfIncident.hashCode() : 0);
-        result = 31 * result + (locationId != null ? locationId.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
         return result;
     }
 

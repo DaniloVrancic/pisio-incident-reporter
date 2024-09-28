@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "incident_subtype", schema = "pisio")
 public class IncidentSubtypeEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
     }
@@ -17,11 +17,11 @@ public class IncidentSubtypeEntity {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    private String subtype;
-
     @Basic
     @Column(name = "subtype", nullable = true, length = 64)
+    private String subtype;
+
+
     public String getSubtype() {
         return subtype;
     }
@@ -30,9 +30,10 @@ public class IncidentSubtypeEntity {
         this.subtype = subtype;
     }
 
-    private Integer incidentTypeId;
-    
+    @Basic
     @Column(name = "incident_type_id", nullable = false)
+    private Integer incidentTypeId;
+
     public Integer getIncidentTypeId() {
         return incidentTypeId;
     }

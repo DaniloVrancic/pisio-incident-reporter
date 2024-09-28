@@ -5,13 +5,20 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "incident_type", schema = "pisio")
 public class IncidentTypeEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
+
+    @Basic
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
+
+    @Basic
+    @Column(name = "type_icon_name", nullable = true, length = 45)
     private String typeIconName;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
+
     public Integer getId() {
         return id;
     }
@@ -20,8 +27,6 @@ public class IncidentTypeEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false, length = 64)
     public String getName() {
         return name;
     }
@@ -30,8 +35,6 @@ public class IncidentTypeEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "type_icon_name", nullable = true, length = 45)
     public String getTypeIconName() {
         return typeIconName;
     }

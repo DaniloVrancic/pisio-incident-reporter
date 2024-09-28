@@ -4,16 +4,22 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "location", schema = "pisio", catalog = "")
+@Table(name = "location", schema = "pisio")
 public class LocationEntity {
-    private Integer id;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
-    private String name;
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
+    private Integer id;
+    @Basic
+    @Column(name = "latitude", nullable = false, precision = 8)
+    private BigDecimal latitude;
+    @Basic
+    @Column(name = "longitude", nullable = false, precision = 8)
+    private BigDecimal longitude;
+    @Basic
+    @Column(name = "name", nullable = true, length = 128)
+    private String name;
+
     public Integer getId() {
         return id;
     }
@@ -22,8 +28,7 @@ public class LocationEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "latitude", nullable = false, precision = 8)
+
     public BigDecimal getLatitude() {
         return latitude;
     }
@@ -32,8 +37,7 @@ public class LocationEntity {
         this.latitude = latitude;
     }
 
-    @Basic
-    @Column(name = "longitude", nullable = false, precision = 8)
+
     public BigDecimal getLongitude() {
         return longitude;
     }
@@ -42,8 +46,7 @@ public class LocationEntity {
         this.longitude = longitude;
     }
 
-    @Basic
-    @Column(name = "name", nullable = true, length = 128)
+
     public String getName() {
         return name;
     }
