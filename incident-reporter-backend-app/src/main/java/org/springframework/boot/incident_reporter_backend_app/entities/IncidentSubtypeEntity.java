@@ -31,9 +31,7 @@ public class IncidentSubtypeEntity {
     }
 
     private Integer incidentTypeId;
-
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    
     @Column(name = "incident_type_id", nullable = false)
     public Integer getIncidentTypeId() {
         return incidentTypeId;
