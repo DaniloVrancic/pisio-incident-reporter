@@ -1,34 +1,52 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 
-import { AppRoutingModule } from './app.routing';
-import { NavbarModule } from './shared/navbar/navbar.module';
-import { FooterModule } from './shared/footer/footer.module';
-import { SidebarModule } from './sidebar/sidebar.module';
-
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+// icons
+import { TablerIconsModule } from 'angular-tabler-icons';
+import * as TablerIcons from 'angular-tabler-icons/icons';
+
+//Import all material modules
+import { MaterialModule } from './material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+
+//Import Layouts
+import { FullComponent } from './layouts/full/full.component';
+import { BlankComponent } from './layouts/blank/blank.component';
+
+// Vertical Layout
+import { SidebarComponent } from './layouts/full/sidebar/sidebar.component';
+import { HeaderComponent } from './layouts/full/header/header.component';
+import { BrandingComponent } from './layouts/full/sidebar/branding.component';
+import { AppNavItemComponent } from './layouts/full/sidebar/nav-item/nav-item.component';
 
 @NgModule({
-  imports: [
-    BrowserAnimationsModule,
-    FormsModule,
-    RouterModule,
-    HttpClientModule,
-    NavbarModule,
-    FooterModule,
-    SidebarModule,
-    AppRoutingModule
-  ],
   declarations: [
     AppComponent,
-    AdminLayoutComponent
+    FullComponent,
+    BlankComponent,
+    SidebarComponent,
+    HeaderComponent,
+    BrandingComponent,
+    AppNavItemComponent,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    TablerIconsModule.pick(TablerIcons),
+    NgScrollbarModule,
+  ],
+  exports: [TablerIconsModule],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
