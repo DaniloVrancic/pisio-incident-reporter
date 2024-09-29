@@ -3,6 +3,7 @@ package org.springframework.boot.incident_reporter_backend_app.entities;
 import jakarta.persistence.*;
 import org.springframework.boot.incident_reporter_backend_app.enums.Status;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -85,21 +86,32 @@ public class IncidentEntity {
         this.timeOfIncident = timeOfIncident;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = false)
-    private LocationEntity location;
+    @Basic
+    @Column(name = "latitude", nullable = false, precision = 8)
+    private BigDecimal latitude;
+    @Basic
+    @Column(name = "longitude", nullable = false, precision = 8)
+    private BigDecimal longitude;
 
-
-    public LocationEntity getLocation() {
-        return location;
+    public BigDecimal getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(LocationEntity location) {
-        this.location = location;
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 
     @ManyToOne
-    @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="user_id", referencedColumnName = "id", nullable = true)
     private UserEntity user;
 
 
@@ -110,6 +122,7 @@ public class IncidentEntity {
     public void setUserId(UserEntity user) {
         this.user = user;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -126,7 +139,8 @@ public class IncidentEntity {
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (timeOfIncident != null ? !timeOfIncident.equals(that.timeOfIncident) : that.timeOfIncident != null)
             return false;
-        if (location != null ? !location.equals(that.location) : that.location != null) return false;
+        if (latitude != null ? !latitude.equals(that.latitude) : that.latitude != null) return false;
+        if (longitude != null ? !longitude.equals(that.longitude) : that.longitude != null) return false;
 
         return true;
     }
@@ -139,7 +153,8 @@ public class IncidentEntity {
         result = 31 * result + (photoUrl != null ? photoUrl.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (timeOfIncident != null ? timeOfIncident.hashCode() : 0);
-        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
+        result = 31 * result + (latitude != null ? latitude.hashCode() : 0);
         return result;
     }
 
