@@ -35,16 +35,16 @@ public class IncidentEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "incident_type_id", referencedColumnName = "id", nullable = false)
-    private IncidentTypeEntity incidentType;
+    @JoinColumn(name = "incident_subtype_id", referencedColumnName = "id", nullable = false)
+    private IncidentSubtypeEntity incidentSubtype;
 
 
-    public IncidentTypeEntity getIncidentType() {
-        return incidentType;
+    public IncidentSubtypeEntity getIncidentType() {
+        return incidentSubtype;
     }
 
-    public void setIncidentType(IncidentTypeEntity incidentType) {
-        this.incidentType = incidentType;
+    public void setIncidentType(IncidentSubtypeEntity incidentType) {
+        this.incidentSubtype = incidentType;
     }
 
     @Basic
@@ -120,7 +120,7 @@ public class IncidentEntity {
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (incidentType != null ? !incidentType.equals(that.incidentType) : that.incidentType != null)
+        if (incidentSubtype != null ? !incidentSubtype.equals(that.incidentSubtype) : that.incidentSubtype != null)
             return false;
         if (photoUrl != null ? !photoUrl.equals(that.photoUrl) : that.photoUrl != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
@@ -135,7 +135,7 @@ public class IncidentEntity {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (incidentType != null ? incidentType.hashCode() : 0);
+        result = 31 * result + (incidentSubtype != null ? incidentSubtype.hashCode() : 0);
         result = 31 * result + (photoUrl != null ? photoUrl.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (timeOfIncident != null ? timeOfIncident.hashCode() : 0);
