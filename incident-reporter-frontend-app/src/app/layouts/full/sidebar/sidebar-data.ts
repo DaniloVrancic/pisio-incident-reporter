@@ -11,12 +11,12 @@ export const navItems: NavItem[] = [
   },
   {
     displayName: 'Mapa',
-    iconName: 'rosette',
+    iconName: 'map-2',
     route: '/map',
   },
   {
     displayName: 'Opis',
-    iconName: 'rosette',
+    iconName: 'file-description',
     route: '/description',
   },
   {
