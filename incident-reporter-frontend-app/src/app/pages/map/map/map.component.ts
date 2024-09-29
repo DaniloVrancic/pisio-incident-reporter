@@ -14,9 +14,9 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class AppMapComponent {
   options: google.maps.MapOptions = {
-    mapId: "DEMO_MAP_ID",
-    center: { lat: -31, lng: 147 },
-    zoom: 11,
+    mapId: "1",
+    center: { lat: 44.79807782849736, lng: 20.469100626055457 },
+    zoom: 13,
   };
 
 
