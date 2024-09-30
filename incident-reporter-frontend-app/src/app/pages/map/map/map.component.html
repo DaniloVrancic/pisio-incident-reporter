@@ -5,7 +5,9 @@
 <div style="border-radius: 1rem; overflow: hidden; min-height: 100%; padding-bottom: 20px; position: relative;">
 
   <!-- The map container -->
-  <google-map width="100%" height="85vh" [options]="options">
+  <google-map width="100%" height="85vh" [options]="options"
+  (mapClick)="this.offerAddIncident($event)"
+  >
   </google-map>
 
   <!-- Buttons overlaid vertically aligned and on the right side -->
