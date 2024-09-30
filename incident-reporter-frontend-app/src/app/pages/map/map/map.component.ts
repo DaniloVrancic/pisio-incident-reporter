@@ -27,6 +27,10 @@ export class AppMapComponent implements OnInit{
     zoom: 13,
   };
 
+  isAddIncidentModalVisible: boolean = false;
+  selectedLatitude: number | null = null;
+  selectedLongitude: number | null = null;
+
   constructor(private mapService: MapService){}
 
   ngOnInit(): void {
@@ -34,11 +38,13 @@ export class AppMapComponent implements OnInit{
   }
 
   offerAddIncident(event: google.maps.MapMouseEvent){
-    let selectedLatitude = event.latLng?.toJSON().lat;
-    let selectedLongitude = event.latLng?.toJSON().lng;
+    this.selectedLatitude = event.latLng?.toJSON().lat as number;
+    this.selectedLongitude = event.latLng?.toJSON().lng as number;
 
-    console.log("Latitude: " + selectedLatitude);
-    console.log("Longitude: " + selectedLongitude);
+    console.log("Latitude: " + this.selectedLatitude);
+    console.log("Longitude: " + this.selectedLongitude);
+
+    this.isAddIncidentModalVisible = true;
   }
 
 }
