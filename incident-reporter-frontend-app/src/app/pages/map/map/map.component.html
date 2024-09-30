@@ -2,27 +2,37 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<div style="border-radius: 1rem; overflow: hidden; min-height: 100%; padding-bottom: 20px">
-    <google-map width="100%" height="85vh" [options]="options"> 
-        
-    </google-map>
-</div>
+<div style="border-radius: 1rem; overflow: hidden; min-height: 100%; padding-bottom: 20px; position: relative;">
 
-<div style="display: flex;
-justify-content: space-around;
-flex-wrap: wrap;">
+  <!-- The map container -->
+  <google-map width="100%" height="85vh" [options]="options">
+  </google-map>
+
+  <!-- Buttons overlaid vertically aligned and on the right side -->
+  <div style="
+        position: absolute;
+        top: 50%;
+        right: 10px; /* Adjust this value to control horizontal position */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: translateY(-50%); /* Vertically center the buttons */
+        z-index: 1;">
     <button mat-fab aria-label="Filter Button" 
-              style="
-              color: rgba(0,0,0,1.0);
-              ">
+            style="
+            margin-bottom: 10px;
+            color: rgba(0,0,0,1.0);
+            background-color: rgba(255,255,255,0.6);">
       <mat-icon>filter_alt</mat-icon>
     </button>
-    <button mat-fab aria-label="Filter Button" 
-              style="
-              color: rgba(0,0,0,1.0);
-              ">
-      <mat-icon>filter_alt</mat-icon>
+    <button mat-fab aria-label="Approve Task Button" 
+        style="
+            margin-bottom: 10px;
+            color: rgba(0,0,0,1.0);
+            background-color: rgba(255,255,255,0.6);">
+      <mat-icon>task_alt</mat-icon>
+      <b>[MOD ONLY]</b>
     </button>
+  </div>
+  
 </div>
- 
-

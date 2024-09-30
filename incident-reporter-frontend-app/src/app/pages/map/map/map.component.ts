@@ -3,6 +3,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import {  MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-map',
@@ -10,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [MatCardModule,
             MatIconModule,
             MatButtonModule,
+            MatDialogModule,
             GoogleMapsModule
   ],
   templateUrl: './map.component.html',
