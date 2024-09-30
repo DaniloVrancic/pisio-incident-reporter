@@ -5,7 +5,19 @@
 <div style="border-radius: 1rem; overflow: hidden; min-height: 100%; padding-bottom: 20px; position: relative;">
 
   <!-- The map container -->
-  <google-map width="100%" height="85vh" [options]="options">
+  <google-map width="100%" height="85vh" 
+              [options]="options"
+              (mapClick)="this.handleMapClick($event)"
+              >
+
+    
+      <map-advanced-marker 
+      #selectionMapMarker 
+      (mapClick)="this.handleMarkerClick($event)"
+      [position]="{lat: this.selectedLatitude, lng: this.selectedLongitude}"
+      />
+    
+
   </google-map>
 
   <!-- Buttons overlaid vertically aligned and on the right side -->
@@ -24,6 +36,13 @@
             color: rgba(0,0,0,1.0);
             background-color: rgba(255,255,255,0.6);">
       <mat-icon>filter_alt</mat-icon>
+    </button>
+    <button mat-fab aria-label="Add Incident Button" 
+            style="
+            margin-bottom: 10px;
+            color: rgba(0,0,0,1.0);
+            background-color: rgba(255,255,255,0.6);">
+      <mat-icon>add</mat-icon>
     </button>
     <button mat-fab aria-label="Approve Task Button" 
         style="
