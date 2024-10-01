@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { GoogleMap, GoogleMapsModule, MapMarker } from '@angular/google-maps';
 import {  MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
-import { NumberValueAccessor } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {MatTreeModule} from '@angular/material/tree';
+import { AddLocationDialogComponent } from './add-location-dialog/add-location-dialog.component';
 
 @Component({
   selector: 'app-map',
@@ -13,6 +14,7 @@ import { NumberValueAccessor } from '@angular/forms';
             MatIconModule,
             MatButtonModule,
             MatDialogModule,
+            MatTreeModule,
             GoogleMapsModule
   ],
   templateUrl: './map.component.html',
@@ -32,6 +34,8 @@ export class AppMapComponent implements AfterViewInit {
     center: { lat: this.selectedLatitude, lng: this.selectedLongitude },
     zoom: 13,
   };
+
+  readonly dialog = inject(MatDialog);
 
   constructor(){}
 
@@ -54,6 +58,14 @@ export class AppMapComponent implements AfterViewInit {
     
     this.isLocationSelected = false;
    
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(AddLocationDialogComponent, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 
 

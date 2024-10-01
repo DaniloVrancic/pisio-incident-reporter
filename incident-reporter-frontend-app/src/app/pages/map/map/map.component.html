@@ -45,6 +45,7 @@
     @if(this.isLocationSelected){
       <button mat-fab 
             aria-label="Add Incident Button" 
+            (click)="this.openDialog('500ms', '0ms')"
             style="
             margin-bottom: 10px;
             color: rgba(0,0,0,1.0);
