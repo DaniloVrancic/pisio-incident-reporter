@@ -1,0 +1,38 @@
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <mat-card-title class="m-b-0"><h1>Opis</h1></mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="b-t-1">
+        <span>
+          <span style="font-size: xx-large;">Sistem za prijavu incidenata</span>
+          <br/><br/>
+          <span style="font-size: large;"><b>Sistem omogućava anonimnu prijavu incidenata na određenom lokalitetu, kao i administraciju sistema.</b></span>
+          <br/>
+           <span style="font-weight: 500; font-size: larger;">Prijava problema:</span>
+          <br/>
+            <ul>
+              <li>Korisnik može da odabere lokaciju na mapi (automatski ili ručno) te da iz liste ponuđenih vrsta incidenata odabere odgovarajuću vrstu i, eventualno, podvrstu incidenta, kao i da priloži tekstualni opis i sliku. Dozvoljena je upotreba proizvoljnog servisa koji obezbjeđuje mape. (15 bodova)</li><br/>
+              <li>Sve prijave se čuvaju u bazi podataka, ali se ne objavljuju javno dok ih jedna od osoba zaduženih za administraciju sistema ne odobri (moderatorski pristup). (5 bodova)</li><br/>
+              <li>Anonimni koristici sistema imaju pristup mapi koja prikazuje incidente uz mogućnost filtriranja po (pod)vrsti, mjestu i vremenu (npr. zadnjih 24h, 7d, 31d ili sve prijave) incidenta. (10 bodova)</li><br/>
+              <li>Moderatori imaju pristup uvidu i u neodobrene prijave te ih mogu odobriti ili trajno ukloniti. Ovaj dio aplikacije je moguće realizovati bez mape (3 bodova) ili sa mapom (5 bodova).</li><br/>
+              <li>Prijava mora biti realizovana kroz lokalnu bazu korisnika (2 boda) ili upotrebom naloga sa *.etf.unibl.org domena upotrebom OAuth2 mehanizma (5 bodova).</li><br/>
+            </ul>
+          <br/><br/>
+          <span style="font-weight: 500; font-size: larger;">Opcione komponente sistema:</span>
+          <br/>
+            <ul>
+                <li>Sistem je realizovan upotrebom mikroservisne arhitekture (10 bodova).</li><br/>
+                <li>Sistem sadrži i servis za izvještavanje koji omogućava osnovnu analizu i vizuelizaciju prijava po vremenu, mjestu i vrsti prijave (7 bodova).</li><br/>
+                <li>Sistem omogućava detekciju bliskih i učestalih prijava (npr. jedan od mikroservisa pamti zadnjih X dana prijava i analizira da li u datom periodu postoji više prijava u nekom zadatom radijusu te aktivira alarm za moderatore ako su navedeni uslovi ispunjeni, moguće su i potpuno drugačije realizacije u dogovoru sa predmetnim nastavnikom) (8 bodova).</li><br/>
+                <li>Sistem omogućava detekciju sličnih tekstualnih unosa (upotreba NLP) i njihovo grupisanje (za moderatore) (5 bodova).</li><br/>
+                <li>Sistem omogućava automatsko prevođenje tekstualnih unosa na engleski jezik (ili sa engleskog jezika) - dozvoljena upotreba eksternih servisa (5 bodova).</li><br/>
+            </ul>
+          <br/>
+        </span>
+        
+      </mat-card-content>
+
+
+      
+
+</mat-card>

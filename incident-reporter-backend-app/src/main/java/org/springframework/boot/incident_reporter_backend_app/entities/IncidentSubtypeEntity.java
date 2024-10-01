@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "incident_subtype", schema = "pisio")
 public class IncidentSubtypeEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
     }
@@ -17,11 +17,11 @@ public class IncidentSubtypeEntity {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    private String subtype;
-
     @Basic
     @Column(name = "subtype", nullable = true, length = 64)
+    private String subtype;
+
+
     public String getSubtype() {
         return subtype;
     }
@@ -30,17 +30,16 @@ public class IncidentSubtypeEntity {
         this.subtype = subtype;
     }
 
-    private Integer incidentTypeId;
+    @ManyToOne
+    @JoinColumn(name = "incident_type_id", referencedColumnName = "id", nullable = false)
+    private IncidentTypeEntity incidentType;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "incident_type_id", nullable = false)
-    public Integer getIncidentTypeId() {
-        return incidentTypeId;
+    public IncidentTypeEntity getIncidentType() {
+        return incidentType;
     }
 
-    public void setIncidentTypeId(Integer incidentTypeId) {
-        this.incidentTypeId = incidentTypeId;
+    public void setIncidentTypeId(IncidentTypeEntity incidentType) {
+        this.incidentType = incidentType;
     }
 
     @Override
@@ -52,7 +51,7 @@ public class IncidentSubtypeEntity {
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (subtype != null ? !subtype.equals(that.subtype) : that.subtype != null) return false;
-        if (incidentTypeId != null ? !incidentTypeId.equals(that.incidentTypeId) : that.incidentTypeId != null)
+        if (incidentType != null ? !incidentType.equals(that.incidentType) : that.incidentType != null)
             return false;
 
         return true;
@@ -62,7 +61,7 @@ public class IncidentSubtypeEntity {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (subtype != null ? subtype.hashCode() : 0);
-        result = 31 * result + (incidentTypeId != null ? incidentTypeId.hashCode() : 0);
+        result = 31 * result + (incidentType != null ? incidentType.hashCode() : 0);
         return result;
     }
 }
