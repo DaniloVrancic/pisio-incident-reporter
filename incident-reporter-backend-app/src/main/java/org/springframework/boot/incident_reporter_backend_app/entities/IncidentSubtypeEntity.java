@@ -30,18 +30,6 @@ public class IncidentSubtypeEntity {
         this.subtype = subtype;
     }
 
-    @Basic
-    @Column(name = "subtype_icon_uri", nullable = true, length = 64)
-    private String subtype_icon_uri;
-
-    public String getSubtypeIconUri() {
-        return subtype_icon_uri;
-    }
-
-    public void setSubtypeIconUri(String subtype_icon_uri) {
-        this.subtype_icon_uri = subtype_icon_uri;
-    }
-
     @ManyToOne
     @JoinColumn(name = "incident_type_id", referencedColumnName = "id", nullable = false)
     private IncidentTypeEntity incidentType;
