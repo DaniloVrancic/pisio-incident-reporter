@@ -15,8 +15,8 @@ public class IncidentTypeEntity {
     private String name;
 
     @Basic
-    @Column(name = "type_icon_name", nullable = true, length = 45)
-    private String typeIconName;
+    @Column(name = "type_icon_uri", nullable = true, length = 45)
+    private String typeIconUri;
 
 
     public Integer getId() {
@@ -36,11 +36,11 @@ public class IncidentTypeEntity {
     }
 
     public String getTypeIconName() {
-        return typeIconName;
+        return typeIconUri;
     }
 
-    public void setTypeIconName(String typeIconName) {
-        this.typeIconName = typeIconName;
+    public void setTypeIconName(String typeIconUri) {
+        this.typeIconUri = typeIconUri;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class IncidentTypeEntity {
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (typeIconName != null ? !typeIconName.equals(that.typeIconName) : that.typeIconName != null) return false;
+        if (typeIconUri != null ? !typeIconUri.equals(that.typeIconUri) : that.typeIconUri != null) return false;
 
         return true;
     }
@@ -61,7 +61,7 @@ public class IncidentTypeEntity {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (typeIconName != null ? typeIconName.hashCode() : 0);
+        result = 31 * result + (typeIconUri != null ? typeIconUri.hashCode() : 0);
         return result;
     }
 }
