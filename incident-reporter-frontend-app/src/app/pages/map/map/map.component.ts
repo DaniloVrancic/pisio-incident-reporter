@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap, GoogleMapsModule, MapMarker } from '@angular/google-maps';
 import {  MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,15 +30,13 @@ export class AppMapComponent implements AfterViewInit {
   options: google.maps.MapOptions = {
     mapId: "1",
     center: { lat: this.selectedLatitude, lng: this.selectedLongitude },
-    zoom: 12,
+    zoom: 13,
   };
 
   constructor(){}
 
   ngAfterViewInit(){
-
-    const marker = this.selectionMapMarker.nativeElement;
-    console.log(marker);
+    
   }
 
   public handleMapClick(clickEvent: google.maps.MapMouseEvent){
@@ -46,17 +44,16 @@ export class AppMapComponent implements AfterViewInit {
     this.selectedLongitude = clickEvent.latLng?.toJSON().lng as number;
 
     this.isLocationSelected = true;
-    console.log("map clicked! Longitude: " + this.selectedLongitude + " :: Latitude: " + this.selectedLatitude);
   }
 
   public handleMarkerClick(clickEvent: google.maps.MapMouseEvent){
     console.log("Marker clicked");
   }
 
-  public handleMarkerRightClick(event: any){
+  public handleMarkerRightClick(event: google.maps.MapMouseEvent){
+    
     this.isLocationSelected = false;
-
-    console.log('right clicked marker');
+   
   }
 
 
