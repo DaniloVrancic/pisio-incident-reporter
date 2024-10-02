@@ -20,8 +20,7 @@ public class IncidentSubtypeController {
     public IncidentSubtypeController(IncidentSubtypeService incidentSubtypeService){
         this.incidentSubtypeService = incidentSubtypeService;
     }
-
-    @CrossOrigin(origins = "http://localhost:4200")
+    
     @GetMapping("/all")
     public ResponseEntity<List<IncidentSubtypeEntity>> findAll(){
         List<IncidentSubtypeEntity> list = null;
