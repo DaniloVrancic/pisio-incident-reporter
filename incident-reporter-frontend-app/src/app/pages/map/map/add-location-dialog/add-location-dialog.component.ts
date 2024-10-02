@@ -30,6 +30,7 @@ export class AddLocationDialogComponent {
   incidentSubtypes: IncidentSubtype[] = [];
 
   selectedSubtypeId: number | null = null;
+  selectedDescription: string | null = "";
   expanded: number | null = null;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[] }) {
@@ -58,6 +59,12 @@ export class AddLocationDialogComponent {
     }
 
     return mySentence.charAt(0).toUpperCase() + mySentence.slice(1);
+}
+
+assignDescription(event: any){
+  
+  this.selectedDescription = event.target.value;
+  console.log(this.selectedDescription);
 }
 
 }
