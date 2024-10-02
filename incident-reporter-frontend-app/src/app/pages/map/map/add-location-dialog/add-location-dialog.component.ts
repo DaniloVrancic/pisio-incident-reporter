@@ -26,7 +26,6 @@ import { IncidentType } from 'src/app/models/incident-type';
   styleUrl: './add-location-dialog.component.scss'
 })
 export class AddLocationDialogComponent {
-
   incidentTypes: IncidentType[] = [];
   incidentSubtypes: IncidentSubtype[] = [];
 

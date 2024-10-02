@@ -1,7 +1,7 @@
 
 import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap, GoogleMapsModule, MapMarker } from '@angular/google-maps';
-import {  MatButtonModule } from '@angular/material/button';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -71,8 +71,13 @@ export class AppMapComponent implements OnInit, AfterViewInit {
                           this.allIncidentTypes.push(incidentType); // Add the unique incident type
                         }
                       });
-                      console.log(this.allIncidentTypes);
+                      
                     });
+
+        this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
+          this.allIncidents = result;
+          console.log(this.allIncidents);
+        })
                    
     }
     catch(error: any){

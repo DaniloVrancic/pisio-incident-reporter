@@ -43,6 +43,26 @@
     </mat-expansion-panel>
   }
   </mat-accordion>
+
+  
+    <textarea matInput 
+    placeholder="Description here..." 
+    formControlName="message" cdkTextareaAutosize
+      cdkAutosizeMinRows="10"
+      style="
+      min-width: 100%;
+      max-width: 100%;
+      min-height: 4.5rem;
+      height: 7rem;
+      max-height: 10rem;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem
+      "
+      
+      ></textarea>
+  
+
 </mat-dialog-content>
 
 <mat-dialog-actions>
