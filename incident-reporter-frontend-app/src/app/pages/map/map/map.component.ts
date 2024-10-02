@@ -1,5 +1,5 @@
 
-import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { GoogleMap, GoogleMapsModule, MapMarker } from '@angular/google-maps';
 import {  MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,6 +8,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatTreeModule} from '@angular/material/tree';
 import { AddLocationDialogComponent } from './add-location-dialog/add-location-dialog.component';
 import { MapService } from './map.service';
+import { IncidentType } from 'src/app/models/incident-type';
+import { IncidentSubtype } from 'src/app/models/incident-subtype';
+import { Incident } from 'src/app/models/incident';
 
 
 @Component({
@@ -26,13 +29,18 @@ import { MapService } from './map.service';
   
 })
 
-export class AppMapComponent implements AfterViewInit {
+export class AppMapComponent implements OnInit, AfterViewInit {
 
   @ViewChild('selectionMapMarker') selectionMapMarker!: ElementRef;
 
   selectedLongitude: number = 20.45847839252972;
   selectedLatitude: number = 44.79807782849736;
   isLocationSelected: boolean = false;
+
+  allIncidentSubtypes: IncidentSubtype[] = [];
+  allIncidents: Incident[] = [];
+  allIncidentTypes: IncidentType[] = [];
+
 
 
   options: google.maps.MapOptions = {
@@ -43,6 +51,34 @@ export class AppMapComponent implements AfterViewInit {
 
   readonly dialog = inject(MatDialog);
 
+  constructor(private mapService: MapService){}
+
+  ngOnInit(): void {
+    try{
+
+      let incidentTypeIdSet = new Set<number>();
+      let testObject : Object;
+
+      this.mapService.getAllIncidentSubtypes()
+                     .subscribe((result: IncidentSubtype[]) => {this.allIncidentSubtypes = result; 
+                      console.log(this.allIncidentSubtypes);
+                      this.allIncidentSubtypes.forEach(subtype => {
+                        const incidentType = subtype.incidentType;
+              
+                        // Only add the incident type if its id is not already in the Set
+                        if (!incidentTypeIdSet.has(incidentType.id)) {
+                          incidentTypeIdSet.add(incidentType.id);
+                          this.allIncidentTypes.push(incidentType); // Add the unique incident type
+                        }
+                      });
+                      console.log(this.allIncidentTypes);
+                    });
+                   
+    }
+    catch(error: any){
+      console.error("Error happened during fetching incident subtypes.\n" + error);
+    }
+  }
   ngAfterViewInit(){
     
   }
@@ -66,17 +102,10 @@ export class AppMapComponent implements AfterViewInit {
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(AddLocationDialogComponent, {
-      width: '250px',
+      width: '100vh',
       enterAnimationDuration,
       exitAnimationDuration,
     });
-  }
-
-
-  constructor(private mapService: MapService){}
-
-  ngOnInit(): void {
-      
   }
 
   offerAddIncident(event: google.maps.MapMouseEvent){
