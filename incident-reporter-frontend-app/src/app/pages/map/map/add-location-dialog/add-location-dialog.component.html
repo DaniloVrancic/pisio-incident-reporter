@@ -1,8 +1,43 @@
-<h2 mat-dialog-title>Delete file</h2>
+<h2 mat-dialog-title>Add Incident</h2>
+
 <mat-dialog-content>
-  Would you like to delete cat.jpeg?
+ 
+  <mat-accordion>
+    @for(type of incidentTypes; track type)
+    {
+
+      <mat-expansion-panel [expanded]="expanded === type.id" (opened)="expanded = type.id" (closed)="expanded = null">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>{{ type.typeIconName }}</mat-icon>
+            {{ type.name }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      
+
+      <!-- Subtypes List -->
+      @if(this.getSubtypes(type.id).length > 0)
+      {
+
+        <mat-list>
+          @for(subtype of this.getSubtypes(type.id); track subtype.id)
+          {
+            <mat-list-item>
+              {{ subtype.subtype }}
+            </mat-list-item>
+          }
+        </mat-list>
+      }
+      @else if(this.getSubtypes(type.id).length === 0){
+
+        <p>No subtypes available</p>
+      }
+    </mat-expansion-panel>
+  }
+  </mat-accordion>
 </mat-dialog-content>
+
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>No</button>
-  <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close cdkFocusInitial style="color: #0066FF;">Confirm</button>
 </mat-dialog-actions>

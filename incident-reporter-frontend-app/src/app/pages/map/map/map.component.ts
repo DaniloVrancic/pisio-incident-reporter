@@ -105,15 +105,16 @@ export class AppMapComponent implements OnInit, AfterViewInit {
       width: '100vh',
       enterAnimationDuration,
       exitAnimationDuration,
+      data: {
+        incidentTypes: this.allIncidentTypes,
+        incidentSubtypes: this.allIncidentSubtypes
+      }
     });
   }
 
   offerAddIncident(event: google.maps.MapMouseEvent){
     this.selectedLatitude = event.latLng?.toJSON().lat as number;
     this.selectedLongitude = event.latLng?.toJSON().lng as number;
-
-    console.log("Latitude: " + this.selectedLatitude);
-    console.log("Longitude: " + this.selectedLongitude);
 
   }
 
