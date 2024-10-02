@@ -1,15 +1,17 @@
 <h2 mat-dialog-title>Add Incident</h2>
 
 <mat-dialog-content>
- 
+  <h3>Select Category:</h3>
   <mat-accordion>
-    @for(type of incidentTypes; track type)
+    @for(type of incidentTypes; track type.id)
     {
 
       <mat-expansion-panel [expanded]="expanded === type.id" (opened)="expanded = type.id" (closed)="expanded = null">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <mat-icon>{{ type.typeIconName }}</mat-icon>
+            <img [src]="'assets/markers/type_icons/' + type.name + '-marker.png'" alt="{{ type.name }}" 
+            width="35" 
+            height="35" />
             {{ this.capitalizeFirstLetter(type.name) }}
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -18,12 +20,15 @@
       <!-- Subtypes List -->
       @if(this.getSubtypes(type.id).length > 0)
       {
-
         <mat-list>
           @for(subtype of this.getSubtypes(type.id); track subtype.id)
           {
-            <mat-list-item>
-              
+            <mat-list-item style="justify-items: center; align-items: center;" 
+                          (click)="this.selectSubtype(subtype.id)"
+                          [ngClass]="{ 'selected-subtype': selectedSubtypeId === subtype.id }"
+                          >
+              <img [src]="'assets/markers/' + subtype.subtype + '-marker-pending.png'" alt="{{ subtype.subtype }}" 
+              width="30" height="30" />
                 {{ this.capitalizeFirstLetter(subtype.subtype) }}
              
             </mat-list-item>

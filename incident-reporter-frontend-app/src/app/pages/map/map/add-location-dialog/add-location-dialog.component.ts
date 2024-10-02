@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {
@@ -14,6 +15,7 @@ import { IncidentType } from 'src/app/models/incident-type';
   selector: 'app-add-location-dialog',
   standalone: true,
   imports: [
+    CommonModule,
     MatButtonModule,
     MatDialogModule,
     MatExpansionModule,
@@ -28,6 +30,7 @@ export class AddLocationDialogComponent {
   incidentTypes: IncidentType[] = [];
   incidentSubtypes: IncidentSubtype[] = [];
 
+  selectedSubtypeId: number | null = null;
   expanded: number | null = null;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[] }) {
@@ -37,6 +40,15 @@ export class AddLocationDialogComponent {
 
   getSubtypes(typeId: number): IncidentSubtype[] {
     return this.incidentSubtypes.filter(subtype => subtype.incidentType.id === typeId);
+  }
+
+  selectSubtype(subtypeId: number) {
+    if(subtypeId === this.selectedSubtypeId){
+      this.selectedSubtypeId = null;
+    }
+    else{
+      this.selectedSubtypeId = subtypeId;
+    }
   }
 
   capitalizeFirstLetter(sentence: string | null) {
