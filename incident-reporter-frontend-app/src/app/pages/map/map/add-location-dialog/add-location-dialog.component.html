@@ -64,7 +64,13 @@
 
       <br/>
       <label class="custom-file-upload"><input type="file" name="avatar" accept="image/*" (change)="this.onChangeFile($event)"/>Upload picture <span id="file-name"></span></label>
-  
+      <br/>
+      <mat-label>Choose a date</mat-label>
+      <br/>
+      <input matInput [max]="maxDate" [matDatepicker]="picker" />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
 
 </mat-dialog-content>
 

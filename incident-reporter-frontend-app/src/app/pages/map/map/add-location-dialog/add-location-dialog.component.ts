@@ -2,12 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
 } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { IncidentType } from 'src/app/models/incident-type';
@@ -21,10 +24,13 @@ import { IncidentType } from 'src/app/models/incident-type';
     MatDialogModule,
     MatExpansionModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatInputModule,
+    MatDatepickerModule
   ],
   templateUrl: './add-location-dialog.component.html',
-  styleUrl: './add-location-dialog.component.scss'
+  styleUrl: './add-location-dialog.component.scss',
+  providers: [provideNativeDateAdapter()]
 })
 export class AddLocationDialogComponent {
   incidentTypes: IncidentType[] = [];
@@ -34,6 +40,8 @@ export class AddLocationDialogComponent {
   selectedDescription: string | null = "";
   selectedImage: string | null = null;
   expanded: number | null = null;
+
+  maxDate: Date = new Date();
 
   profilePictureFormControl = new FormControl(null);
 

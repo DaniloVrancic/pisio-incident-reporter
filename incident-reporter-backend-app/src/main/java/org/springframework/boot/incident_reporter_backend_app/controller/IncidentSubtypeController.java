@@ -20,7 +20,7 @@ public class IncidentSubtypeController {
     public IncidentSubtypeController(IncidentSubtypeService incidentSubtypeService){
         this.incidentSubtypeService = incidentSubtypeService;
     }
-    
+
     @GetMapping("/all")
     public ResponseEntity<List<IncidentSubtypeEntity>> findAll(){
         List<IncidentSubtypeEntity> list = null;
