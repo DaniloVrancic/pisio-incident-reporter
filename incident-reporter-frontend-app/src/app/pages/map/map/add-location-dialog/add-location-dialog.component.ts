@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -31,7 +32,10 @@ export class AddLocationDialogComponent {
 
   selectedSubtypeId: number | null = null;
   selectedDescription: string | null = "";
+  selectedImage: string | null = null;
   expanded: number | null = null;
+
+  profilePictureFormControl = new FormControl(null);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[] }) {
     this.incidentTypes = data.incidentTypes;
@@ -64,7 +68,48 @@ export class AddLocationDialogComponent {
 assignDescription(event: any){
   
   this.selectedDescription = event.target.value;
-  console.log(this.selectedDescription);
 }
+
+onChangeFile(event: any)
+  {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    let selectedImage = this.selectedImage;
+
+    let fileNameElement = document.getElementById("file-name") as HTMLElement | null;
+
+    if(file === undefined)
+    {
+      (fileNameElement as HTMLElement).innerHTML = "";
+      (fileNameElement as HTMLElement).style.display = 'inline';
+    }
+    else if (file != undefined && fileNameElement) {
+      fileNameElement.innerHTML = file.name; // Assuming you want to display the file name
+      fileNameElement.style.display = 'inline-block';
+    } else {
+      console.error("File name element not found.");
+    }
+    
+
+    reader.onloadend = function(event : any) {
+        const imgBase64 = event.target.result as string | null;
+        
+
+        // Assign the BASE64 string to this.userForRegister.avatar
+        selectedImage = imgBase64
+
+    };
+
+    if(file != undefined)
+    {
+    reader.readAsDataURL(file);
+    this.selectedImage = selectedImage;
+    }
+    else
+    {
+      this.selectedImage = null;
+    }
+
+  }
 
 }

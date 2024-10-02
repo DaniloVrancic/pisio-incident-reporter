@@ -61,6 +61,9 @@
       margin-bottom: 0.5rem
       "
       ></textarea>
+
+      <br/>
+      <label class="custom-file-upload"><input type="file" name="avatar" accept="image/*" (change)="this.onChangeFile($event)"/>Upload picture <span id="file-name"></span></label>
   
 
 </mat-dialog-content>

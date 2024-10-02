@@ -3,3 +3,21 @@
     color: white !important;
     border-radius: 1rem;
   }
+
+  .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    border-radius: 0.4rem;
+    padding: 12px;
+    cursor: pointer;
+    width: 30%;
+    
+
+    margin-bottom: 1rem;
+    
+}
+
+input[type="file"]
+  {
+    display: none;
+  }
