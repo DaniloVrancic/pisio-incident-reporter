@@ -39,4 +39,14 @@ export class AddLocationDialogComponent {
     return this.incidentSubtypes.filter(subtype => subtype.incidentType.id === typeId);
   }
 
+  capitalizeFirstLetter(sentence: string | null) {
+    let mySentence: string = sentence as string;
+
+    if(mySentence == undefined || mySentence == null){
+      return undefined;
+    }
+
+    return mySentence.charAt(0).toUpperCase() + mySentence.slice(1);
+}
+
 }

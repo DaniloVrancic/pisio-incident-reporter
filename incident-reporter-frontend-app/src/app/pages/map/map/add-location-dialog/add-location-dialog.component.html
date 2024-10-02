@@ -10,7 +10,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon>{{ type.typeIconName }}</mat-icon>
-            {{ type.name }}
+            {{ this.capitalizeFirstLetter(type.name) }}
           </mat-panel-title>
         </mat-expansion-panel-header>
       
@@ -23,8 +23,11 @@
           @for(subtype of this.getSubtypes(type.id); track subtype.id)
           {
             <mat-list-item>
-              {{ subtype.subtype }}
+              
+                {{ this.capitalizeFirstLetter(subtype.subtype) }}
+             
             </mat-list-item>
+            <mat-divider/>
           }
         </mat-list>
       }
