@@ -102,10 +102,8 @@ onChangeFile(event: any)
     reader.onloadend = function(event : any) {
         const imgBase64 = event.target.result as string | null;
         
-
         // Assign the BASE64 string to this.userForRegister.avatar
         selectedImage = imgBase64
-
     };
 
     if(file != undefined)
