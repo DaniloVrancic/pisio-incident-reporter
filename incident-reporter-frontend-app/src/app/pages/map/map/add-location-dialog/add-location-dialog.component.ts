@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { Incident } from 'src/app/models/incident';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { IncidentType } from 'src/app/models/incident-type';
+import { MapService } from '../map.service';
 
 @Component({
   selector: 'app-add-location-dialog',
@@ -31,7 +32,7 @@ import { IncidentType } from 'src/app/models/incident-type';
   ],
   templateUrl: './add-location-dialog.component.html',
   styleUrl: './add-location-dialog.component.scss',
-  providers: [provideNativeDateAdapter()]
+  providers: [provideNativeDateAdapter(), MapService]
 })
 export class AddLocationDialogComponent {
   incidentTypes: IncidentType[] = [];
@@ -53,7 +54,7 @@ export class AddLocationDialogComponent {
   profilePictureFormControl = new FormControl(null);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[],
-    latitude: number, longitude: number}) {
+    latitude: number, longitude: number}, private mapService: MapService) {
     this.incidentTypes = data.incidentTypes;
     this.incidentSubtypes = data.incidentSubtypes;
     this.selectedLongitude = data.longitude;
@@ -156,7 +157,35 @@ onChangeFile(event: any)
       this.errorMessage = "";
     }
 
+    if(this.selectedDate != null){
+      const date = new Date(this.selectedDate);
+      incidentToSend.timeOfIncident = date.toISOString();
+    }
     
-  }
+    if(this.selectedImage != null){
+      incidentToSend.photoUrl = this.selectedImage;
+    }
 
+    incidentToSend.description = this.selectedDescription;
+    incidentToSend.incidentSubtype = {id: this.selectedSubtypeId} as IncidentSubtype;
+
+    try{
+      console.log("SENDING THIS INCIDENT!");
+      console.log(incidentToSend);
+      this.mapService.addIncident(incidentToSend).subscribe({
+        next: result => {console.log(result);},
+        error: error => {console.error(error);}
+      });
+    }
+    catch(error: any){
+      console.log(error);
+      }
+    }
+    
+
+    
+
+    
 }
+
+
