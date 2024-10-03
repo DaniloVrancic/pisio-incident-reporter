@@ -12,6 +12,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { Incident } from 'src/app/models/incident';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { IncidentType } from 'src/app/models/incident-type';
 
@@ -35,19 +36,28 @@ import { IncidentType } from 'src/app/models/incident-type';
 export class AddLocationDialogComponent {
   incidentTypes: IncidentType[] = [];
   incidentSubtypes: IncidentSubtype[] = [];
+  selectedLongitude : number = 181;
+  selectedLatitude : number = 181;
 
   selectedSubtypeId: number | null = null;
   selectedDescription: string | null = "";
   selectedImage: string | null = null;
   expanded: number | null = null;
 
+  selectedDate: any = null;
+
+  errorMessage: string = "";
+
   maxDate: Date = new Date();
 
   profilePictureFormControl = new FormControl(null);
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[] }) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[],
+    latitude: number, longitude: number}) {
     this.incidentTypes = data.incidentTypes;
     this.incidentSubtypes = data.incidentSubtypes;
+    this.selectedLongitude = data.longitude;
+    this.selectedLatitude = data.latitude;
   }
 
   getSubtypes(typeId: number): IncidentSubtype[] {
@@ -76,6 +86,14 @@ export class AddLocationDialogComponent {
 assignDescription(event: any){
   
   this.selectedDescription = event.target.value;
+}
+
+dateTimeInput(event: any){
+
+
+
+  this.selectedDate = event.target.value;
+  console.log(this.selectedDate);
 }
 
 onChangeFile(event: any)
@@ -116,6 +134,29 @@ onChangeFile(event: any)
       this.selectedImage = null;
     }
 
+  }
+
+  onConfirmClicked() : void {
+    let incidentToSend : Incident = {} as Incident;
+
+
+
+    incidentToSend.latitude = this.selectedLatitude;
+    incidentToSend.longitude = this.selectedLongitude;
+
+    if(this.selectedSubtypeId === null){
+      this.errorMessage = "Must select a category first.";
+      return;
+    }
+    else if(this.selectedDescription === null || this.selectedDescription === ""){
+      this.errorMessage = "Can't input an empty description.";
+      return;
+    }
+    else{
+      this.errorMessage = "";
+    }
+
+    
   }
 
 }

@@ -112,7 +112,9 @@ export class AppMapComponent implements OnInit, AfterViewInit {
       exitAnimationDuration,
       data: {
         incidentTypes: this.allIncidentTypes,
-        incidentSubtypes: this.allIncidentSubtypes
+        incidentSubtypes: this.allIncidentSubtypes,
+        latitude: this.selectedLatitude,
+        longitude: this.selectedLongitude
       }
     });
   }
