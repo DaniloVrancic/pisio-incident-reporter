@@ -20,6 +20,15 @@
         [position]="{lat: this.selectedLatitude, lng: this.selectedLongitude}"
         />
       }
+
+      @for(incident of this.allIncidents; track incident.id){
+        <map-advanced-marker 
+        (mapClick)="this.handleLoadedMarkerClick(incident)"
+        [position]="{lat: incident.latitude, lng: incident.longitude}"
+        title={{incident.incidentSubtype.subtype}}
+        [content]="incident.content"
+        />
+      }
     
 
     </google-map>

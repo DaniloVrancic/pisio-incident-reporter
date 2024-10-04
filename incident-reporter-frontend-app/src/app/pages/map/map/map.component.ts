@@ -10,7 +10,7 @@ import { AddLocationDialogComponent } from './add-location-dialog/add-location-d
 import { MapService } from './map.service';
 import { IncidentType } from 'src/app/models/incident-type';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
-import { Incident } from 'src/app/models/incident';
+import { Incident, Status } from 'src/app/models/incident';
 
 
 @Component({
@@ -39,6 +39,7 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
   allIncidentSubtypes: IncidentSubtype[] = [];
   allIncidents: Incident[] = [];
+  approvedIncidents: Incident[] = [];
   allIncidentTypes: IncidentType[] = [];
 
 
@@ -76,7 +77,27 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
         this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
           this.allIncidents = result;
-          console.log(this.allIncidents);
+
+          this.allIncidents.forEach((incident: Incident) => {
+            let pathToPhoto = "";
+            if(incident.status == Status.APPROVED)
+            {
+              pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker.png`;
+            }
+            else{
+              pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker-pending.png`;
+            }
+            let imgTag = document.createElement('img');
+            imgTag.src = pathToPhoto;
+            imgTag.onerror = () => {
+              imgTag.src = `assets/markers/type_icons/other-marker.png`;
+            };
+            incident.content = imgTag;
+          });
+          
+          this.approvedIncidents = this.allIncidents.filter((incident: Incident) => {return incident.status == Status.APPROVED});
+          
+          this.loadMarkers(this.allIncidents);
         })
                    
     }
@@ -88,6 +109,42 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     
   }
 
+  loadMarkers(incidents: Incident[]): void {
+    incidents.forEach((incident: Incident) => {
+      const { latitude, longitude, incidentSubtype, status } = incident;
+      const markerImage = this.getMarkerImage(incidentSubtype.subtype, status);
+  
+      // Create a marker with the position and the selected image
+      const marker = new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        
+        icon: markerImage, // Assign the selected marker image
+      });
+  
+      // Optional: You can add click event listeners or infowindows here
+      marker.addListener('click', () => {
+        this.handleLoadedMarkerClick(incident);
+      });
+    });
+  }
+
+  getMarkerImage(subtype: string | null, status: Status): string {
+    const basePath = 'assets/markers/';
+    const markerType = status === Status.APPROVED ? '' : '-pending';
+    const markerPath = `${basePath}${subtype?.toLowerCase()}-marker${markerType}.png`;
+  
+    // Check if the image exists in the assets folder
+    const img = new Image();
+    img.src = markerPath;
+  
+    // If image fails to load, use the fallback image
+    img.onerror = () => {
+      img.src = `${basePath}type_icons/other-marker.png`;
+    };
+  
+    return img.src;
+  }
+
   public handleMapClick(clickEvent: google.maps.MapMouseEvent){
     this.selectedLatitude = clickEvent.latLng?.toJSON().lat as number;
     this.selectedLongitude = clickEvent.latLng?.toJSON().lng as number;
@@ -96,7 +153,11 @@ export class AppMapComponent implements OnInit, AfterViewInit {
   }
 
   public handleMarkerClick(clickEvent: google.maps.MapMouseEvent){
-    console.log("Marker clicked");
+    
+  }
+
+  public handleLoadedMarkerClick(incident: any){
+    
   }
 
   public handleMarkerRightClick(event: google.maps.MapMouseEvent){

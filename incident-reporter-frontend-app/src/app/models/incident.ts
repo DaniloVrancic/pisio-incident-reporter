@@ -10,6 +10,7 @@ export interface Incident {
     latitude: number;
     longitude: number;
     userId: number | null;
+    content: any;
   }
 
   export enum Status {
