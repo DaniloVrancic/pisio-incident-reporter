@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.List;
 
 @Service
@@ -26,7 +29,8 @@ public class IncidentService {
 
         if(modifiedEntity.getTimeOfIncident() == null)
         {
-            modifiedEntity.setTimeOfIncident(Timestamp.from(Instant.now()));
+            ZonedDateTime zoneAdjustedTime = Instant.now().atZone(ZoneId.systemDefault()); //Gets the local timezone of the machine
+            modifiedEntity.setTimeOfIncident(Timestamp.from(zoneAdjustedTime.toInstant()));
         }
         if(modifiedEntity.getStatus() == null){
             if(modifiedEntity.getUserId() == null){
