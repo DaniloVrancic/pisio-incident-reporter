@@ -32,7 +32,7 @@ import { Incident, Status } from 'src/app/models/incident';
 export class AppMapComponent implements OnInit, AfterViewInit {
 
   @ViewChild('selectionMapMarker') selectionMapMarker!: ElementRef;
-  @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;
+
 
   selectedLongitude: number = 20.45847839252972;
   selectedLatitude: number = 44.79807782849736;
@@ -46,7 +46,7 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
 
   options: google.maps.MapOptions = {
-    mapId: "1",
+    mapId: "myMap",
     center: { lat: this.selectedLatitude, lng: this.selectedLongitude },
     zoom: 13,
   };
@@ -156,9 +156,20 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     
   }
 
-  public handleLoadedMarkerClick(marker: MapAdvancedMarker, incident: Incident){
-    
-    this.infoWindow.open(marker, true);
+  public handleLoadedMarkerClick(marker: any, incident: Incident){
+    const map : any = document.getElementById("map");
+
+    const contentString = "<div>Ja sam taj!</div>";
+
+    const infowindow = new google.maps.InfoWindow({
+      content: contentString,
+      ariaLabel: "Info Window",
+    });
+
+    infowindow.open({
+      anchor: marker,
+      map
+    });
   }
 
   public handleMarkerRightClick(event: google.maps.MapMouseEvent){

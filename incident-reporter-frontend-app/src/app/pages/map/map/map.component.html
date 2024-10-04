@@ -6,7 +6,8 @@
 
   <!-- The map container -->
 
-    <google-map width="100%" height="85vh" 
+    <google-map id="map"
+                width="100%" height="85vh" 
                 [options]="options"
                 (mapClick)="this.handleMapClick($event)"
                 (mapRightclick)="this.handleMarkerRightClick($event)"
