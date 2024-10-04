@@ -27,7 +27,7 @@ public class IncidentController {
             list = incidentService.findAllEntities();
         }
         catch(Exception ex){
-            ResponseEntity.notFound();
+            return ResponseEntity.notFound().build();
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -65,6 +65,6 @@ public class IncidentController {
         catch(Exception ex){
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-            return new ResponseEntity<>(entity, HttpStatus.CREATED);
+            return new ResponseEntity<IncidentEntity>(entity, HttpStatus.CREATED);
     }
 }

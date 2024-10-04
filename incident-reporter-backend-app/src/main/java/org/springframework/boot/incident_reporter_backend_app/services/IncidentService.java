@@ -3,9 +3,12 @@ package org.springframework.boot.incident_reporter_backend_app.services;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.incident_reporter_backend_app.entities.IncidentEntity;
+import org.springframework.boot.incident_reporter_backend_app.enums.Status;
 import org.springframework.boot.incident_reporter_backend_app.repositories.IncidentRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -19,7 +22,22 @@ public class IncidentService {
     }
 
     public IncidentEntity add(IncidentEntity entity){
-        return this.incidentRepository.save(entity);
+        IncidentEntity modifiedEntity = entity;
+
+        if(modifiedEntity.getTimeOfIncident() == null)
+        {
+            modifiedEntity.setTimeOfIncident(Timestamp.from(Instant.now()));
+        }
+        if(modifiedEntity.getStatus() == null){
+            if(modifiedEntity.getUserId() == null){
+                modifiedEntity.setStatus(Status.REQUESTED);
+            }
+            else{
+                modifiedEntity.setStatus(Status.APPROVED);
+            }
+        }
+
+        return this.incidentRepository.save(modifiedEntity);
     }
 
     public IncidentEntity update(IncidentEntity entity){

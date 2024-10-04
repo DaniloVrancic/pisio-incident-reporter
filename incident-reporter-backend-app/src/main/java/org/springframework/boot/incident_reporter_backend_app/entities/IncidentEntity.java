@@ -85,10 +85,10 @@ public class IncidentEntity {
     }
 
     @Basic
-    @Column(name = "latitude", nullable = false, precision = 8)
+    @Column(name = "latitude", nullable = false, precision = 15, scale = 12)
     private BigDecimal latitude;
     @Basic
-    @Column(name = "longitude", nullable = false, precision = 8)
+    @Column(name = "longitude", nullable = false, precision = 15, scale = 12)
     private BigDecimal longitude;
 
     public BigDecimal getLatitude() {
