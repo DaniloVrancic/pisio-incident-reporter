@@ -22,15 +22,14 @@
       }
 
       @for(incident of this.allIncidents; track incident.id){
-        <map-advanced-marker 
-        (mapClick)="this.handleLoadedMarkerClick(incident)"
+        <map-advanced-marker
+        #markerElem="mapAdvancedMarker" 
+        (mapClick)="this.handleLoadedMarkerClick(markerElem, incident)"
         [position]="{lat: incident.latitude, lng: incident.longitude}"
         title={{incident.incidentSubtype.subtype}}
         [content]="incident.content"
         />
       }
-    
-
     </google-map>
 
 

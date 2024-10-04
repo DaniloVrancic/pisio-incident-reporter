@@ -1,11 +1,11 @@
 
 import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMapsModule, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import {MatTreeModule} from '@angular/material/tree';
+import { MatTreeModule } from '@angular/material/tree';
 import { AddLocationDialogComponent } from './add-location-dialog/add-location-dialog.component';
 import { MapService } from './map.service';
 import { IncidentType } from 'src/app/models/incident-type';
@@ -32,6 +32,7 @@ import { Incident, Status } from 'src/app/models/incident';
 export class AppMapComponent implements OnInit, AfterViewInit {
 
   @ViewChild('selectionMapMarker') selectionMapMarker!: ElementRef;
+  @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;
 
   selectedLongitude: number = 20.45847839252972;
   selectedLatitude: number = 44.79807782849736;
@@ -50,7 +51,7 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     zoom: 13,
   };
 
-  readonly dialog = inject(MatDialog);
+  readonly dialog: MatDialog = inject(MatDialog);
 
   constructor(private mapService: MapService){}
 
@@ -62,7 +63,6 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
       this.mapService.getAllIncidentSubtypes()
                      .subscribe((result: IncidentSubtype[]) => {this.allIncidentSubtypes = result; 
-                      console.log(this.allIncidentSubtypes);
                       this.allIncidentSubtypes.forEach(subtype => {
                         const incidentType = subtype.incidentType;
               
@@ -123,7 +123,7 @@ export class AppMapComponent implements OnInit, AfterViewInit {
   
       // Optional: You can add click event listeners or infowindows here
       marker.addListener('click', () => {
-        this.handleLoadedMarkerClick(incident);
+       // this.handleLoadedMarkerClick(incident);
       });
     });
   }
@@ -156,8 +156,9 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     
   }
 
-  public handleLoadedMarkerClick(incident: any){
+  public handleLoadedMarkerClick(marker: MapAdvancedMarker, incident: Incident){
     
+    this.infoWindow.open(marker, true);
   }
 
   public handleMarkerRightClick(event: google.maps.MapMouseEvent){
