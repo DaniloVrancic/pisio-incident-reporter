@@ -1,6 +1,7 @@
 export const environment = {
-    apiBaseUrl: 'http://localhost:8080',
-    incidentUrl: 'http://localhost:8080/incident',
-    incidentSubtypeUrl: 'http://localhost/incident_subtype',
-    incidentTypeUrl: 'http://localhost/incident_type'
+    apiPort: '8443',
+    apiBaseUrl: 'http://localhost:8443',
+    incidentUrl: 'http://localhost:8443' + '/incident',
+    incidentSubtypeUrl: 'http://localhost:8443' + '/incident_subtype',
+    incidentTypeUrl: 'http://localhost:8443' + '/incident_type'
 }

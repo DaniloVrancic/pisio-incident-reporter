@@ -2,6 +2,7 @@ package org.springframework.boot.incident_reporter_backend_app.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,10 +26,12 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.anyRequest().authenticated())
-                .oauth2Login((oauth2Login) -> oauth2Login
-                        .userInfoEndpoint((userInfo) -> userInfo
-                                .userAuthoritiesMapper(grantedAuthoritiesMapper())));
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(request -> request.anyRequest().permitAll())
+                //.oauth2Login((oauth2Login) -> oauth2Login
+                      //  .userInfoEndpoint((userInfo) -> userInfo
+                         //       .userAuthoritiesMapper(grantedAuthoritiesMapper())))
+                         ;
 
         return http.build();
     }

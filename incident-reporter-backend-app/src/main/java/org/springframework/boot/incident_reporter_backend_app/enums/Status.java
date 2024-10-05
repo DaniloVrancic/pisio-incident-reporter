@@ -2,8 +2,8 @@ package org.springframework.boot.incident_reporter_backend_app.enums;
 
 
 public enum Status {
-    Requested("REQUESTED"),
-    Approved("APPROVED");
+    REQUESTED("REQUESTED"),
+    APPROVED("APPROVED");
 
     private String value;
     private Status(String value)

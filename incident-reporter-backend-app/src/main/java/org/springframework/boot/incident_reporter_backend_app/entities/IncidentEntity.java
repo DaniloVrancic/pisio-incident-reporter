@@ -39,19 +39,17 @@ public class IncidentEntity {
     @JoinColumn(name = "incident_subtype_id", referencedColumnName = "id", nullable = false)
     private IncidentSubtypeEntity incidentSubtype;
 
-
-    public IncidentSubtypeEntity getIncidentType() {
+    public IncidentSubtypeEntity getIncidentSubtype() {
         return incidentSubtype;
     }
 
-    public void setIncidentType(IncidentSubtypeEntity incidentType) {
-        this.incidentSubtype = incidentType;
+    public void setIncidentSubtype(IncidentSubtypeEntity incidentSubtype) {
+        this.incidentSubtype = incidentSubtype;
     }
 
     @Basic
     @Column(name = "photo_url", nullable = true, length = 512)
     private String photoUrl;
-
 
     public String getPhotoUrl() {
         return photoUrl;
@@ -63,7 +61,7 @@ public class IncidentEntity {
 
     @Basic
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private Status status;
 
     public Status getStatus() {
@@ -87,10 +85,10 @@ public class IncidentEntity {
     }
 
     @Basic
-    @Column(name = "latitude", nullable = false, precision = 8)
+    @Column(name = "latitude", nullable = false, precision = 15, scale = 12)
     private BigDecimal latitude;
     @Basic
-    @Column(name = "longitude", nullable = false, precision = 8)
+    @Column(name = "longitude", nullable = false, precision = 15, scale = 12)
     private BigDecimal longitude;
 
     public BigDecimal getLatitude() {

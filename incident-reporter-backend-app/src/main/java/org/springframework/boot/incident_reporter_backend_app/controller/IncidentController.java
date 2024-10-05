@@ -27,7 +27,7 @@ public class IncidentController {
             list = incidentService.findAllEntities();
         }
         catch(Exception ex){
-            ResponseEntity.notFound();
+            return ResponseEntity.notFound().build();
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -57,14 +57,14 @@ public class IncidentController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<IncidentEntity> addEntity(@RequestBody IncidentEntity requestBody){
+    public ResponseEntity<?> addEntity(@RequestBody IncidentEntity requestBody){
         IncidentEntity entity = null;
         try{
             entity = incidentService.add(requestBody);
         }
         catch(Exception ex){
-            ResponseEntity.internalServerError();
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-            return new ResponseEntity<>(entity, HttpStatus.OK);
+            return new ResponseEntity<IncidentEntity>(entity, HttpStatus.CREATED);
     }
 }
