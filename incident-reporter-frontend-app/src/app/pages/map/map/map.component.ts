@@ -32,7 +32,7 @@ import { FilterLocationsDialogComponent } from './filter-locations-dialog/filter
 
 export class AppMapComponent implements OnInit, AfterViewInit {
 
-
+  isInitialized: boolean = false;
 
   selectedLongitude: number = 20.45847839252972;
   selectedLatitude: number = 44.79807782849736;
@@ -55,7 +55,9 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
   readonly dialog: MatDialog = inject(MatDialog);
 
-  constructor(private mapService: MapService, private cdr: ChangeDetectorRef){}
+  constructor(private mapService: MapService, private cdr: ChangeDetectorRef){
+    console.log("CONSTRUCTOR");
+  }
 
 
 
@@ -113,6 +115,7 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     catch(error: any){
       console.error("Error happened during fetching incident subtypes.\n" + error);
     }
+
   }
   
 
@@ -122,6 +125,7 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     this.initMap();
     window['approveIncident'] = this.approveIncident.bind(this);
     window['rejectIncident'] = this.rejectIncident.bind(this);
+    this.cdr.detectChanges();
   }
 
   private initMap = async () => {
@@ -129,7 +133,6 @@ export class AppMapComponent implements OnInit, AfterViewInit {
       // Request needed libraries.
       const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
       const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
-  
       const map = new Map(document.getElementById('map') as HTMLElement,
           {
             mapId: "4504f8b37365c3d0",

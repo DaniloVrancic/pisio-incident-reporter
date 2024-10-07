@@ -170,7 +170,6 @@ onChangeFile(event: any)
     incidentToSend.incidentSubtype = {id: this.selectedSubtypeId} as IncidentSubtype;
 
     try{
-      console.log("SENDING THIS INCIDENT!");
       console.log(incidentToSend);
       this.mapService.addIncident(incidentToSend).subscribe({
         next: result => {console.log(result);},
