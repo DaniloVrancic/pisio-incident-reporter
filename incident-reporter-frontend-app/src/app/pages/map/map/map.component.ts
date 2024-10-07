@@ -11,6 +11,7 @@ import { MapService } from './map.service';
 import { IncidentType } from 'src/app/models/incident-type';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { Incident, Status } from 'src/app/models/incident';
+import { FilterLocationsDialogComponent } from './filter-locations-dialog/filter-locations-dialog.component';
 
 
 @Component({
@@ -208,7 +209,6 @@ export class AppMapComponent implements OnInit, AfterViewInit {
               `<button class='btn' onclick="rejectIncident(${incident.id})">Remove</button>
             </div>
           </div>`;
-          
 
           infoWindow.setContent(contentString);
           infoWindow.open(marker.map, marker);
@@ -216,12 +216,12 @@ export class AppMapComponent implements OnInit, AfterViewInit {
   });
 }
 
-private approveIncident(incidentId: number) {
+approveIncident(incidentId: number) {
   // Your logic to approve the incident
   console.log(`Approving incident with ID: ${incidentId}`);
 }
 
-private rejectIncident(incidentId: number) {
+rejectIncident(incidentId: number) {
   // Your logic to reject/remove the incident
   console.log(`Removing incident with ID: ${incidentId}`);
 }
@@ -329,8 +329,22 @@ toggleHighlight(markerView: any, incident: any) {
     this.cdr.detectChanges(); //Detect changes on the UI
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openAddLocationDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(AddLocationDialogComponent, {
+      width: '100vh',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {
+        incidentTypes: this.allIncidentTypes,
+        incidentSubtypes: this.allIncidentSubtypes,
+        latitude: this.selectedLatitude,
+        longitude: this.selectedLongitude
+      }
+    });
+  }
+
+  openFilterLocationsDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(FilterLocationsDialogComponent, {
       width: '100vh',
       enterAnimationDuration,
       exitAnimationDuration,

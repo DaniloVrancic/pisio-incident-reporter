@@ -23,6 +23,7 @@
       <button mat-fab aria-label="Filter Button"
             #filterButton
             id="filterButton"
+            (click)="openFilterLocationsDialog('500ms', '0ms')"
             [disabled]="!isLocationSelected"
             >
       <mat-icon>filter_alt</mat-icon>
@@ -32,7 +33,7 @@
             #addButton
             id="addButton"
             aria-label="Add Incident Button" 
-            (click)="openDialog('500ms', '0ms')"
+            (click)="openAddLocationDialog('500ms', '0ms')"
             [disabled]="!isLocationSelected"
             >
             <mat-icon>add</mat-icon>
