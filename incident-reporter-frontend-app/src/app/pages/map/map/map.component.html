@@ -6,38 +6,7 @@
 <div style="border-radius: 1rem; overflow: hidden; min-height: 100%; padding-bottom: 20px; position: relative;">
 
   <!-- The map container -->
-
   <div id="map"></div>
-  
-
-  <!--
-    <google-map #map
-                width="100%" height="85vh" 
-                [options]="options"
-                (mapClick)="this.handleMapClick($event)"
-                (mapRightclick)="this.handleMarkerRightClick($event)"
-                >
-
-    @if(this.isLocationSelected){
-      <map-advanced-marker 
-      #selectionMapMarker 
-      (mapClick)="this.handleMarkerClick($event)"
-      [position]="{lat: this.selectedLatitude, lng: this.selectedLongitude}"
-      />
-    } 
-      @for(incident of this.allIncidents; track incident.id){
-        <map-advanced-marker
-        #markerElem="mapAdvancedMarker" 
-        (mapClick)="this.handleLoadedMarkerClick(markerElem, incident)"
-        [position]="{lat: incident.latitude, lng: incident.longitude}"
-        title={{incident.incidentSubtype.subtype}}
-        [content]="incident.content"
-        />
-      }
-    </google-map>
-
-   -->
-
 
   <!-- Buttons overlaid vertically aligned and on the right side -->
   <div style="
