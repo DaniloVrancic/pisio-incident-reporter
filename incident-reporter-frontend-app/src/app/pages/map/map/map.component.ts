@@ -112,17 +112,19 @@ export class AppMapComponent implements OnInit, AfterViewInit {
   initMap = async () => {
     
       // Request needed libraries.
-      const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
-      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+      const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+      const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
   
       const map = new Map(document.getElementById('map') as HTMLElement,
           {
             mapId: "4504f8b37365c3d0",
             center: {lng: this.selectedLongitude, lat: this.selectedLatitude },
-            zoom: 13
-
+            zoom: 13,
+            clickableIcons: true
           }
       );
+
+      map.addListener('click', (event: any)=>{this.handleMapClick(event)})
 
 
       this.allIncidents.forEach(incident => {
@@ -131,12 +133,49 @@ export class AppMapComponent implements OnInit, AfterViewInit {
           position: {lat: incident.latitude, lng: incident.longitude},
           content: incident.content,
           gmpClickable: true,
+          title: incident.timeOfIncident,
           zIndex: 999
         });
 
-        
+        const infoWindow = new InfoWindow();
+        marker.addListener('click', ({ domEvent, latLng }: any) => {
+
+          const { target } = domEvent;
+          if(infoWindow.isOpen){
+            infoWindow.close();
+            return;
+          }
+          let contentString = `
+          <div class='contentContainer'>
+            <div style='align-content: center'>
+              <img src=${incident.photoUrl} style='max-width: 12rem; max-height: 12rem;' onerror="this.src='assets/images/fallback/notFound.png';"/>
+            </div>
+            <div class='descriptionContainer'>
+              <h3 style='text-align: center; font-size: larger'>Description</h3>
+              <div style='font-size: 0.6rem'>${incident.description}</div>
+            </div>
+            <div class='timeContainer'>
+              <h3 style='text-align: center; font-size: larger'>Time of Incident</h3>
+              <div style='font-size: 0.6rem'>${incident.timeOfIncident}</div>
+            </div>
+          </div>`;
+          
+
+          infoWindow.setContent(contentString);
+          infoWindow.open(marker.map, marker);
       });
+  });
+}
+
+toggleHighlight(markerView: any, incident: any) {
+  if (markerView.content.classList.contains("highlight")) {
+    markerView.content.classList.remove("highlight");
+    markerView.zIndex = null;
+  } else {
+    markerView.content.classList.add("highlight");
+    markerView.zIndex = 1;
   }
+}
   
 
   async loadMarkers(incidents: Incident[]) {
@@ -178,10 +217,19 @@ export class AppMapComponent implements OnInit, AfterViewInit {
   }
 
   public handleMapClick(clickEvent: google.maps.MapMouseEvent){
+    
     this.selectedLatitude = clickEvent.latLng?.toJSON().lat as number;
     this.selectedLongitude = clickEvent.latLng?.toJSON().lng as number;
-
+    
     this.isLocationSelected = true;
+
+    if(this.isLocationSelected){
+      var placedMarker = new google.maps.marker.AdvancedMarkerElement({
+        position: { lat: this.selectedLatitude, lng: this.selectedLongitude },
+        
+        //icon: markerImage, // Assign the selected marker image
+      });
+    }
   }
 
   public handleMarkerClick(clickEvent: google.maps.MapMouseEvent){
