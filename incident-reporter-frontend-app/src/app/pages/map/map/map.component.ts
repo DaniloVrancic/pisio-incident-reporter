@@ -129,7 +129,9 @@ export class AppMapComponent implements OnInit, AfterViewInit {
         const marker = new AdvancedMarkerElement({
           map,
           position: {lat: incident.latitude, lng: incident.longitude},
-          content: incident.content
+          content: incident.content,
+          gmpClickable: true,
+          zIndex: 999
         });
 
         
