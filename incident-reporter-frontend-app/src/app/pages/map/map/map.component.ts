@@ -46,7 +46,7 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
 
   options: google.maps.MapOptions = {
-    mapId: "myMap",
+    mapId: "4504f8b37365c3d0",
     center: { lat: this.selectedLatitude, lng: this.selectedLongitude },
     zoom: 13,
   };
@@ -106,19 +106,49 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     }
   }
   ngAfterViewInit(){
-    
+    this.initMap();
   }
 
-  loadMarkers(incidents: Incident[]): void {
+  initMap = async () => {
+    
+      // Request needed libraries.
+      const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+  
+      const map = new Map(document.getElementById('map') as HTMLElement,
+          {
+            mapId: "4504f8b37365c3d0",
+            center: {lng: this.selectedLongitude, lat: this.selectedLatitude },
+            zoom: 13
+
+          }
+      );
+
+
+      this.allIncidents.forEach(incident => {
+        const marker = new AdvancedMarkerElement({
+          map,
+          position: {lat: incident.latitude, lng: incident.longitude},
+          content: incident.content
+        });
+
+        
+      });
+  }
+  
+
+  async loadMarkers(incidents: Incident[]) {
+
+    const { AdvancedMarkerElement } : any = await google.maps.importLibrary("marker");
+
     incidents.forEach((incident: Incident) => {
       const { latitude, longitude, incidentSubtype, status } = incident;
       const markerImage = this.getMarkerImage(incidentSubtype.subtype, status);
   
       // Create a marker with the position and the selected image
-      const marker = new google.maps.Marker({
+      const marker = new google.maps.marker.AdvancedMarkerElement({
         position: { lat: latitude, lng: longitude },
-        
-        icon: markerImage, // Assign the selected marker image
+        //icon: markerImage, // Assign the selected marker image
       });
   
       // Optional: You can add click event listeners or infowindows here
@@ -156,20 +186,30 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     
   }
 
-  public handleLoadedMarkerClick(marker: any, incident: Incident){
-    const map : any = document.getElementById("map");
+  public async handleLoadedMarkerClick(marker: any, incident: Incident){
+    console.log(marker);
+    console.log(incident);
+
+    const {Map, InfoWindow} : any = await google.maps.importLibrary("maps");
+
+    const map = new google.maps.Map(
+
+      document.getElementById("map") as HTMLElement,
+      this.options
+    );
 
     const contentString = "<div>Ja sam taj!</div>";
 
-    const infowindow = new google.maps.InfoWindow({
+    let infoWindowOptions = {
       content: contentString,
-      ariaLabel: "Info Window",
-    });
+      headerContent: 'bitch',
+      map: map,
+      position: {lng: incident.longitude, lat: incident.latitude}
+    }
 
-    infowindow.open({
-      anchor: marker,
-      map
-    });
+    let myInfoWindow = new InfoWindow(infoWindowOptions);
+
+    myInfoWindow.open();
   }
 
   public handleMarkerRightClick(event: google.maps.MapMouseEvent){
