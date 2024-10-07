@@ -8,6 +8,7 @@
   <!-- The map container -->
 
   <div id="map"></div>
+  
 
   <!--
     <google-map #map
@@ -17,15 +18,13 @@
                 (mapRightclick)="this.handleMarkerRightClick($event)"
                 >
 
-    
-      @if(this.isLocationSelected){
-        <map-advanced-marker 
-        #selectionMapMarker 
-        (mapClick)="this.handleMarkerClick($event)"
-        [position]="{lat: this.selectedLatitude, lng: this.selectedLongitude}"
-        />
-      }
-
+    @if(this.isLocationSelected){
+      <map-advanced-marker 
+      #selectionMapMarker 
+      (mapClick)="this.handleMarkerClick($event)"
+      [position]="{lat: this.selectedLatitude, lng: this.selectedLongitude}"
+      />
+    } 
       @for(incident of this.allIncidents; track incident.id){
         <map-advanced-marker
         #markerElem="mapAdvancedMarker" 
@@ -51,56 +50,25 @@
         transform: translateY(-50%); /* Vertically center the buttons */
         z-index: 1;">
     
-    @if(this.isLocationSelected){
-      <button mat-fab aria-label="Filter Button" 
-            style="
-            margin-bottom: 10px;
-            color: rgba(0,0,0,1.0);
-            background-color: rgba(255,255,255,0.6);">
-      <mat-icon style="color: gold; scale: 1.5;">filter_alt</mat-icon>
+   
+      <button mat-fab aria-label="Filter Button"
+            #filterButton
+            id="filterButton"
+            [disabled]="!isLocationSelected"
+            >
+      <mat-icon>filter_alt</mat-icon>
     </button>
     
-      <button mat-fab 
+      <button mat-fab
+            #addButton
+            id="addButton"
             aria-label="Add Incident Button" 
-            (click)="this.openDialog('500ms', '0ms')"
-            style="
-            margin-bottom: 10px;
-            color: rgba(0,0,0,1.0);
-            background-color: rgba(255,255,255,0.6);"
+            (click)="openDialog('500ms', '0ms')"
+            [disabled]="!isLocationSelected"
             >
-            <mat-icon style="color: lime; scale: 1.5;">add</mat-icon>
+            <mat-icon>add</mat-icon>
         </button>
-    }
-    @else {
-      <div style="cursor: not-allowed;">
-        <button mat-fab 
-              disabled="true"
-              aria-label="Filter Button" 
-              style="
-              margin-bottom: 10px;
-              color: rgba(0,0,0,1.0);
-              background-color: rgba(255,255,255,0.6);">
-        <mat-icon style="color: red; scale: 1.5;">filter_alt</mat-icon>
-        </button>
-      </div>
-
-      <div style="cursor: not-allowed;">
-          <button 
-            mat-fab 
-            disabled="true"
-            aria-label="Add Incident Button"
-            style="
-            margin-bottom: 10px;
-            color: rgba(0,0,0,1.0);
-            background-color: rgba(255,255,255,0.6);"
-            >
-            <mat-icon style="color:red; scale: 1.5;">add</mat-icon>
-          </button>
-        </div>
-      
-    }
     
-      
     <button mat-fab aria-label="Approve Task Button" 
         style="
             margin-bottom: 10px;

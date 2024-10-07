@@ -1,5 +1,5 @@
 
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { GoogleMapsModule, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,7 +31,6 @@ import { Incident, Status } from 'src/app/models/incident';
 
 export class AppMapComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('selectionMapMarker') selectionMapMarker!: ElementRef;
 
 
   selectedLongitude: number = 20.45847839252972;
@@ -43,6 +42,8 @@ export class AppMapComponent implements OnInit, AfterViewInit {
   approvedIncidents: Incident[] = [];
   allIncidentTypes: IncidentType[] = [];
 
+  selectedMarker : any = null;
+
 
 
   options: google.maps.MapOptions = {
@@ -53,63 +54,74 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
   readonly dialog: MatDialog = inject(MatDialog);
 
-  constructor(private mapService: MapService){}
+  constructor(private mapService: MapService, private cdr: ChangeDetectorRef){}
 
+
+
+  private readSubtypesAndTypes(incidentTypeIdSet: Set<number>) {
+    this.mapService.getAllIncidentSubtypes()
+      .subscribe((result: IncidentSubtype[]) => {
+        this.allIncidentSubtypes = result;
+        this.allIncidentSubtypes.forEach(subtype => {
+          const incidentType = subtype.incidentType;
+
+          // Only add the incident type if its id is not already in the Set
+          if (!incidentTypeIdSet.has(incidentType.id)) {
+            incidentTypeIdSet.add(incidentType.id);
+            this.allIncidentTypes.push(incidentType);
+          }
+        });
+
+      });
+  }
+  private readIncidentsAndLoadMarkers() {
+    this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
+      this.allIncidents = result;
+
+      this.allIncidents.forEach((incident: Incident) => {
+        let pathToPhoto = "";
+        if (incident.status == Status.APPROVED) {
+          pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker.png`;
+        }
+        else {
+          pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker-pending.png`;
+        }
+        let imgTag = document.createElement('img');
+        imgTag.src = pathToPhoto;
+        imgTag.onerror = () => {
+          imgTag.src = `assets/markers/type_icons/other-marker.png`;
+        };
+        incident.content = imgTag;
+      });
+
+      this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
+
+      this.loadMarkers(this.allIncidents);
+    });
+  }
   ngOnInit(): void {
     try{
 
       let incidentTypeIdSet = new Set<number>();
-      let testObject : Object;
 
-      this.mapService.getAllIncidentSubtypes()
-                     .subscribe((result: IncidentSubtype[]) => {this.allIncidentSubtypes = result; 
-                      this.allIncidentSubtypes.forEach(subtype => {
-                        const incidentType = subtype.incidentType;
-              
-                        // Only add the incident type if its id is not already in the Set
-                        if (!incidentTypeIdSet.has(incidentType.id)) {
-                          incidentTypeIdSet.add(incidentType.id);
-                          this.allIncidentTypes.push(incidentType); // Add the unique incident type
-                        }
-                      });
-                      
-                    });
+      this.readSubtypesAndTypes(incidentTypeIdSet);
 
-        this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
-          this.allIncidents = result;
-
-          this.allIncidents.forEach((incident: Incident) => {
-            let pathToPhoto = "";
-            if(incident.status == Status.APPROVED)
-            {
-              pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker.png`;
-            }
-            else{
-              pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker-pending.png`;
-            }
-            let imgTag = document.createElement('img');
-            imgTag.src = pathToPhoto;
-            imgTag.onerror = () => {
-              imgTag.src = `assets/markers/type_icons/other-marker.png`;
-            };
-            incident.content = imgTag;
-          });
-          
-          this.approvedIncidents = this.allIncidents.filter((incident: Incident) => {return incident.status == Status.APPROVED});
-          
-          this.loadMarkers(this.allIncidents);
-        })
+      this.readIncidentsAndLoadMarkers();
                    
     }
     catch(error: any){
       console.error("Error happened during fetching incident subtypes.\n" + error);
     }
   }
+  
+
+
+
   ngAfterViewInit(){
     this.initMap();
   }
 
-  initMap = async () => {
+  private initMap = async () => {
     
       // Request needed libraries.
       const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
@@ -120,11 +132,12 @@ export class AppMapComponent implements OnInit, AfterViewInit {
             mapId: "4504f8b37365c3d0",
             center: {lng: this.selectedLongitude, lat: this.selectedLatitude },
             zoom: 13,
-            clickableIcons: true
+            clickableIcons: false
           }
       );
 
-      map.addListener('click', (event: any)=>{this.handleMapClick(event)})
+      map.addListener('click', (event: any)=>{this.handleMapClick(event, map)});
+      google.maps.event.addListener(map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
 
 
       this.allIncidents.forEach(incident => {
@@ -178,7 +191,7 @@ toggleHighlight(markerView: any, incident: any) {
 }
   
 
-  async loadMarkers(incidents: Incident[]) {
+  private async loadMarkers(incidents: Incident[]) { //DELETE THIS LATER
 
     const { AdvancedMarkerElement } : any = await google.maps.importLibrary("marker");
 
@@ -216,27 +229,53 @@ toggleHighlight(markerView: any, incident: any) {
     return img.src;
   }
 
-  public handleMapClick(clickEvent: google.maps.MapMouseEvent){
+  public async handleMapClick(clickEvent: google.maps.MapMouseEvent, map: any){
+
+    const { AdvancedMarkerElement } : any = await google.maps.importLibrary("marker");
     
+    let tempMarker : google.maps.marker.AdvancedMarkerElement = this.selectedMarker;
+
+    if(this.selectedMarker != null || this.selectedMarker != undefined){
+      this.selectedMarker.map = null
+      this.isLocationSelected = false;
+    }
+
     this.selectedLatitude = clickEvent.latLng?.toJSON().lat as number;
     this.selectedLongitude = clickEvent.latLng?.toJSON().lng as number;
-    
     this.isLocationSelected = true;
 
+    
     if(this.isLocationSelected){
-      var placedMarker = new google.maps.marker.AdvancedMarkerElement({
+      this.selectedMarker = new google.maps.marker.AdvancedMarkerElement({
         position: { lat: this.selectedLatitude, lng: this.selectedLongitude },
-        
+        gmpDraggable: true,
+        map
         //icon: markerImage, // Assign the selected marker image
       });
+      this.selectedMarker.addListener("click", (event:any) => {this.handleMarkerClick(event)});
+      this.selectedMarker.addListener("dragend", (event:any) => {this.handleMarkerDragEnd(event, map)});
+      
+      this.cdr.detectChanges(); //DETECTS WHEN CHANGES ARE MADE
     }
+    
+    
   }
 
   public handleMarkerClick(clickEvent: google.maps.MapMouseEvent){
-    
+    this.selectedMarker.map = null;
+    this.isLocationSelected = false;
+    this.cdr.detectChanges(); //DETECT CHANGES ON THE UI
   }
 
-  public async handleLoadedMarkerClick(marker: any, incident: Incident){
+  public handleMarkerDragEnd(dragEvent: any, map: any){
+
+    this.selectedLatitude = dragEvent.latLng?.toJSON().lat as number;
+    this.selectedLongitude = dragEvent.latLng?.toJSON().lng as number;
+    this.isLocationSelected = true;
+    this.cdr.detectChanges(); //DETECT CHANGES ON THE UI
+  }
+
+  public async handleLoadedMarkerClick(marker: any, incident: Incident){ //DELETE THIS AFTER TESTING I DON'T NEED IT
     console.log(marker);
     console.log(incident);
 
@@ -265,7 +304,9 @@ toggleHighlight(markerView: any, incident: any) {
   public handleMarkerRightClick(event: google.maps.MapMouseEvent){
     
     this.isLocationSelected = false;
-   
+    this.selectedMarker.map = null; 
+    
+    this.cdr.detectChanges(); //Detect changes on the UI
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
