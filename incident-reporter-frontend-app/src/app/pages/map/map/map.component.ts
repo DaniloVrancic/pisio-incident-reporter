@@ -327,7 +327,9 @@ toggleHighlight(markerView: any, incident: any) {
   public handleMarkerRightClick(event: google.maps.MapMouseEvent){
     
     this.isLocationSelected = false;
-    this.selectedMarker.map = null; 
+    if(this.selectedMarker){
+      this.selectedMarker.map = null; 
+    }
     
     this.cdr.detectChanges(); //Detect changes on the UI
   }

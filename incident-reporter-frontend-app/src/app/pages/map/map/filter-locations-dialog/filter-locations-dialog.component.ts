@@ -85,4 +85,8 @@ export class FilterLocationsDialogComponent {
 onConfirmClicked() : void {
   console.log("CONFIRM CLICKED!");
   }
+
+dateTimeInput(event: any){
+    this.selectedDate = event.target.value;    
+}
 }
