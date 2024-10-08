@@ -1,5 +1,5 @@
 
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { GoogleMapsModule, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,7 +31,7 @@ import { MapStateService } from './map-state.service';
   
 })
 
-export class AppMapComponent implements OnInit, AfterViewInit {
+export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isInitialized: boolean = false;
 
@@ -46,12 +46,15 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
   selectedMarker : any = null;
 
+  mapClickListener: any = null;
+  mapRightClickListener: any = null;
+  mapMarkerClickListener: any = null;
+
   readonly dialog: MatDialog = inject(MatDialog);
 
   constructor(private mapService: MapService, 
               public mapStateService: MapStateService, 
               private cdr: ChangeDetectorRef){
-    console.log("CONSTRUCTOR");
   }
 
 
@@ -112,6 +115,10 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     }
 
   }
+
+  ngOnDestroy(): void {
+      
+  }
   
 
 
@@ -132,13 +139,15 @@ export class AppMapComponent implements OnInit, AfterViewInit {
       const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
       const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
       
-      if(this.mapStateService.isInitialized == false){
-        
       this.mapStateService.initializeMap(this.selectedLatitude, this.selectedLongitude, document.getElementById('map'));
-      this.mapStateService.map.addListener('click', (event: any)=>{this.handleMapClick(event, this.mapStateService.map)});
-      google.maps.event.addListener(this.mapStateService.map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
-      this.mapStateService.isInitialized = true;
-    }
+      if(this.mapStateService.isInitialized == false){
+        this.mapStateService.map.addListener('click', (event: any)=>{this.handleMapClick(event, this.mapStateService.map)});
+        google.maps.event.addListener(this.mapStateService.map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
+        this.mapStateService.isInitialized = true;
+       }
+       else{
+        document.getElementById('map')?.appendChild(this.mapStateService.domWithMap as HTMLElement);
+       }
     const map = this.mapStateService.map;
 
       this.allIncidents.forEach(incident => {
@@ -287,7 +296,6 @@ toggleHighlight(markerView: any, incident: any) {
     this.selectedLatitude = clickEvent.latLng?.toJSON().lat as number;
     this.selectedLongitude = clickEvent.latLng?.toJSON().lng as number;
     this.isLocationSelected = true;
-
     
     if(this.isLocationSelected){
       this.selectedMarker = new google.maps.marker.AdvancedMarkerElement({
