@@ -12,6 +12,7 @@ import { IncidentType } from 'src/app/models/incident-type';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { Incident, Status } from 'src/app/models/incident';
 import { FilterLocationsDialogComponent } from './filter-locations-dialog/filter-locations-dialog.component';
+import { MapStateService } from './map-state.service';
 
 
 @Component({
@@ -45,17 +46,11 @@ export class AppMapComponent implements OnInit, AfterViewInit {
 
   selectedMarker : any = null;
 
-
-
-  options: google.maps.MapOptions = {
-    mapId: "4504f8b37365c3d0",
-    center: { lat: this.selectedLatitude, lng: this.selectedLongitude },
-    zoom: 13,
-  };
-
   readonly dialog: MatDialog = inject(MatDialog);
 
-  constructor(private mapService: MapService, private cdr: ChangeDetectorRef){
+  constructor(private mapService: MapService, 
+              public mapStateService: MapStateService, 
+              private cdr: ChangeDetectorRef){
     console.log("CONSTRUCTOR");
   }
 
@@ -125,7 +120,10 @@ export class AppMapComponent implements OnInit, AfterViewInit {
     this.initMap();
     window['approveIncident'] = this.approveIncident.bind(this);
     window['rejectIncident'] = this.rejectIncident.bind(this);
+    
     this.cdr.detectChanges();
+
+    
   }
 
   private initMap = async () => {
@@ -133,18 +131,15 @@ export class AppMapComponent implements OnInit, AfterViewInit {
       // Request needed libraries.
       const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
       const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
-      const map = new Map(document.getElementById('map') as HTMLElement,
-          {
-            mapId: "4504f8b37365c3d0",
-            center: {lng: this.selectedLongitude, lat: this.selectedLatitude },
-            zoom: 13,
-            clickableIcons: false
-          }
-      );
-
-      map.addListener('click', (event: any)=>{this.handleMapClick(event, map)});
-      google.maps.event.addListener(map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
-
+      
+      if(this.mapStateService.isInitialized == false){
+        
+      this.mapStateService.initializeMap(this.selectedLatitude, this.selectedLongitude, document.getElementById('map'));
+      this.mapStateService.map.addListener('click', (event: any)=>{this.handleMapClick(event, this.mapStateService.map)});
+      google.maps.event.addListener(this.mapStateService.map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
+      this.mapStateService.isInitialized = true;
+    }
+    const map = this.mapStateService.map;
 
       this.allIncidents.forEach(incident => {
         const marker = new AdvancedMarkerElement({

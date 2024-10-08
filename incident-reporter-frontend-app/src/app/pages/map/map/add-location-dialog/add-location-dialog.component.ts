@@ -90,11 +90,7 @@ assignDescription(event: any){
 }
 
 dateTimeInput(event: any){
-
-
-
   this.selectedDate = event.target.value;
-  console.log(this.selectedDate);
 }
 
 onChangeFile(event: any)

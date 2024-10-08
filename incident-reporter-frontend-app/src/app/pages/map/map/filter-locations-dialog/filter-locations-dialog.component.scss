@@ -1,0 +1,9 @@
+.horizontal-items{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+mat-dialog-actions {
+    justify-content: right;
+}
