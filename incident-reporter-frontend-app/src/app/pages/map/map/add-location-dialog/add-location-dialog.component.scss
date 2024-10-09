@@ -32,3 +32,21 @@ input[type="file"]
   {
     display: none;
   }
+
+.photo-container {
+  display:flex;
+  border-radius: 1.5rem;
+  padding: 0.5rem;
+  width: 100%;
+
+  justify-content: center;
+  align-content: center;
+}
+
+.photo{
+  max-width: 13rem;
+  max-height: 13rem;
+  padding: 1rem;
+  border: 2px solid gray;
+  border-radius: 1.5rem;
+}

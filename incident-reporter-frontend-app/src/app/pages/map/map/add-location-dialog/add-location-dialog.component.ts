@@ -96,7 +96,7 @@ dateTimeInput(event: any){
 onChangeFile(event: any)
   {
     const file = event.target.files[0];
-    const reader = new FileReader();
+    var reader = new FileReader();
     let selectedImage = this.selectedImage;
 
     let fileNameElement = document.getElementById("file-name") as HTMLElement | null;
@@ -114,11 +114,13 @@ onChangeFile(event: any)
     }
     
 
-    reader.onloadend = function(event : any) {
+  reader.onloadend = function(event : any) {
         const imgBase64 = event.target.result as string | null;
         
         // Assign the BASE64 string to this.userForRegister.avatar
-        selectedImage = imgBase64
+        selectedImage = imgBase64;
+        document.getElementById("displayed-photo")?.setAttribute("src", imgBase64 as string);
+        
     };
 
     if(file != undefined)
@@ -135,6 +137,7 @@ onChangeFile(event: any)
 
   onConfirmClicked() : void {
     let incidentToSend : Incident = {} as Incident;
+
 
 
 
@@ -166,6 +169,7 @@ onChangeFile(event: any)
     incidentToSend.incidentSubtype = {id: this.selectedSubtypeId} as IncidentSubtype;
 
     try{
+      console.log("SENT ITEM: ");
       console.log(incidentToSend);
       this.mapService.addIncident(incidentToSend).subscribe({
         next: result => {console.log(result);},

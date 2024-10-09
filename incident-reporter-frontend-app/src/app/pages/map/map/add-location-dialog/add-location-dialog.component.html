@@ -62,18 +62,32 @@
       "
       ></textarea>
 
+      <mat-form-field style="align-items: center; align-self: center; display:flex; justify-content: right;">
+        <mat-label>Choose a date</mat-label>
+        <br/>
+          <input readonly matInput [max]="maxDate" [matDatepicker]="picker" (dateInput)="this.dateTimeInput($event)"/>
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      <div style="padding: 2rem"></div>
       <br/>
       <label class="custom-file-upload"><input type="file" name="avatar" accept="image/*" (change)="this.onChangeFile($event)"/>Upload picture <span id="file-name"></span></label>
       <br/>
+
+      <section class="photo-container">
+         
+        <img src='../../../../../assets/images/fallback/notFound.png'
+        class="photo"
+        id="displayed-photo" 
+        onerror="this.src='../../../../../assets/images/fallback/notFound.png'">
       
-      <mat-form-field style="align-items: center; align-self: center;">
-      <mat-label>Choose a date</mat-label>
-      <br/>
-        <input readonly matInput [max]="maxDate" [matDatepicker]="picker" (dateInput)="this.dateTimeInput($event)"/>
-        <mat-hint>MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+      </section>
+      
+
+
+      
+     
 
 </mat-dialog-content>
 
