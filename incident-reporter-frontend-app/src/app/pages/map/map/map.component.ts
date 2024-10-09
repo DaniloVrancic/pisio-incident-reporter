@@ -80,22 +80,6 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
       this.allIncidents = result;
 
-      this.allIncidents.forEach((incident: Incident) => {
-        let pathToPhoto = "";
-        if (incident.status == Status.APPROVED) {
-          pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker.png`;
-        }
-        else {
-          pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker-pending.png`;
-        }
-        let imgTag = document.createElement('img');
-        imgTag.src = pathToPhoto;
-        imgTag.onerror = () => {
-          imgTag.src = `assets/markers/type_icons/other-marker.png`;
-        };
-        incident.content = imgTag;
-      });
-
       this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
 
       this.mapStateService.loadMarkers(this.allIncidents);
@@ -121,7 +105,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.mapStateSubscription.unsubscribe();
+      //this.mapStateSubscription.unsubscribe();
   }
   
 

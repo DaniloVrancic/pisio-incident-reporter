@@ -51,7 +51,12 @@ export class MapStateService {
         
         this.domWithMap = document.getElementById('map');
       }
+      this.map.addListener('click', (event: any)=>{this.handleMapClick(event, this.map)});
+      google.maps.event.addListener(this.map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
     }
+    this.selectedMarker = null;
+    this.isLocationSelected = false;
+    this.emitMapStateChanged();
   }
 
   
@@ -88,6 +93,20 @@ export class MapStateService {
     incidents.forEach((incident: Incident) => {
       const { latitude, longitude, incidentSubtype, status } = incident;
       const markerImage = this.getMarkerImage(incidentSubtype.subtype, status);
+
+      let pathToPhoto = "";
+      if (incident.status == Status.APPROVED) {
+        pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker.png`;
+      }
+      else {
+        pathToPhoto = `assets/markers/${incident.incidentSubtype.subtype}-marker-pending.png`;
+      }
+      let imgTag = document.createElement('img');
+      imgTag.src = pathToPhoto;
+      imgTag.onerror = () => {
+        imgTag.src = `assets/markers/type_icons/other-marker.png`;
+      };
+      incident.content = imgTag;
 
       const marker = new AdvancedMarkerElement({
         map: this.map,
