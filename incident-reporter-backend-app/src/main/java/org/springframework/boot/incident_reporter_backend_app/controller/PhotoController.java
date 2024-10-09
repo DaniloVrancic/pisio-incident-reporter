@@ -1,6 +1,5 @@
 package org.springframework.boot.incident_reporter_backend_app.controller;
 
-import com.nimbusds.oauth2.sdk.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.incident_reporter_backend_app.services.IncidentService;
 import org.springframework.core.io.FileSystemResource;
@@ -36,7 +35,7 @@ public class PhotoController {
         }
 
         File photoFile = new File(pathToPhoto);
-        
+
         if(photoFile.exists())
         {
             if(pathToPhoto.endsWith(".png"))
