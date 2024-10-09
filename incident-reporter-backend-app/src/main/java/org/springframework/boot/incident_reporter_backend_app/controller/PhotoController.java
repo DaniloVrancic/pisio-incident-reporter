@@ -1,5 +1,6 @@
 package org.springframework.boot.incident_reporter_backend_app.controller;
 
+import com.nimbusds.oauth2.sdk.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.incident_reporter_backend_app.services.IncidentService;
 import org.springframework.core.io.FileSystemResource;
@@ -24,17 +25,18 @@ public class PhotoController {
     }
 
     @GetMapping("/incident/{id}")
-    public ResponseEntity<FileSystemResource> getIncidentPhoto(@PathVariable("id") Integer profileId)
+    public ResponseEntity<?> getIncidentPhoto(@PathVariable("id") Integer profileId)
     {
 
 
         String pathToPhoto = incidentService.findById(profileId).getPhotoUrl();
 
-        File photoFile = new File(pathToPhoto);
+        if(pathToPhoto == null){
+            return ResponseEntity.notFound().build();
+        }
 
-        System.out.println("CONTROLER FOR PROFILE--------------------");
-        System.out.println("PhotoFile:" + photoFile.toString());
-        System.out.println("pathToPhoto: " + pathToPhoto);
+        File photoFile = new File(pathToPhoto);
+        
         if(photoFile.exists())
         {
             if(pathToPhoto.endsWith(".png"))

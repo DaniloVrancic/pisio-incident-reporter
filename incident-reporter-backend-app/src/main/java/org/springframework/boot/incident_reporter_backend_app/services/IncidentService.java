@@ -40,12 +40,7 @@ public class IncidentService {
 
         String avatar = modifiedEntity.getPhotoUrl();
         modifiedEntity.setPhotoUrl(null);
-
-        if(avatar != null && !avatar.isEmpty())
-        {
-            modifiedEntity.setPhotoUrl(saveBase64EncodedPhoto(avatar, modifiedEntity));
-
-        }
+        IncidentEntity realEntityToSave = null;
 
         if(modifiedEntity.getTimeOfIncident() == null)
         {
@@ -61,7 +56,17 @@ public class IncidentService {
             }
         }
 
-        return this.incidentRepository.save(modifiedEntity);
+
+
+        if(avatar != null && !avatar.isEmpty())
+        {
+            realEntityToSave = this.incidentRepository.save(modifiedEntity);
+            realEntityToSave.setPhotoUrl(saveBase64EncodedPhoto(avatar, realEntityToSave));
+            return this.incidentRepository.save(realEntityToSave);
+        }
+        else{
+            return this.incidentRepository.save(modifiedEntity);
+        }
     }
 
     public IncidentEntity update(IncidentEntity entity){

@@ -96,7 +96,7 @@ dateTimeInput(event: any){
 onChangeFile(event: any)
   {
     const file = event.target.files[0];
-    var reader = new FileReader();
+    let reader = new FileReader();
     let selectedImage = this.selectedImage;
 
     let fileNameElement = document.getElementById("file-name") as HTMLElement | null;
@@ -114,11 +114,12 @@ onChangeFile(event: any)
     }
     
 
-  reader.onloadend = function(event : any) {
+  reader.onloadend = (event : any) => {
         const imgBase64 = event.target.result as string | null;
         
         // Assign the BASE64 string to this.userForRegister.avatar
         selectedImage = imgBase64;
+        this.selectedImage = imgBase64;
         document.getElementById("displayed-photo")?.setAttribute("src", imgBase64 as string);
         
     };
@@ -150,6 +151,7 @@ onChangeFile(event: any)
     }
     else if(this.selectedDescription === null || this.selectedDescription === ""){
       this.errorMessage = "Can't input an empty description.";
+      this.selectedDescription=""
       return;
     }
     else{
