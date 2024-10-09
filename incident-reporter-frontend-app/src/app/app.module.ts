@@ -24,6 +24,7 @@ import { SidebarComponent } from './layouts/full/sidebar/sidebar.component';
 import { HeaderComponent } from './layouts/full/header/header.component';
 import { BrandingComponent } from './layouts/full/sidebar/branding.component';
 import { AppNavItemComponent } from './layouts/full/sidebar/nav-item/nav-item.component';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { AppNavItemComponent } from './layouts/full/sidebar/nav-item/nav-item.co
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    OAuthModule.forRoot(),
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,

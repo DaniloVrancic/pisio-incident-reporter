@@ -14,6 +14,7 @@ import { Incident, Status } from 'src/app/models/incident';
 import { FilterLocationsDialogComponent } from './filter-locations-dialog/filter-locations-dialog.component';
 import { MapStateService } from './map-state.service';
 import { Subscription } from 'rxjs';
+import { AuthGoogleService } from 'src/app/services/auth-google.service';
 
 
 @Component({
@@ -28,7 +29,7 @@ import { Subscription } from 'rxjs';
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
-  providers: [MapService]
+  providers: [MapService, AuthGoogleService]
   
 })
 
@@ -55,7 +56,8 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private mapService: MapService, 
               public mapStateService: MapStateService, 
-              private cdr: ChangeDetectorRef){
+              private cdr: ChangeDetectorRef,
+              private authGoogleService: AuthGoogleService){
   }
 
 

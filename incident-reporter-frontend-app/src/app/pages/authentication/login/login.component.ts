@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthGoogleService } from 'src/app/services/auth-google.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
 })
 export class AppSideLoginComponent implements OnInit{
-  constructor() {}
+
+  constructor(private authService: AuthGoogleService) {}
 
   ngOnInit(): void {
       
   }
 
   handleSignInGoogle(){
-    console.log("google sign-in");
+    this.authService.login();
   }
 }
