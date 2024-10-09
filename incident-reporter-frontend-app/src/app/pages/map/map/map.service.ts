@@ -83,5 +83,9 @@ export class MapService {
     return this.http.put<IncidentType>(`${this.incidentTypeUrl}/update`, type, { headers });
   }
 
+  getPhotoGetRequestString(incidentId: number): string{
+    return environment.apiBaseUrl + `/photo/incident/${incidentId}`;
+  }
+
 
 }

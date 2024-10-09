@@ -199,7 +199,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
           </style>
           <div class='contentContainer'>
             <div style='align-content: center; justify-content: center;'>
-              <img src=${incident.photoUrl} style='max-width: 12rem; max-height: 12rem;' onerror="this.src='assets/images/fallback/notFound.png';"/>
+              <img src=${this.mapService.getPhotoGetRequestString(incident.id)} style='max-width: 12rem; max-height: 12rem;' alt='Incident Photo' onerror="this.src='assets/images/fallback/notFound.png';"/>
             </div>
             <div class='descriptionContainer'>
               <h3 style='text-align: center; font-size: 1.2rem'>Description</h3>
