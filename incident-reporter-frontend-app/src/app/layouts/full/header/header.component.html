@@ -24,21 +24,33 @@
     [matMenuTriggerFor]="profilemenu"
     aria-label="Notifications" class="m-l-10"
   >
+
     <img
-      src="/assets/images/profile/user-1.jpg"
-      class="rounded-circle object-cover"
-      width="35"
+    id="profile-pic"
+    src="/assets/images/profile/default-user.png"
+    class="rounded-circle object-cover"
+    width="55"
+    onerror="this.src='/assets/images/profile/default-user.png'"
     />
+  
+
   </button>
   <mat-menu #profilemenu="matMenu" xPosition="before" class="topbar-dd cardWithShadow">
     
 
     <div class="p-x-12 m-t-12">
       <a
-        [routerLink]="['/authentication/login']"
         mat-flat-button
         color="primary"
         class="w-100"
+        (click)="printInfo()"
+        >Print Info [TEST]</a
+      >
+      <a
+        mat-flat-button
+        color="primary"
+        class="w-100"
+        (click)="handleLogoutClick()"
         >Logout</a
       >
     </div>

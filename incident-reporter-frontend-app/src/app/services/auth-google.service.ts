@@ -18,7 +18,7 @@ export class AuthGoogleService {
     const authConfig: AuthConfig = {
       issuer: 'https://accounts.google.com',
       strictDiscoveryDocumentValidation: false,
-      clientId: '',
+      clientId: '991341419524-nlbtqds1hbem08gmhrpgfoh7mns4dn9n.apps.googleusercontent.com',
       redirectUri: window.location.origin + '/map',
       scope: 'openid profile email'
     }
@@ -30,20 +30,26 @@ export class AuthGoogleService {
 
   login(){
     this.oAuthService.initImplicitFlow();
+    this.getProfile();
+    this.getToken;
   }
 
   logout(){
-    this.oAuthService.revokeTokenAndLogout();
-    this.oAuthService.logOut();
+    try{
+
+      this.oAuthService.revokeTokenAndLogout();
+      this.oAuthService.logOut();
+    }
+    catch(error){
+      console.log(error);
+    }
   }
 
   getProfile(){
-    console.log(this.oAuthService.getIdentityClaims());
     return this.oAuthService.getIdentityClaims();
   }
 
   getToken(){
-    console.log(this.oAuthService.getAccessToken());
     return this.oAuthService.getAccessToken();
   }
 
