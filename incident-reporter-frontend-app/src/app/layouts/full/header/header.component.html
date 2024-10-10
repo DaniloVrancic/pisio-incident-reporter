@@ -18,21 +18,34 @@
   <!-- --------------------------------------------------------------- -->
   <!-- profile Dropdown -->
   <!-- --------------------------------------------------------------- -->
- 
+  @if(this.profileChangeObservable | async; as myProf){
+    <div>{{(myProf) ? "Logged in as: " + myProf.name : ""}}</div>
+  }
   <button
     mat-icon-button
     [matMenuTriggerFor]="profilemenu"
     aria-label="Notifications" class="m-l-10"
   >
+    @if(this.profileChangeObservable | async; as profile){
+      <img
+      id="profile-pic"
+      src={{profile.picture}}
+      class="rounded-circle object-cover"
+      width="55"
+      style="width: 55 !important;"
+      />
+    }
+    @else {
+      <img
+      id="profile-pic"
+      src="/assets/images/profile/default-user.png"
+      class="rounded-circle object-cover"
+      width="55"
+      style="width: 55 !important;"
+      onerror="this.src = '/assets/images/profile/default-user.png'"
+      />
+    }
 
-    <img
-    id="profile-pic"
-    src="/assets/images/profile/default-user.png"
-    class="rounded-circle object-cover"
-    width="55"
-    style="width: 55 !important;"
-    onerror="this.src = '/assets/images/profile/default-user.png'"
-    />
   
 
   </button>

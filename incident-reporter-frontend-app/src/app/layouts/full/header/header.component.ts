@@ -7,9 +7,12 @@ import {
   OnInit,
   AfterViewInit,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { MapsSubscriptionContainer } from 'src/app/pages/map/map/map-subscriptions-container';
 import { AuthGoogleService } from 'src/app/services/auth-google.service';
 
 
@@ -19,7 +22,7 @@ import { AuthGoogleService } from 'src/app/services/auth-google.service';
   encapsulation: ViewEncapsulation.None,
   providers: [AuthGoogleService]
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() showToggle = true;
   @Input() toggleChecked = false;
   @Output() toggleMobileNav = new EventEmitter<void>();
@@ -31,12 +34,30 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   profileToken: any = null;
   imageDOM : HTMLImageElement | null = null;
   loggedDom : HTMLElement | null = null;
+  profileChangeObservable: Observable<any> | undefined;
+  mySubs: MapsSubscriptionContainer = new MapsSubscriptionContainer();
+
+  showModeratorOptions: boolean = false; //use this to show or hide options that are wanted to be used
+  
+  
 
   constructor(public dialog: MatDialog, public authService: AuthGoogleService, private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.profileChangeObservable = this.authService.onProfileChange();
+
+    this.mySubs.add = this.profileChangeObservable.subscribe(result => {
+      if(result == null){
+        this.showModeratorOptions = false;
+      }
+      else{
+        this.showModeratorOptions = true;
+      }
+      console.log("SHOW MODERATOR OPTIONS: " + this.showModeratorOptions);
+
+    })
     
   }
 
@@ -45,35 +66,12 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       this.imageDOM = document.getElementById('profile-pic') as HTMLImageElement;
     
 
-    if(this.authService.getProfile() != null){
-      
-      setTimeout(() => {
-        let profile : any = this.authService.getProfile();
-        console.log("SETTING PROFILE PIC");
-        if(this.imageDOM){
-          if(profile != null)
-          {
-            console.log("PROFILE EXISTS");
-            this.imageDOM.src = profile.picture;
-            console.log(this.imageDOM.src);
-          }
-          else{
-            console.log("PROFILE IS NULL");
-            this.imageDOM.src = "/assets/images/profile/default-user.png"
-          }
-          document.getElementById('profile-pic')?.replaceWith(this.imageDOM);
-          if(this.loggedDom != null)
-          this.loggedDom.innerHTML = "Logged In as: " + profile.name;
-          this.cdr.detectChanges();
-        }
-      }, 1250)
-        
-    }
-    else{
-      if(this.loggedDom)
-      this.loggedDom.innerHTML = "";
-    }
-      
+    
+      this.authService.publishProfile();
+  }
+
+  ngOnDestroy(): void {
+    this.mySubs.dispose();
   }
 
   printInfo(){

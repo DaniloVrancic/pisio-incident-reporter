@@ -33,12 +33,10 @@ export class AuthGoogleService {
 
   login(){
     this.oAuthService.initImplicitFlow();
-    this.profileSubject.next(this.getProfile());
   }
 
   logout(){
     try{
-
       this.oAuthService.revokeTokenAndLogout();
       this.oAuthService.logOut();
       this.profileSubject.next(null)
@@ -67,6 +65,10 @@ export class AuthGoogleService {
 
   onProfileChange() {
     return this.profileSubject.asObservable(); // Observable for profile updates
+  }
+
+  publishProfile(){
+    this.profileSubject.next(this.getProfile());
   }
 
 

@@ -22,7 +22,6 @@ export class MapStateService {
   selectedMarker : any = null;
   isLocationSelected: boolean = false;
 
-
   constructor(private mapService: MapService, private authService: AuthGoogleService) {}
 
   initializeMap(startLatitude: number, startLongitude: number, containerDiv: any){
@@ -35,12 +34,14 @@ export class MapStateService {
       zoom: 13,
       clickableIcons: false
     };
-  
+
       this.map = new google.maps.Map(containerDiv as HTMLElement, this.mapOptions);
       this.map.addListener('click', (event: any)=>{this.handleMapClick(event, this.map)});
       google.maps.event.addListener(this.map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
+      
+    
 
-  
+    
     this.selectedMarker = null;
     this.isLocationSelected = false;
     this.emitMapStateChanged();

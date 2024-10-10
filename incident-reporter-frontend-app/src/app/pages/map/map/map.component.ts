@@ -13,8 +13,9 @@ import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { Incident, Status } from 'src/app/models/incident';
 import { FilterLocationsDialogComponent } from './filter-locations-dialog/filter-locations-dialog.component';
 import { MapStateService } from './map-state.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthGoogleService } from 'src/app/services/auth-google.service';
+import { MapsSubscriptionContainer } from './map-subscriptions-container';
 
 
 @Component({
@@ -49,7 +50,8 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   private filteredIncidents: Incident[] = [];
   public currentlyUsedIncidents: Incident[] = [];
 
-  private mapStateSubscription: Subscription = {} as any;
+  private mapSubsContainer: MapsSubscriptionContainer = new MapsSubscriptionContainer();
+  public profileChangeObservable: Observable<any> | undefined;
 
   mapClickListener: any = null;
   mapRightClickListener: any = null;
@@ -110,24 +112,17 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnInit(): void {
     try{
-      this.authGoogleService.onProfileChange().subscribe((profile: any) => {
-        if (profile) {
-          this.updateProfileUI(profile);
-        } else {
-          this.clearProfileUI();
-        }
-      });
+      
       let incidentTypeIdSet = new Set<number>();
 
       this.readSubtypesAndTypes(incidentTypeIdSet);
 
       this.readIncidentsAndLoadMarkers();
 
-      this.mapStateSubscription = this.mapStateService.mapStateChanged.subscribe(() => {
-        this.cdr.detectChanges();
+      this.mapSubsContainer.add = this.mapStateService.mapStateChanged.subscribe(() => { //'add' is a setter in the MapSubscriptionsContainer class
+        this.cdr.detectChanges(); 
       });
-
-                   
+ 
     }
     catch(error: any){
       console.error("Error happened during fetching incident subtypes.\n" + error);
@@ -135,28 +130,10 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      //this.mapStateSubscription.unsubscribe();
+      this.mapSubsContainer.dispose();
   }
 
-  updateProfileUI(profile: any) {
-    if (this.imageDOM) {
-      this.imageDOM.src = profile.picture || '/assets/images/profile/default-user.png';
-    }
-    if (this.loggedDOM) {
-      this.loggedDOM.innerHTML = 'Logged In as: ' + profile.name;
-    }
-    this.cdr.detectChanges();
-  }
-  
-  clearProfileUI() {
-    if (this.imageDOM) {
-      this.imageDOM.src = '/assets/images/profile/default-user.png';
-    }
-    if (this.loggedDOM) {
-      this.loggedDOM.innerHTML = '';
-    }
-    this.cdr.detectChanges();
-  }
+ 
   
 
 
