@@ -14,8 +14,6 @@ export class MapStateService {
 
   public mapOptions: google.maps.MapOptions = {};
   public map: google.maps.Map = {} as any;
-  public isInitialized: boolean = false;
-  public domWithMap: HTMLElement | null = null;
   
   public mapStateChanged: EventEmitter<void> = new EventEmitter<void>();
 
@@ -24,7 +22,6 @@ export class MapStateService {
   selectedMarker : any = null;
   isLocationSelected: boolean = false;
 
-  public changeHappened: boolean = true;
 
   constructor(private mapService: MapService, private authService: AuthGoogleService) {}
 
@@ -38,24 +35,12 @@ export class MapStateService {
       zoom: 13,
       clickableIcons: false
     };
-    if(!this.isInitialized)
-    {
+  
       this.map = new google.maps.Map(containerDiv as HTMLElement, this.mapOptions);
       this.map.addListener('click', (event: any)=>{this.handleMapClick(event, this.map)});
       google.maps.event.addListener(this.map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
-      this.isInitialized = true;
-      this.domWithMap = document.getElementById('map');
-      
-    }
-    else{
-      if(this.changeHappened){
-        this.map = new google.maps.Map(containerDiv as HTMLElement, this.mapOptions); 
-        
-        this.domWithMap = document.getElementById('map');
-      }
-      this.map.addListener('click', (event: any)=>{this.handleMapClick(event, this.map)});
-      google.maps.event.addListener(this.map, 'rightclick', (event: any) => {this.handleMarkerRightClick(event);});
-    }
+
+  
     this.selectedMarker = null;
     this.isLocationSelected = false;
     this.emitMapStateChanged();

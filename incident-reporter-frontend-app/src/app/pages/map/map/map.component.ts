@@ -90,7 +90,14 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
       this.filteredIncidents = this.allIncidents;
-      this.currentlyUsedIncidents = this.allIncidents;
+
+      if(this.authGoogleService.isLoggedIn())
+      {
+        this.currentlyUsedIncidents = this.allIncidents;
+      }
+      else{
+        this.currentlyUsedIncidents = this.approvedIncidents;
+      }
 
       if(this.authGoogleService.getProfile())
       {
@@ -103,9 +110,6 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnInit(): void {
     try{
-
-      
-      
       this.authGoogleService.onProfileChange().subscribe((profile: any) => {
         if (profile) {
           this.updateProfileUI(profile);
@@ -175,11 +179,13 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
       const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
       
-      this.mapStateService.initializeMap(this.selectedLatitude, this.selectedLongitude, document.getElementById('map'));
+    this.mapStateService.initializeMap(this.selectedLatitude, this.selectedLongitude, document.getElementById('map'));
 
     const map = this.mapStateService.map;
 
-      this.allIncidents.forEach(incident => {
+
+
+      this.currentlyUsedIncidents.forEach(incident => {
         const marker = new AdvancedMarkerElement({
           map,
           position: {lat: incident.latitude, lng: incident.longitude},
