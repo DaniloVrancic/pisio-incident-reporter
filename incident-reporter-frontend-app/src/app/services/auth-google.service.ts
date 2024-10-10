@@ -65,5 +65,9 @@ export class AuthGoogleService {
     return this.oAuthService.getAccessToken();
   }
 
+  onProfileChange() {
+    return this.profileSubject.asObservable(); // Observable for profile updates
+  }
+
 
 }

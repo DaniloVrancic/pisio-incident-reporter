@@ -55,6 +55,9 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   mapRightClickListener: any = null;
   mapMarkerClickListener: any = null;
 
+  imageDOM: any = null;
+  loggedDOM: any = null;
+
   readonly dialog: MatDialog = inject(MatDialog);
 
   constructor(private mapService: MapService, 
@@ -101,6 +104,15 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     try{
 
+      
+      
+      this.authGoogleService.onProfileChange().subscribe((profile: any) => {
+        if (profile) {
+          this.updateProfileUI(profile);
+        } else {
+          this.clearProfileUI();
+        }
+      });
       let incidentTypeIdSet = new Set<number>();
 
       this.readSubtypesAndTypes(incidentTypeIdSet);
@@ -110,6 +122,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mapStateSubscription = this.mapStateService.mapStateChanged.subscribe(() => {
         this.cdr.detectChanges();
       });
+
                    
     }
     catch(error: any){
@@ -120,11 +133,33 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
       //this.mapStateSubscription.unsubscribe();
   }
+
+  updateProfileUI(profile: any) {
+    if (this.imageDOM) {
+      this.imageDOM.src = profile.picture || '/assets/images/profile/default-user.png';
+    }
+    if (this.loggedDOM) {
+      this.loggedDOM.innerHTML = 'Logged In as: ' + profile.name;
+    }
+    this.cdr.detectChanges();
+  }
+  
+  clearProfileUI() {
+    if (this.imageDOM) {
+      this.imageDOM.src = '/assets/images/profile/default-user.png';
+    }
+    if (this.loggedDOM) {
+      this.loggedDOM.innerHTML = '';
+    }
+    this.cdr.detectChanges();
+  }
   
 
 
 
   ngAfterViewInit(){
+    this.imageDOM = document.getElementById('profile-pic') as HTMLImageElement;
+    this.loggedDOM = document.getElementById('logged-div');
     this.initMap();
     window['approveIncident'] = this.approveIncident.bind(this);
     window['rejectIncident'] = this.rejectIncident.bind(this);
