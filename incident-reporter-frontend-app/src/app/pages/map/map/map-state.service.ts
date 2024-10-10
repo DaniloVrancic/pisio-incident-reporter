@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Incident, Status } from 'src/app/models/incident';
 import { MapService } from './map.service';
 import { formatNumber } from '@angular/common';
+import { AuthGoogleService } from 'src/app/services/auth-google.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,7 @@ export class MapStateService {
 
   public selectedLongitude: number = 181;
   public selectedLatitude: number = 181;
-  public allIncidents: Incident[] = []; // store markers here
-  public filteredIncidents: Incident[] = [];
+
   public mapOptions: google.maps.MapOptions = {};
   public map: google.maps.Map = {} as any;
   public isInitialized: boolean = false;
@@ -19,12 +19,14 @@ export class MapStateService {
   
   public mapStateChanged: EventEmitter<void> = new EventEmitter<void>();
 
+  currentlyUsedMarkers: any[] = [];
+
   selectedMarker : any = null;
   isLocationSelected: boolean = false;
 
   public changeHappened: boolean = true;
 
-  constructor(private mapService: MapService) {}
+  constructor(private mapService: MapService, private authService: AuthGoogleService) {}
 
   initializeMap(startLatitude: number, startLongitude: number, containerDiv: any){
     this.selectedLongitude = startLongitude;
@@ -59,11 +61,6 @@ export class MapStateService {
     this.emitMapStateChanged();
   }
 
-  
-  setIncidents(incidents: Incident[]){
-    this.allIncidents = incidents;
-  }
-
   getMarkerImage(subtype: string | null, status: Status): string {
     const basePath = 'assets/markers/';
     const markerType = status === Status.APPROVED ? '' : '-pending';
@@ -89,6 +86,13 @@ export class MapStateService {
 
     const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
     const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+
+    if(this.currentlyUsedMarkers.length > 0){
+      this.currentlyUsedMarkers.forEach((marker: any) => {
+        marker.map = null;
+      })
+      this.currentlyUsedMarkers = [];
+    }
 
     incidents.forEach((incident: Incident) => {
       const { latitude, longitude, incidentSubtype, status } = incident;
@@ -170,7 +174,9 @@ export class MapStateService {
           <div class='timeContainer'>
             <h3 style='text-align: center; font-size: 1.2rem'>Time of Incident</h3>
             <div style='font-size: 0.85rem'>${incident.timeOfIncident}</div>
-          </div>
+          </div>` +
+          
+          `
           <div class='button-container' style="padding: 1rem 0rem; display: flex; flex-direction: column; justify-content: space-around;">
           `+
           ((incident.status === Status.REQUESTED) ? `<button class='btn' onclick="approveIncident(${incident.id})">Approve</button>` : ``)
@@ -183,6 +189,7 @@ export class MapStateService {
         infoWindow.open(marker.map, marker);
       
       });
+      this.currentlyUsedMarkers.push(marker);
     });
 }
 

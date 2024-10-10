@@ -42,9 +42,12 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   isLocationSelected: boolean = false;
 
   allIncidentSubtypes: IncidentSubtype[] = [];
-  allIncidents: Incident[] = [];
-  approvedIncidents: Incident[] = [];
   allIncidentTypes: IncidentType[] = [];
+  
+  allIncidents: Incident[] = [];
+  approvedIncidents: Incident[] = [];;
+  private filteredIncidents: Incident[] = [];
+  public currentlyUsedIncidents: Incident[] = [];
 
   private mapStateSubscription: Subscription = {} as any;
 
@@ -83,8 +86,16 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.allIncidents = result;
 
       this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
+      this.filteredIncidents = this.allIncidents;
+      this.currentlyUsedIncidents = this.allIncidents;
 
-      this.mapStateService.loadMarkers(this.allIncidents);
+      if(this.authGoogleService.getProfile())
+      {
+        this.mapStateService.loadMarkers(this.allIncidents);
+      }
+      else{
+        this.mapStateService.loadMarkers(this.approvedIncidents);
+      }
     });
   }
   ngOnInit(): void {

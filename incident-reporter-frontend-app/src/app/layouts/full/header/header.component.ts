@@ -30,31 +30,48 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   identityClaims: any = null;
   profileToken: any = null;
   imageDOM : HTMLImageElement | null = null;
+  loggedDom : HTMLElement | null = null;
 
   constructor(public dialog: MatDialog, public authService: AuthGoogleService, private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    
   }
 
   ngAfterViewInit(): void {
-    if(this.imageDOM == null){
+      this.loggedDom = document.getElementById('logged-div');
       this.imageDOM = document.getElementById('profile-pic') as HTMLImageElement;
-    }
-    console.log("AFTER INIT VIEW");
+    
 
     if(this.authService.getProfile() != null){
       
-      console.log("SETTING PROFILE PIC");
       setTimeout(() => {
         let profile : any = this.authService.getProfile();
+        console.log("SETTING PROFILE PIC");
         if(this.imageDOM){
-          this.imageDOM.src = profile.picture;
+          if(profile != null)
+          {
+            console.log("PROFILE EXISTS");
+            this.imageDOM.src = profile.picture;
+            console.log(this.imageDOM.src);
+          }
+          else{
+            console.log("PROFILE IS NULL");
+            this.imageDOM.src = "/assets/images/profile/default-user.png"
+          }
+          document.getElementById('profile-pic')?.replaceWith(this.imageDOM);
+          if(this.loggedDom != null)
+          this.loggedDom.innerHTML = "Logged In as: " + profile.name;
           this.cdr.detectChanges();
         }
-      }, 2000)
+      }, 1250)
         
+    }
+    else{
+      if(this.loggedDom)
+      this.loggedDom.innerHTML = "";
     }
       
   }
