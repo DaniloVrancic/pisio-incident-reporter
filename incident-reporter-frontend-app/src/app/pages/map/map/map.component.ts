@@ -58,6 +58,8 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   mapRightClickListener: any = null;
   mapMarkerClickListener: any = null;
 
+  markersMap: Map<number, any> = new Map();
+
   imageDOM: any = null;
   loggedDOM: any = null;
 
@@ -151,6 +153,10 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
     
   }
 
+  showMarker(id: number){
+    console.log(this.markersMap.get(id));
+  }
+
   private initMap = async () => {
     
       // Request needed libraries.
@@ -164,7 +170,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
       this.currentlyUsedIncidents.forEach(incident => {
-        const marker = new AdvancedMarkerElement({
+        let marker : any = new AdvancedMarkerElement({
           map,
           position: {lat: incident.latitude, lng: incident.longitude},
           content: incident.content,
@@ -174,12 +180,13 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         
-         
+        this.markersMap.set(incident.id, marker);
 
         const infoWindow = new InfoWindow();
         marker.addListener('click', ({ domEvent, latLng }: any) => {
-          console.log("THIS MARKER");
-          console.log(marker);
+          this.showMarker(incident.id);
+          console.log(domEvent);
+          marker.alt = "SVIRA MI MUZKA";
           const { target } = domEvent;
           
 
@@ -239,7 +246,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
             +
             ((incident.status === Status.REQUESTED) ? `<button class='btn' onclick="approveIncident(${incident.id})">Approve</button>` : ``)
              +
-              `<button class='btn' onclick="rejectIncident(${incident.id},${marker})">Delete</button>
+              `<button class='btn' onclick="rejectIncident(${incident.id})">Delete</button>
             </div>
           </div>`;
 
@@ -250,14 +257,26 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 approveIncident(incidentId: number) {
-  // Your logic to approve the incident
-  console.log(`Approving incident with ID: ${incidentId}`);
-}
+  let updatedIncident: any = {id: incidentId, status: Status.APPROVED};
+  this.mapSubsContainer.add = this.mapService.updateIncident(updatedIncident)
+                                             .subscribe(result =>{
+                                               
+                                             console.log(this.markersMap.get(result.id));
+                                              let pathToPhoto = `assets/markers/${result.incidentSubtype.subtype}-marker.png`;
+                                              let imgTag = document.createElement('img');
+                                               imgTag.src = pathToPhoto;
+                                              imgTag.onerror = () => {
+                                                imgTag.src = `assets/markers/type_icons/other-marker.png`;
+                                              };
+                                              let mapMarker: google.maps.marker.AdvancedMarkerElement = this.markersMap.get(result.id);
+                                              mapMarker.content = imgTag;
+                                              this.cdr.detectChanges();
+                                             })
+                                      }
 
-deleteIncident(incidentId: number, marker: any) {
-  console.log(marker);
-  console.log(incidentId);
-/*
+deleteIncident(incidentId: number) {
+
+
   this.mapSubsContainer.add = this.mapService.deleteIncident(incidentId).subscribe(returnedId => {
     if(returnedId === -1){
       return;
@@ -267,10 +286,10 @@ deleteIncident(incidentId: number, marker: any) {
       this.allIncidents = this.allIncidents.filter(incident => {return incident.id != returnedId});
       this.currentlyUsedIncidents = this.currentlyUsedIncidents.filter(incident => {return incident.id != returnedId});
       this.filteredIncidents = this.filteredIncidents.filter(incident => {return incident.id != returnedId});
-      marker.map = null;
+      this.markersMap.get(incidentId).map = null;
     }
   });
-  */
+  
 }
 
 toggleHighlight(markerView: any, incident: any) {

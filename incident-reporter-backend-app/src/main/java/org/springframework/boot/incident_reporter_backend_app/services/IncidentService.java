@@ -69,12 +69,37 @@ public class IncidentService {
 
     public IncidentEntity update(IncidentEntity entity){
 
-        this.incidentRepository.findById(entity.getId()).orElseThrow(() -> new EntityNotFoundException());
+        IncidentEntity entityToReturn = this.incidentRepository.findById(entity.getId()).orElseThrow(() -> new EntityNotFoundException());
         if(entity.getId() == null || !this.incidentRepository.existsById(entity.getId())){
             throw new EntityNotFoundException();
         }
 
-        return this.incidentRepository.save(entity);
+        if(entity.getStatus() != null){
+            entityToReturn.setStatus(entity.getStatus());
+        }
+        if(entity.getUserId() != null){
+            entityToReturn.setUserId(entity.getUserId());
+        }
+        if(entity.getDescription() != null){
+           entityToReturn.setDescription(entity.getDescription());
+        }
+        if(entity.getTimeOfIncident() != null){
+            entityToReturn.setTimeOfIncident(entity.getTimeOfIncident());
+        }
+        if(entity.getLatitude() != null){
+            entityToReturn.setLatitude(entity.getLatitude());
+        }
+        if(entity.getLongitude() != null){
+            entityToReturn.setLongitude(entity.getLongitude());
+        }
+        if(entity.getIncidentSubtype() != null){
+            entityToReturn.setIncidentSubtype(entity.getIncidentSubtype());
+        }
+        if(entity.getPhotoUrl() != null){
+            entityToReturn.setPhotoUrl(entity.getPhotoUrl());
+        }
+
+        return this.incidentRepository.save(entityToReturn);
     }
 
     public Integer delete(Integer id){
