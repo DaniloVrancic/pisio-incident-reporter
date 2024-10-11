@@ -16,6 +16,7 @@ import { MapStateService } from './map-state.service';
 import { Observable, Subscription } from 'rxjs';
 import { AuthGoogleService } from 'src/app/services/auth-google.service';
 import { MapsSubscriptionContainer } from './map-subscriptions-container';
+import { consumerPollProducersForChange } from '@angular/core/primitives/signals';
 
 
 @Component({
@@ -143,7 +144,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loggedDOM = document.getElementById('logged-div');
     this.initMap();
     window['approveIncident'] = this.approveIncident.bind(this);
-    window['rejectIncident'] = this.rejectIncident.bind(this);
+    window['rejectIncident'] = this.deleteIncident.bind(this);
     
     this.cdr.detectChanges();
 
@@ -172,10 +173,17 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
           zIndex: 999
         });
 
+        
+         
+
         const infoWindow = new InfoWindow();
         marker.addListener('click', ({ domEvent, latLng }: any) => {
-
+          console.log("THIS MARKER");
+          console.log(marker);
           const { target } = domEvent;
+          
+
+          
           if(infoWindow.isOpen){
             infoWindow.close();
             return;
@@ -227,10 +235,11 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
               <div style='font-size: 0.85rem'>${incident.timeOfIncident}</div>
             </div>
             <div class='button-container' style="padding: 1rem 0rem; display: flex; flex-direction: column; justify-content: space-around;">
-            `+
+            `
+            +
             ((incident.status === Status.REQUESTED) ? `<button class='btn' onclick="approveIncident(${incident.id})">Approve</button>` : ``)
              +
-              `<button class='btn' onclick="rejectIncident(${incident.id})">Remove</button>
+              `<button class='btn' onclick="rejectIncident(${incident.id},${marker})">Delete</button>
             </div>
           </div>`;
 
@@ -245,9 +254,23 @@ approveIncident(incidentId: number) {
   console.log(`Approving incident with ID: ${incidentId}`);
 }
 
-rejectIncident(incidentId: number) {
-  // Your logic to reject/remove the incident
-  console.log(`Removing incident with ID: ${incidentId}`);
+deleteIncident(incidentId: number, marker: any) {
+  console.log(marker);
+  console.log(incidentId);
+/*
+  this.mapSubsContainer.add = this.mapService.deleteIncident(incidentId).subscribe(returnedId => {
+    if(returnedId === -1){
+      return;
+    }
+    else{
+      this.currentlyUsedIncidents = this.allIncidents;
+      this.allIncidents = this.allIncidents.filter(incident => {return incident.id != returnedId});
+      this.currentlyUsedIncidents = this.currentlyUsedIncidents.filter(incident => {return incident.id != returnedId});
+      this.filteredIncidents = this.filteredIncidents.filter(incident => {return incident.id != returnedId});
+      marker.map = null;
+    }
+  });
+  */
 }
 
 toggleHighlight(markerView: any, incident: any) {

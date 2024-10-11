@@ -39,6 +39,10 @@ export class MapService {
     return this.http.put<Incident>(`${this.incidentUrl}/update`, incident, { headers });
   }
 
+  deleteIncident(incidentId: number): Observable<number> {
+    return this.http.delete<number>(`${this.incidentUrl}/delete/${incidentId}`);
+  }
+
   // Get all incident subtypes
   getAllIncidentSubtypes(): Observable<IncidentSubtype[]> {
     return this.http.get<IncidentSubtype[]>(`${this.incidentSubtypeUrl}/all`);

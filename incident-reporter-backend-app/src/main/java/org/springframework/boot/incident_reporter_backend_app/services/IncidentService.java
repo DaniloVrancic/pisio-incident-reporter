@@ -25,9 +25,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class IncidentService {
-
     private final IncidentRepository incidentRepository;
-
     public final String incidentPhotoFilePath = ".//report_images//";
 
     @Autowired
@@ -79,8 +77,16 @@ public class IncidentService {
         return this.incidentRepository.save(entity);
     }
 
-    public void delete(Integer id){
-        this.incidentRepository.deleteById(id);
+    public Integer delete(Integer id){
+        try
+        {
+            this.incidentRepository.deleteById(id);
+            return id;
+        }
+        catch(Exception ex){
+            System.err.println(ex.getLocalizedMessage());
+            return -1; //Returns -1 if an exception occured
+        }
     }
 
     public List<IncidentEntity> findAllEntities(){

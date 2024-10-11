@@ -67,4 +67,16 @@ public class IncidentController {
         }
             return new ResponseEntity<IncidentEntity>(entity, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteEntity(@PathVariable Integer id){
+        Integer returnedId = this.incidentService.delete(id);
+
+        if(returnedId == -1){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{
+            return new ResponseEntity<Integer>(returnedId, HttpStatus.OK);
+        }
+    }
 }
