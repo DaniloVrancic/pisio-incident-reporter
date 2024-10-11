@@ -261,15 +261,14 @@ approveIncident(incidentId: number) {
   this.mapSubsContainer.add = this.mapService.updateIncident(updatedIncident)
                                              .subscribe(result =>{
                                                
-                                             console.log(this.markersMap.get(result.id));
-                                              let pathToPhoto = `assets/markers/${result.incidentSubtype.subtype}-marker.png`;
-                                              let imgTag = document.createElement('img');
+                                              const pathToPhoto = `assets/markers/${result.incidentSubtype.subtype}-marker.png`;
+                                              let mapMarker: google.maps.marker.AdvancedMarkerElement = this.markersMap.get(result.id);
+                                              let imgTag : HTMLImageElement = mapMarker.content as HTMLImageElement;
                                                imgTag.src = pathToPhoto;
                                               imgTag.onerror = () => {
                                                 imgTag.src = `assets/markers/type_icons/other-marker.png`;
                                               };
-                                              let mapMarker: google.maps.marker.AdvancedMarkerElement = this.markersMap.get(result.id);
-                                              mapMarker.content = imgTag;
+                                              
                                               this.cdr.detectChanges();
                                              })
                                       }
