@@ -62,12 +62,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    setTimeout(() => {
       this.loggedDom = document.getElementById('logged-div');
       this.imageDOM = document.getElementById('profile-pic') as HTMLImageElement;
-    
-
-    
+  
       this.authService.publishProfile();
+    });
   }
 
   ngOnDestroy(): void {

@@ -115,7 +115,11 @@ export class MapStateService {
           infoWindow.close();
           return;
         }
-        let contentString = `
+
+        let contentString = '';
+
+        if(this.authService.isLoggedIn()){
+          contentString = `
         <style>
         .btn {
               cursor: pointer;
@@ -170,6 +174,57 @@ export class MapStateService {
             `<button class='btn' onclick="rejectIncident(${incident.id})">Remove</button>
           </div>
         </div>`;
+        }
+        else{
+          contentString = `
+        <style>
+        .btn {
+              cursor: pointer;
+              border: 1px solid rgb(0, 0, 0);
+              font-family: "system-ui";
+              font-size: 18px;
+              color: rgb(0, 136, 255);
+              padding: 15px 30px;
+              margin: 0.3rem;
+              transition: 146ms;
+              width: 200px;
+              box-shadow: rgb(0, 0, 0) 0px 0px 0px 0px;
+              border-radius: 20px;
+              background: rgb(255, 255, 255);
+              font-weight: 400;
+              --hover-borderSize: 3px;
+              --hover-width: 200px;
+              --hover-borderc: #0088ff;
+              }
+
+        .btn:hover{
+              color: rgb(255, 255, 255);
+              width: 200px;
+              background: rgb(0, 102, 204) none repeat scroll 0% 0% / auto padding-box border-box;
+              border-color: rgb(0, 136, 255);
+              border-style: solid;
+              }
+        </style>
+        <div class='contentContainer'>
+          <div style='align-content: center; justify-content: center;'>
+            <img src=${this.mapService.getPhotoGetRequestString(incident.id)} style='max-width: 12rem; 
+                                                                                     max-height: 12rem; 
+                                                                                     margin: 1rem; 
+                                                                                     border-radius: 0.8rem' 
+                                                                              alt='Incident Photo' 
+                                                                              onerror="this.src='assets/images/fallback/notFound.png';"/>
+          </div>
+          <div class='descriptionContainer'>
+            <h3 style='text-align: center; font-size: 1.2rem'>Description</h3>
+            <div style='font-size: 0.85rem'>${incident.description}</div>
+          </div>
+          <div class='timeContainer'>
+            <h3 style='text-align: center; font-size: 1.2rem'>Time of Incident</h3>
+            <div style='font-size: 0.85rem'>${incident.timeOfIncident}</div>
+          </div>
+        </div>`;
+        }
+        
 
         infoWindow.setContent(contentString);
         infoWindow.open(marker.map, marker);
