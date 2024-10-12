@@ -46,7 +46,7 @@ public class IncidentService {
             modifiedEntity.setTimeOfIncident(Timestamp.from(zoneAdjustedTime.toInstant()));
         }
         if(modifiedEntity.getStatus() == null){
-            if(modifiedEntity.getUserId() == null){
+            if(modifiedEntity.getUser_token() == null){
                 modifiedEntity.setStatus(Status.REQUESTED);
             }
             else{
@@ -77,8 +77,8 @@ public class IncidentService {
         if(entity.getStatus() != null){
             entityToReturn.setStatus(entity.getStatus());
         }
-        if(entity.getUserId() != null){
-            entityToReturn.setUserId(entity.getUserId());
+        if(entity.getUser_token() != null){
+            entityToReturn.setUser_token(entity.getUser_token());
         }
         if(entity.getDescription() != null){
            entityToReturn.setDescription(entity.getDescription());

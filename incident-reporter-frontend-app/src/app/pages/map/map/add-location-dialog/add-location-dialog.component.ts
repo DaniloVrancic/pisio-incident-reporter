@@ -44,6 +44,7 @@ export class AddLocationDialogComponent {
   selectedDescription: string | null = "";
   selectedImage: string | null = null;
   expanded: number | null = null;
+  userId: string | null = null;
 
   selectedDate: any = null;
 
@@ -54,11 +55,12 @@ export class AddLocationDialogComponent {
   profilePictureFormControl = new FormControl(null);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[],
-    latitude: number, longitude: number}, private mapService: MapService) {
+    latitude: number, longitude: number, userId: string | null}, private mapService: MapService) {
     this.incidentTypes = data.incidentTypes;
     this.incidentSubtypes = data.incidentSubtypes;
     this.selectedLongitude = data.longitude;
     this.selectedLatitude = data.latitude;
+    this.userId = data.userId;
   }
 
   getSubtypes(typeId: number): IncidentSubtype[] {
@@ -139,9 +141,6 @@ onChangeFile(event: any)
   onConfirmClicked() : void {
     let incidentToSend : Incident = {} as Incident;
 
-
-
-
     incidentToSend.latitude = this.selectedLatitude;
     incidentToSend.longitude = this.selectedLongitude;
 
@@ -169,6 +168,10 @@ onChangeFile(event: any)
 
     incidentToSend.description = this.selectedDescription;
     incidentToSend.incidentSubtype = {id: this.selectedSubtypeId} as IncidentSubtype;
+
+    if(this.userId){
+      incidentToSend.user_token = this.userId;
+    }
 
     try{
       console.log("SENT ITEM: ");

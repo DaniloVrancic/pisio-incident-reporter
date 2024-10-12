@@ -167,10 +167,8 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       const centerLongitude: number = 20.45847839252972;
     this.mapStateService.initializeMap(centerLatitude, centerLongitude, document.getElementById('map'));
 
+
     const map = this.mapStateService.map;
-
-
-
       this.currentlyUsedIncidents.forEach(incident => {
         let marker : any = new AdvancedMarkerElement({
           map,
@@ -187,11 +185,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         const infoWindow = new InfoWindow();
         marker.addListener('click', ({ domEvent, latLng }: any) => {
           this.showMarker(incident.id);
-          console.log(domEvent);
           const { target } = domEvent;
-
-          console.log({...marker});
-          
 
           
           if(infoWindow.isOpen){
@@ -271,14 +265,12 @@ approveIncident(incidentId: number) {
                                               imgTag.onerror = () => {
                                                 imgTag.src = `assets/markers/type_icons/other-marker.png`;
                                               };
-                                              
                                               this.cdr.detectChanges();
+                                              window.alert('Approved Incident with ID: ' + incidentId);
                                              })
                                       }
 
 deleteIncident(incidentId: number) {
-
-
   this.mapSubsContainer.add = this.mapService.deleteIncident(incidentId).subscribe(returnedId => {
     if(returnedId === -1){
       return;
@@ -289,6 +281,7 @@ deleteIncident(incidentId: number) {
       this.currentlyUsedIncidents = this.currentlyUsedIncidents.filter(incident => {return incident.id != returnedId});
       this.filteredIncidents = this.filteredIncidents.filter(incident => {return incident.id != returnedId});
       this.markersMap.get(incidentId).map = null;
+      window.alert('Deleted Incident with ID: ' + incidentId);
     }
   });
   
@@ -306,6 +299,12 @@ toggleHighlight(markerView: any, incident: any) {
   
 
   openAddLocationDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    
+    let loginToken: string | null = null;
+    if(this.authGoogleService.getToken() != null){
+      loginToken = this.authGoogleService.getToken();
+    }
+
     this.dialog.open(AddLocationDialogComponent, {
       width: '100vh',
       enterAnimationDuration,
@@ -314,7 +313,8 @@ toggleHighlight(markerView: any, incident: any) {
         incidentTypes: this.allIncidentTypes,
         incidentSubtypes: this.allIncidentSubtypes,
         latitude: this.mapStateService.selectedLatitude,
-        longitude: this.mapStateService.selectedLongitude
+        longitude: this.mapStateService.selectedLongitude,
+        usedId: loginToken
       }
     });
   }
