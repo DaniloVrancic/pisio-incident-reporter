@@ -39,8 +39,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isInitialized: boolean = false;
 
-  selectedLongitude: number = 20.45847839252972;
-  selectedLatitude: number = 44.79807782849736;
+
   isLocationSelected: boolean = false;
 
   allIncidentSubtypes: IncidentSubtype[] = [];
@@ -163,7 +162,10 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
       const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
       
-    this.mapStateService.initializeMap(this.selectedLatitude, this.selectedLongitude, document.getElementById('map'));
+    
+      const centerLatitude: number = 44.79807782849736;
+      const centerLongitude: number = 20.45847839252972;
+    this.mapStateService.initializeMap(centerLatitude, centerLongitude, document.getElementById('map'));
 
     const map = this.mapStateService.map;
 
@@ -186,8 +188,9 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         marker.addListener('click', ({ domEvent, latLng }: any) => {
           this.showMarker(incident.id);
           console.log(domEvent);
-          marker.alt = "SVIRA MI MUZKA";
           const { target } = domEvent;
+
+          console.log({...marker});
           
 
           
@@ -310,8 +313,8 @@ toggleHighlight(markerView: any, incident: any) {
       data: {
         incidentTypes: this.allIncidentTypes,
         incidentSubtypes: this.allIncidentSubtypes,
-        latitude: this.selectedLatitude,
-        longitude: this.selectedLongitude
+        latitude: this.mapStateService.selectedLatitude,
+        longitude: this.mapStateService.selectedLongitude
       }
     });
   }
@@ -324,16 +327,10 @@ toggleHighlight(markerView: any, incident: any) {
       data: {
         incidentTypes: this.allIncidentTypes,
         incidentSubtypes: this.allIncidentSubtypes,
-        latitude: this.selectedLatitude,
-        longitude: this.selectedLongitude
+        latitude: this.mapStateService.selectedLatitude,
+        longitude: this.mapStateService.selectedLongitude
       }
     });
-  }
-
-  offerAddIncident(event: google.maps.MapMouseEvent){
-    this.selectedLatitude = event.latLng?.toJSON().lat as number;
-    this.selectedLongitude = event.latLng?.toJSON().lng as number;
-
   }
 
 }
