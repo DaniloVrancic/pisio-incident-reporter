@@ -44,7 +44,7 @@ export class AddLocationDialogComponent {
   selectedDescription: string | null = "";
   selectedImage: string | null = null;
   expanded: number | null = null;
-  userId: string | null = null;
+  user_token: string | null = null;
 
   selectedDate: any = null;
 
@@ -60,7 +60,8 @@ export class AddLocationDialogComponent {
     this.incidentSubtypes = data.incidentSubtypes;
     this.selectedLongitude = data.longitude;
     this.selectedLatitude = data.latitude;
-    this.userId = data.userId;
+    this.user_token = data.userId;
+    console.log(data.userId);
   }
 
   getSubtypes(typeId: number): IncidentSubtype[] {
@@ -169,8 +170,8 @@ onChangeFile(event: any)
     incidentToSend.description = this.selectedDescription;
     incidentToSend.incidentSubtype = {id: this.selectedSubtypeId} as IncidentSubtype;
 
-    if(this.userId){
-      incidentToSend.user_token = this.userId;
+    if(this.user_token){
+      incidentToSend.user_token = this.user_token;
     }
 
     try{

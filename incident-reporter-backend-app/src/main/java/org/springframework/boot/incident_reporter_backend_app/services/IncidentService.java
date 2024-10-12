@@ -51,11 +51,9 @@ public class IncidentService {
             }
             else{
                 modifiedEntity.setStatus(Status.APPROVED);
+
             }
         }
-
-
-
         if(avatar != null && !avatar.isEmpty())
         {
             realEntityToSave = this.incidentRepository.save(modifiedEntity);

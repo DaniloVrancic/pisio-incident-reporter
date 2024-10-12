@@ -314,7 +314,7 @@ toggleHighlight(markerView: any, incident: any) {
         incidentSubtypes: this.allIncidentSubtypes,
         latitude: this.mapStateService.selectedLatitude,
         longitude: this.mapStateService.selectedLongitude,
-        usedId: loginToken
+        userId: loginToken
       }
     });
   }
