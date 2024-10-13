@@ -91,7 +91,7 @@ export class FilterLocationsDialogComponent {
 }
 
 
-onConfirmClicked() : void {
+async onConfirmClicked() {
   let selectedFilters = {} as FilterSelection;
 
   if(this.selectedRadius == null){
@@ -101,22 +101,24 @@ onConfirmClicked() : void {
     else{
       selectedFilters.latitude = this.selectedLatitude;
       selectedFilters.longitude = this.selectedLongitude;
+      selectedFilters.radius = this.selectedRadius;
     }
   
   selectedFilters.date = this.selectedDate;
   selectedFilters.subtype = this.selectedSubtypeId;
 
     let filteredIncidents = this.mapStateService.allIncidents;
-
     if (selectedFilters.radius != null) { //Apply the radius filter on this
+    const {spherical}: any = await google.maps.importLibrary("geometry")
     this.mapStateService.isFilterOn = true;
-    const radiusInMeters : number = this.selectedRadius as number;
-    filteredIncidents = filteredIncidents?.filter(incident => {
-      const distance = this.calculateDistance(
-        this.selectedLatitude, this.selectedLongitude,
-        incident.latitude, incident.longitude
-      );
-      return distance <= radiusInMeters;
+
+    const allowedDistance : number = this.selectedRadius as number;
+
+    filteredIncidents = filteredIncidents.filter(incident => {
+      let from: google.maps.LatLng = new google.maps.LatLng(selectedFilters.latitude as number, selectedFilters.longitude);
+      let to: google.maps.LatLng = new google.maps.LatLng(incident.latitude, incident.longitude);
+      const distance: number = google.maps.geometry.spherical.computeDistanceBetween(from,to);
+      return distance <= allowedDistance;
     });
     }
 
@@ -124,14 +126,14 @@ onConfirmClicked() : void {
       this.mapStateService.isFilterOn = true;
       const selectedDate = new Date(this.selectedDate);
       const now = new Date();
-      filteredIncidents = filteredIncidents?.filter(incident => {
+      filteredIncidents = filteredIncidents.filter(incident => {
       const incidentDate = new Date(incident.timeOfIncident);
       return incidentDate >= selectedDate && incidentDate <= now;
     });
     }
     if(selectedFilters.subtype){ //Apply the selected subtype ID here
       this.mapStateService.isFilterOn = true;
-      filteredIncidents = filteredIncidents?.filter(incident => {
+      filteredIncidents = filteredIncidents.filter(incident => {
         return incident.incidentSubtype.id === selectedFilters.subtype;
       });
     }
@@ -141,13 +143,14 @@ onConfirmClicked() : void {
     }
 
     if(!this.authService.isLoggedIn()){
-      filteredIncidents = filteredIncidents?.filter(incident =>{
+      filteredIncidents = filteredIncidents.filter(incident =>{
         return incident.status === Status.APPROVED;
       });
     }
 
     this.mapStateService.filteredIncidents = filteredIncidents as any;
     this.mapStateService.currentlyUsedIncidents = filteredIncidents;
+    console.log(filteredIncidents);
     this.refreshMap();
 }
 

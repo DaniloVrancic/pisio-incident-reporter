@@ -144,7 +144,7 @@ export class MapStateService {
         content: incident.content,
         gmpClickable: true,
         title: incident.timeOfIncident,
-        zIndex: 999
+        zIndex: 1000
       });
 
       const infoWindow = new InfoWindow();
