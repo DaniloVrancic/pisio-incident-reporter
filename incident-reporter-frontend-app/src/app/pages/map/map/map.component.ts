@@ -123,10 +123,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
     window['approveIncident'] = this.approveIncident.bind(this);
     window['rejectIncident'] = this.deleteIncident.bind(this);
     
-    this.cdr.detectChanges();
-    console.log("CURRENTLY USED INCIDENTS: ");
-    console.log(this.mapStateService.currentlyUsedIncidents);
-    
+    this.cdr.detectChanges(); 
   }
 
   showMarker(id: number){
@@ -158,7 +155,6 @@ approveIncident(incidentId: number) {
                                               let imgTag : HTMLImageElement | undefined = undefined;
                                               try{
                                                 imgTag = mapMarker.src as any;
-                                                console.log(mapMarker);
                                                 if(imgTag != undefined){
                                                   imgTag.src = pathToPhoto;
                                                 }
