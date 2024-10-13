@@ -55,8 +55,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       else{
         this.showModeratorOptions = true;
       }
-      console.log("SHOW MODERATOR OPTIONS: " + this.showModeratorOptions);
-
     })
     
   }
