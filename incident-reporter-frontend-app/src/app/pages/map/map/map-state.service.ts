@@ -14,20 +14,28 @@ export class MapStateService {
 
   public mapOptions: google.maps.MapOptions = {};
   public map: google.maps.Map = {} as any;
+  public isFilterOn = false;
   
   public mapStateChanged: EventEmitter<void> = new EventEmitter<void>();
 
-  currentlyUsedMarkers: any[] = [];
+  currentlyUsedMarkers: any[] = []; //Currently rendered markers
 
   allIncidents: Incident[] = [];
-  approvedIncidents: Incident[] = [];;
+  approvedIncidents: Incident[] = [];
   filteredIncidents: Incident[] = [];
-  public currentlyUsedIncidents: Incident[] = [];
+  public currentlyUsedIncidents: Incident[] | undefined = undefined;
 
   selectedMarker : any = null;
   isLocationSelected: boolean = false;
 
   constructor(private mapService: MapService, private authService: AuthGoogleService) {}
+
+
+  tryUseFilteredIncidents(){
+    if(this.isFilterOn == true){
+      this.currentlyUsedIncidents = this.filteredIncidents;
+    }
+  }
 
   initializeMap(startLatitude: number, startLongitude: number, containerDiv: any){
     if(this.selectedLongitude == undefined && this.selectedLatitude == undefined)
@@ -57,28 +65,26 @@ export class MapStateService {
 
   public readIncidentsAndLoadMarkers() //gets all incidents, and based on the login status it will assign allIncidents to be shown or only approved incidents
   {
-    this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
-      this.allIncidents = result;
+      this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
+        this.allIncidents = result;
+  
+        this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
+        
+  
+        if(this.authService.isLoggedIn())
+        {
+            this.currentlyUsedIncidents = this.allIncidents;
+        }
+        else{
+            this.currentlyUsedIncidents = this.approvedIncidents;
+        }
 
-      this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
-      this.filteredIncidents = this.allIncidents;
-
-      if(this.authService.isLoggedIn())
-      {
-        this.currentlyUsedIncidents = this.allIncidents;
-      }
-      else{
-        this.currentlyUsedIncidents = this.approvedIncidents;
-      }
-
-      if(this.authService.getProfile())
-      {
-        this.loadMarkers(this.allIncidents);
-      }
-      else{
-        this.loadMarkers(this.approvedIncidents);
-      }
-    });
+        this.tryUseFilteredIncidents()
+        
+          this.loadMarkers(this.currentlyUsedIncidents);
+      });
+    
+    
   }
 
   getMarkerImage(subtype: string | null, status: Status): string {

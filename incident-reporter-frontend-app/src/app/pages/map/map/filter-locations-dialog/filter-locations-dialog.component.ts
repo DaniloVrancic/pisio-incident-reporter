@@ -109,8 +109,9 @@ onConfirmClicked() : void {
     let filteredIncidents = this.mapStateService.allIncidents;
 
     if (selectedFilters.radius != null) { //Apply the radius filter on this
+    this.mapStateService.isFilterOn = true;
     const radiusInMeters : number = this.selectedRadius as number;
-    filteredIncidents = filteredIncidents.filter(incident => {
+    filteredIncidents = filteredIncidents?.filter(incident => {
       const distance = this.calculateDistance(
         this.selectedLatitude, this.selectedLongitude,
         incident.latitude, incident.longitude
@@ -120,29 +121,39 @@ onConfirmClicked() : void {
     }
 
     if(selectedFilters.date){ //Apply the Between [selectedDate - Now] filter here
+      this.mapStateService.isFilterOn = true;
       const selectedDate = new Date(this.selectedDate);
       const now = new Date();
-      filteredIncidents = filteredIncidents.filter(incident => {
+      filteredIncidents = filteredIncidents?.filter(incident => {
       const incidentDate = new Date(incident.timeOfIncident);
       return incidentDate >= selectedDate && incidentDate <= now;
     });
     }
     if(selectedFilters.subtype){ //Apply the selected subtype ID here
-      filteredIncidents = filteredIncidents.filter(incident => {
+      this.mapStateService.isFilterOn = true;
+      filteredIncidents = filteredIncidents?.filter(incident => {
         return incident.incidentSubtype.id === selectedFilters.subtype;
       });
     }
 
+    if(selectedFilters.subtype == null && selectedFilters.date == null && selectedFilters.radius == null){
+      this.mapStateService.isFilterOn = false;
+    }
+
     if(!this.authService.isLoggedIn()){
-      filteredIncidents = filteredIncidents.filter(incident =>{
+      filteredIncidents = filteredIncidents?.filter(incident =>{
         return incident.status === Status.APPROVED;
       });
     }
 
-    this.mapStateService.filteredIncidents = filteredIncidents;
+    this.mapStateService.filteredIncidents = filteredIncidents as any;
     this.mapStateService.currentlyUsedIncidents = filteredIncidents;
-    console.log(filteredIncidents);
-    //this.refreshMap();
+    this.refreshMap();
+}
+
+onCancelClicked(){
+  this.mapStateService.isFilterOn = false;
+  this.refreshMap();
 }
 
 dateTimeInput(event: any){

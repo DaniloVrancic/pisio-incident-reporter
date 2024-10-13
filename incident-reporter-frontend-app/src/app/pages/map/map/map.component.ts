@@ -124,7 +124,8 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
     window['rejectIncident'] = this.deleteIncident.bind(this);
     
     this.cdr.detectChanges();
-
+    console.log("CURRENTLY USED INCIDENTS: ");
+    console.log(this.mapStateService.currentlyUsedIncidents);
     
   }
 
@@ -181,8 +182,8 @@ deleteIncident(incidentId: number) {
     }
     else{
       this.mapStateService.currentlyUsedIncidents = this.mapStateService.allIncidents;
-      this.mapStateService.allIncidents = this.mapStateService.allIncidents.filter(incident => {return incident.id != returnedId});
-      this.mapStateService.currentlyUsedIncidents = this.mapStateService.currentlyUsedIncidents.filter(incident => {return incident.id != returnedId});
+      this.mapStateService.allIncidents = this.mapStateService.allIncidents?.filter(incident => {return incident.id != returnedId});
+      this.mapStateService.currentlyUsedIncidents = this.mapStateService.currentlyUsedIncidents?.filter(incident => {return incident.id != returnedId});
       this.mapStateService.filteredIncidents = this.mapStateService.filteredIncidents.filter(incident => {return incident.id != returnedId});
       
       window.alert('Deleted Incident with ID: ' + incidentId);

@@ -64,6 +64,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close (click)="this.onCancelClicked()">Cancel</button>
   <button mat-button mat-dialog-close cdkFocusInitial style="color: #0066FF;" (click)="this.onConfirmClicked()">Confirm</button>
 </mat-dialog-actions>
