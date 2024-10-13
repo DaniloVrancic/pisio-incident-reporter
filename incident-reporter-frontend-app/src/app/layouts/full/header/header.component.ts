@@ -80,4 +80,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.authService.logout();
     this.router.navigateByUrl('/authentication/login');
   }
+  handleLoginClick(){
+    this.router.navigateByUrl('/authentication/login');
+  }
 }

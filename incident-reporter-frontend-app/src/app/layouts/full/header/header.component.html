@@ -8,10 +8,12 @@
   <!-- --------------------------------------------------------------- -->
   <!-- Notification Dropdown -->
   <!-- --------------------------------------------------------------- -->
-
+@if(this.authService.isLoggedIn())
+{
   <button mat-icon-button aria-label="Notifications">
-    <i-tabler class="d-flex" name="bell" matBadge="9" matBadgeColor="primary"></i-tabler>
+    <i-tabler class="d-flex" name="bell" matBadge="0" matBadgeColor="primary"></i-tabler>
   </button>
+}
 
   <span class="flex-1-auto"></span>
 
@@ -53,22 +55,38 @@
   <mat-menu #profilemenu="matMenu" xPosition="before" class="topbar-dd cardWithShadow">
     
 
+    @if(this.authService.isLoggedIn())
+    {
     <div class="p-x-12 m-t-12">
-      <a
+
+        <a
         mat-flat-button
         color="primary"
         class="w-100"
         (click)="printInfo()"
         >Print Info [TEST]</a
-      >
-      <a
+        >
+        <div style="margin-top: 0.3rem; margin-bottom: 0.3rem;"></div>
+        <a
         mat-flat-button
         color="primary"
         class="w-100"
         (click)="handleLogoutClick()"
         >Logout</a
-      >
-    </div>
+        >
+      </div>
+    }
+    @else {
+      <div class="p-x-12 m-t-12">
+        <a
+        mat-flat-button
+        color="primary"
+        class="w-100"
+        (click)="handleLoginClick()"
+        >Login</a
+        >
+      </div>
+    }
   </mat-menu>
   <div id="logged-div"></div>
 </mat-toolbar>
