@@ -9,8 +9,8 @@ import { AuthGoogleService } from 'src/app/services/auth-google.service';
 })
 export class MapStateService {
 
-  public selectedLongitude: number = 181;
-  public selectedLatitude: number = 181;
+  public selectedLongitude: number | undefined = undefined;
+  public selectedLatitude: number | undefined = undefined;
 
   public mapOptions: google.maps.MapOptions = {};
   public map: google.maps.Map = {} as any;
@@ -25,12 +25,15 @@ export class MapStateService {
   constructor(private mapService: MapService, private authService: AuthGoogleService) {}
 
   initializeMap(startLatitude: number, startLongitude: number, containerDiv: any){
-    this.selectedLongitude = startLongitude;
-    this.selectedLatitude = startLatitude;
+    if(this.selectedLongitude == undefined && this.selectedLatitude == undefined)
+    {
+      this.selectedLongitude = startLongitude;
+      this.selectedLatitude = startLatitude;
+    }
 
     this.mapOptions = {
       mapId: "4504f8b37365c3d0",
-      center: {lng: this.selectedLongitude, lat: this.selectedLatitude },
+      center: {lng: this.selectedLongitude as number, lat: this.selectedLatitude as number },
       zoom: 13,
       clickableIcons: false
     };

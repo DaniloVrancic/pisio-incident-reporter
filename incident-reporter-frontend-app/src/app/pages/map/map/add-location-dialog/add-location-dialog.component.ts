@@ -62,7 +62,6 @@ export class AddLocationDialogComponent {
     this.selectedLongitude = data.longitude;
     this.selectedLatitude = data.latitude;
     this.user_token = data.userId;
-    console.log(data.userId);
   }
 
   getSubtypes(typeId: number): IncidentSubtype[] {
@@ -177,7 +176,13 @@ onChangeFile(event: any)
 
     try{
       this.mapService.addIncident(incidentToSend).subscribe({
-        next: result => {this.refreshMap();},
+        next: result => {
+          if(this.user_token)
+          {
+            this.refreshMap();
+          }
+          window.alert("A new incident report request has been sent!");
+        },
         error: error => {console.error(error);}
       });
     }
