@@ -12,6 +12,11 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { IncidentType } from 'src/app/models/incident-type';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { FormControl } from '@angular/forms';
+import { MapStateService } from '../map-state.service';
+import { FilterSelection } from './filters-selection';
+import { Router } from '@angular/router';
+import { AuthGoogleService } from 'src/app/services/auth-google.service';
+import { Status } from 'src/app/models/incident';
 
 @Component({
   selector: 'app-filter-locations-dialog',
@@ -28,7 +33,7 @@ import { FormControl } from '@angular/forms';
   ],
   templateUrl: './filter-locations-dialog.component.html',
   styleUrl: './filter-locations-dialog.component.scss',
-  providers: [provideNativeDateAdapter(), MapService]
+  providers: [provideNativeDateAdapter()]
 })
 export class FilterLocationsDialogComponent {
 
@@ -39,6 +44,7 @@ export class FilterLocationsDialogComponent {
 
   selectedSubtypeId: number | null = null;
   selectedDescription: string | null = "";
+  selectedRadius : number | null = null;
   selectedImage: string | null = null;
   expanded: number | null = null;
 
@@ -51,7 +57,10 @@ export class FilterLocationsDialogComponent {
   profilePictureFormControl = new FormControl(null);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[],
-    latitude: number, longitude: number}, private mapService: MapService) {
+    latitude: number, longitude: number}, private mapService: MapService, 
+    private mapStateService: MapStateService, 
+    private router: Router,
+    private authService: AuthGoogleService) {
     this.incidentTypes = data.incidentTypes;
     this.incidentSubtypes = data.incidentSubtypes;
     this.selectedLongitude = data.longitude;
@@ -83,10 +92,92 @@ export class FilterLocationsDialogComponent {
 
 
 onConfirmClicked() : void {
-  console.log("CONFIRM CLICKED!");
-  }
+  let selectedFilters = {} as FilterSelection;
+
+  if(this.selectedRadius == null){
+      selectedFilters.latitude = null;
+      selectedFilters.longitude = null
+    }
+    else{
+      selectedFilters.latitude = this.selectedLatitude;
+      selectedFilters.longitude = this.selectedLongitude;
+    }
+  
+  selectedFilters.date = this.selectedDate;
+  selectedFilters.subtype = this.selectedSubtypeId;
+
+    let filteredIncidents = this.mapStateService.allIncidents;
+
+    if (selectedFilters.radius != null) { //Apply the radius filter on this
+    const radiusInMeters : number = this.selectedRadius as number;
+    filteredIncidents = filteredIncidents.filter(incident => {
+      const distance = this.calculateDistance(
+        this.selectedLatitude, this.selectedLongitude,
+        incident.latitude, incident.longitude
+      );
+      return distance <= radiusInMeters;
+    });
+    }
+
+    if(selectedFilters.date){ //Apply the Between [selectedDate - Now] filter here
+      const selectedDate = new Date(this.selectedDate);
+      const now = new Date();
+      filteredIncidents = filteredIncidents.filter(incident => {
+      const incidentDate = new Date(incident.timeOfIncident);
+      return incidentDate >= selectedDate && incidentDate <= now;
+    });
+    }
+    if(selectedFilters.subtype){ //Apply the selected subtype ID here
+      filteredIncidents = filteredIncidents.filter(incident => {
+        return incident.incidentSubtype.id === selectedFilters.subtype;
+      });
+    }
+
+    if(!this.authService.isLoggedIn()){
+      filteredIncidents = filteredIncidents.filter(incident =>{
+        return incident.status === Status.APPROVED;
+      });
+    }
+
+    this.mapStateService.filteredIncidents = filteredIncidents;
+    this.mapStateService.currentlyUsedIncidents = filteredIncidents;
+    console.log(filteredIncidents);
+    //this.refreshMap();
+}
 
 dateTimeInput(event: any){
     this.selectedDate = event.target.value;    
+}
+
+radiusInput(event: any){
+  const {value} = event.target;
+    if(value.length > 0)
+    {
+      this.selectedRadius = value;
+    }
+    else{
+      this.selectedRadius = null;
+    }
+  }
+
+
+private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371000; // Radius of the Earth in meters
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in meters
+  }
+  
+private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
+  }
+
+private refreshMap(){
+  this.router.navigateByUrl('/refresh');
 }
 }

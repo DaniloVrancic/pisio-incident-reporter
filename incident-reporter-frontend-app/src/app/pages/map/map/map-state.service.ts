@@ -19,6 +19,11 @@ export class MapStateService {
 
   currentlyUsedMarkers: any[] = [];
 
+  allIncidents: Incident[] = [];
+  approvedIncidents: Incident[] = [];;
+  filteredIncidents: Incident[] = [];
+  public currentlyUsedIncidents: Incident[] = [];
+
   selectedMarker : any = null;
   isLocationSelected: boolean = false;
 
@@ -48,6 +53,32 @@ export class MapStateService {
     this.selectedMarker = null;
     this.isLocationSelected = false;
     this.emitMapStateChanged();
+  }
+
+  public readIncidentsAndLoadMarkers() //gets all incidents, and based on the login status it will assign allIncidents to be shown or only approved incidents
+  {
+    this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
+      this.allIncidents = result;
+
+      this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
+      this.filteredIncidents = this.allIncidents;
+
+      if(this.authService.isLoggedIn())
+      {
+        this.currentlyUsedIncidents = this.allIncidents;
+      }
+      else{
+        this.currentlyUsedIncidents = this.approvedIncidents;
+      }
+
+      if(this.authService.getProfile())
+      {
+        this.loadMarkers(this.allIncidents);
+      }
+      else{
+        this.loadMarkers(this.approvedIncidents);
+      }
+    });
   }
 
   getMarkerImage(subtype: string | null, status: Status): string {

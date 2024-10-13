@@ -46,10 +46,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   allIncidentSubtypes: IncidentSubtype[] = [];
   allIncidentTypes: IncidentType[] = [];
   
-  allIncidents: Incident[] = [];
-  approvedIncidents: Incident[] = [];;
-  private filteredIncidents: Incident[] = [];
-  public currentlyUsedIncidents: Incident[] = [];
+
 
   private mapSubsContainer: MapsSubscriptionContainer = new MapsSubscriptionContainer();
   public profileChangeObservable: Observable<any> | undefined;
@@ -90,30 +87,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       });
   }
-  private readIncidentsAndLoadMarkers() {
-    this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
-      this.allIncidents = result;
 
-      this.approvedIncidents = this.allIncidents.filter((incident: Incident) => { return incident.status == Status.APPROVED; });
-      this.filteredIncidents = this.allIncidents;
-
-      if(this.authGoogleService.isLoggedIn())
-      {
-        this.currentlyUsedIncidents = this.allIncidents;
-      }
-      else{
-        this.currentlyUsedIncidents = this.approvedIncidents;
-      }
-
-      if(this.authGoogleService.getProfile())
-      {
-        this.mapStateService.loadMarkers(this.allIncidents);
-      }
-      else{
-        this.mapStateService.loadMarkers(this.approvedIncidents);
-      }
-    });
-  }
   ngOnInit(): void {
     try{
       
@@ -121,7 +95,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.readSubtypesAndTypes(incidentTypeIdSet);
 
-      this.readIncidentsAndLoadMarkers();
+      this.mapStateService.readIncidentsAndLoadMarkers();
 
       this.mapSubsContainer.add = this.mapStateService.mapStateChanged.subscribe(() => { //'add' is a setter in the MapSubscriptionsContainer class
         this.cdr.detectChanges(); 
@@ -171,88 +145,6 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     const map = this.mapStateService.map;
-      this.currentlyUsedIncidents.forEach(incident => {
-        let marker : any = new AdvancedMarkerElement({
-          map,
-          position: {lat: incident.latitude, lng: incident.longitude},
-          content: incident.content,
-          gmpClickable: true,
-          title: incident.timeOfIncident,
-          zIndex: 999
-        });
-
-        
-        this.markersMap.set(incident.id, marker);
-
-        const infoWindow = new InfoWindow();
-        marker.addListener('click', ({ domEvent, latLng }: any) => {
-          this.showMarker(incident.id);
-          const { target } = domEvent;
-
-          
-          if(infoWindow.isOpen){
-            infoWindow.close();
-            return;
-          }
-          let contentString = `
-          <style>
-          .btn {
-                cursor: pointer;
-                border: 1px solid rgb(0, 0, 0);
-                font-family: "system-ui";
-                font-size: 18px;
-                color: rgb(0, 136, 255);
-                padding: 15px 30px;
-                margin: 0.3rem;
-                transition: 146ms;
-                width: 200px;
-                box-shadow: rgb(0, 0, 0) 0px 0px 0px 0px;
-                border-radius: 20px;
-                background: rgb(255, 255, 255);
-                font-weight: 400;
-                --hover-borderSize: 3px;
-                --hover-width: 200px;
-                --hover-borderc: #0088ff;
-                }
-
-          .btn:hover{
-                color: rgb(255, 255, 255);
-                width: 200px;
-                background: rgb(0, 102, 204) none repeat scroll 0% 0% / auto padding-box border-box;
-                border-color: rgb(0, 136, 255);
-                border-style: solid;
-                }
-          </style>
-          <div class='contentContainer'>
-            <div style='align-content: center; justify-content: center;'>
-              <img src=${this.mapService.getPhotoGetRequestString(incident.id)} style='max-width: 12rem; 
-                                                                                       max-height: 12rem; 
-                                                                                       margin: 1rem; 
-                                                                                       border-radius: 0.8rem' 
-                                                                                alt='Incident Photo' 
-                                                                                onerror="this.src='assets/images/fallback/notFound.png';"/>
-            </div>
-            <div class='descriptionContainer'>
-              <h3 style='text-align: center; font-size: 1.2rem'>Description</h3>
-              <div style='font-size: 0.85rem'>${incident.description}</div>
-            </div>
-            <div class='timeContainer'>
-              <h3 style='text-align: center; font-size: 1.2rem'>Time of Incident</h3>
-              <div style='font-size: 0.85rem'>${incident.timeOfIncident}</div>
-            </div>
-            <div class='button-container' style="padding: 1rem 0rem; display: flex; flex-direction: column; justify-content: space-around;">
-            `
-            +
-            ((incident.status === Status.REQUESTED) ? `<button class='btn' onclick="approveIncident(${incident.id})">Approve</button>` : ``)
-             +
-              `<button class='btn' onclick="rejectIncident(${incident.id})">Delete</button>
-            </div>
-          </div>`;
-
-          infoWindow.setContent(contentString);
-          infoWindow.open(marker.map, marker);
-      });
-  });
 }
 
 approveIncident(incidentId: number) {
@@ -261,15 +153,23 @@ approveIncident(incidentId: number) {
                                              .subscribe(result =>{
                                                
                                               const pathToPhoto = `assets/markers/${result.incidentSubtype.subtype}-marker.png`;
-                                              let mapMarker: google.maps.marker.AdvancedMarkerElement = this.markersMap.get(result.id);
-                                              let imgTag : HTMLImageElement = mapMarker.content as HTMLImageElement;
-                                               imgTag.src = pathToPhoto;
-                                              imgTag.onerror = () => {
-                                                imgTag.src = `assets/markers/type_icons/other-marker.png`;
+                                              let mapMarker: any = this.markersMap.get(result.id);
+                                              let imgTag : HTMLImageElement | undefined = undefined;
+                                              try{
+                                                imgTag = mapMarker.src as any;
+                                                console.log(mapMarker);
+                                                if(imgTag != undefined){
+                                                  imgTag.src = pathToPhoto;
+                                                }
+                                              }
+                                              catch(error){
+                                                console.error(error);
+                                                if(imgTag != undefined){
+                                                  imgTag.src = `assets/markers/type_icons/other-marker.png`;
+                                                                       }
                                               };
                                               this.cdr.detectChanges();
                                               window.alert('Approved Incident with ID: ' + incidentId);
-
                                               this.refreshMap();
                                              })
                                       }
@@ -280,16 +180,15 @@ deleteIncident(incidentId: number) {
       return;
     }
     else{
-      this.currentlyUsedIncidents = this.allIncidents;
-      this.allIncidents = this.allIncidents.filter(incident => {return incident.id != returnedId});
-      this.currentlyUsedIncidents = this.currentlyUsedIncidents.filter(incident => {return incident.id != returnedId});
-      this.filteredIncidents = this.filteredIncidents.filter(incident => {return incident.id != returnedId});
-      this.markersMap.get(incidentId).map = null;
+      this.mapStateService.currentlyUsedIncidents = this.mapStateService.allIncidents;
+      this.mapStateService.allIncidents = this.mapStateService.allIncidents.filter(incident => {return incident.id != returnedId});
+      this.mapStateService.currentlyUsedIncidents = this.mapStateService.currentlyUsedIncidents.filter(incident => {return incident.id != returnedId});
+      this.mapStateService.filteredIncidents = this.mapStateService.filteredIncidents.filter(incident => {return incident.id != returnedId});
+      
       window.alert('Deleted Incident with ID: ' + incidentId);
       this.refreshMap();
     }
   });
-  
 }
 
 toggleHighlight(markerView: any, incident: any) {
