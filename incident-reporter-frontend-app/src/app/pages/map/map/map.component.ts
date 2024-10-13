@@ -17,6 +17,7 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthGoogleService } from 'src/app/services/auth-google.service';
 import { MapsSubscriptionContainer } from './map-subscriptions-container';
 import { consumerPollProducersForChange } from '@angular/core/primitives/signals';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -67,7 +68,8 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private mapService: MapService, 
               public mapStateService: MapStateService, 
               private cdr: ChangeDetectorRef,
-              private authGoogleService: AuthGoogleService){
+              private authGoogleService: AuthGoogleService,
+              public router: Router){
   }
 
 
@@ -267,6 +269,8 @@ approveIncident(incidentId: number) {
                                               };
                                               this.cdr.detectChanges();
                                               window.alert('Approved Incident with ID: ' + incidentId);
+
+                                              this.refreshMap();
                                              })
                                       }
 
@@ -282,6 +286,7 @@ deleteIncident(incidentId: number) {
       this.filteredIncidents = this.filteredIncidents.filter(incident => {return incident.id != returnedId});
       this.markersMap.get(incidentId).map = null;
       window.alert('Deleted Incident with ID: ' + incidentId);
+      this.refreshMap();
     }
   });
   
@@ -331,6 +336,10 @@ toggleHighlight(markerView: any, incident: any) {
         longitude: this.mapStateService.selectedLongitude
       }
     });
+  }
+
+  refreshMap(){ //Navigates to component that redirects back to route: '', useful for reloading markers
+    this.router.navigateByUrl('/refresh');
   }
 
 }

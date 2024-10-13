@@ -4,6 +4,7 @@ import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
 import { AppMapComponent } from './pages/map/map/map.component';
 import { AppDescriptionComponent } from './pages/description/description/description.component';
+import { MagicRefreshComponent } from './layouts/blank/magic-refresh/magic-refresh.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./pages/pages.module').then((m) => m.PagesModule),
       },
+      {
+        path: 'refresh',
+        component: MagicRefreshComponent,
+        pathMatch: 'full'
+      }
     ],
   },
   {

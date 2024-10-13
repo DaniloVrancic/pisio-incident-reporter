@@ -16,6 +16,7 @@ import { Incident } from 'src/app/models/incident';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { IncidentType } from 'src/app/models/incident-type';
 import { MapService } from '../map.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-location-dialog',
@@ -55,7 +56,7 @@ export class AddLocationDialogComponent {
   profilePictureFormControl = new FormControl(null);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[],
-    latitude: number, longitude: number, userId: string | null}, private mapService: MapService) {
+    latitude: number, longitude: number, userId: string | null}, private mapService: MapService, private router: Router) {
     this.incidentTypes = data.incidentTypes;
     this.incidentSubtypes = data.incidentSubtypes;
     this.selectedLongitude = data.longitude;
@@ -175,10 +176,8 @@ onChangeFile(event: any)
     }
 
     try{
-      console.log("SENT ITEM: ");
-      console.log(incidentToSend);
       this.mapService.addIncident(incidentToSend).subscribe({
-        next: result => {console.log(result);},
+        next: result => {this.refreshMap();},
         error: error => {console.error(error);}
       });
     }
@@ -188,6 +187,9 @@ onChangeFile(event: any)
     }
     
 
+    refreshMap(){ //Navigates to component that redirects back to route: '', useful for reloading markers
+      this.router.navigateByUrl('/refresh');
+    }
     
 
     
