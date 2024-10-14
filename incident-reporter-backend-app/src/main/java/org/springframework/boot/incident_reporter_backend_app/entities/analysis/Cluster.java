@@ -2,12 +2,13 @@ package org.springframework.boot.incident_reporter_backend_app.entities.analysis
 
 import org.springframework.boot.incident_reporter_backend_app.entities.IncidentEntity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Cluster {
     public int id;
-    public List<IncidentEntity> items =new ArrayList<>();
+    public List<Location> items =new ArrayList<>();
     public double latitude;
     public double longitude;
 

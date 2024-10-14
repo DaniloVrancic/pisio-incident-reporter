@@ -142,6 +142,16 @@ public class IncidentService {
     }
 
     /**
+     * Returns the list of IncidentEntities that are between the times specified
+     * @param t1 the start time from where it will be measured
+     * @param t2 the end time
+     * @return List of incidents that satisfy the confiditon of occuring between the two timestamps
+     */
+    public List<IncidentEntity> findBetweenDates(Timestamp t1, Timestamp t2){
+        return this.incidentRepository.findIncidentEntitiesByTimeOfIncidentBetween(t1, t2); // Will return all Incidents in the time interval selected
+    }
+
+    /**
      * Depending on the UserID value, this photo will be saved on the file system in a predetermined folder, under
      * the UserID of the user that is requesting the save to take place.
      * @param base64encodedPhoto the full photo base64 encoded
