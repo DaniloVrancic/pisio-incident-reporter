@@ -13,12 +13,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.TemporalAccessor;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +44,27 @@ public class IncidentService {
         {
             ZonedDateTime zoneAdjustedTime = Instant.now().atZone(ZoneId.systemDefault()); //Gets the local timezone of the machine
             modifiedEntity.setTimeOfIncident(Timestamp.from(zoneAdjustedTime.toInstant()));
+        }
+        else{
+            // Get the current timestamp
+            ZonedDateTime zoneAdjustedTime = Instant.now().atZone(ZoneId.systemDefault());
+            Timestamp currentTime = Timestamp.from(zoneAdjustedTime.toInstant());
+
+            // Extract the current time (hours, minutes, seconds) from currentTime
+            LocalTime currentTimeOnly = currentTime.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalTime();
+
+            // Extract year, month, and day from the selected date
+            LocalDate selectedDateOnly = modifiedEntity.getTimeOfIncident().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            // Combine the selected date (year, month, day) with the current time (hours, minutes, seconds)
+            LocalDateTime combinedDateTime = LocalDateTime.of(selectedDateOnly, currentTimeOnly);
+
+            // Convert the combined LocalDateTime back to a Timestamp
+            Timestamp finalTimestamp = Timestamp.valueOf(combinedDateTime);
         }
         if(modifiedEntity.getStatus() == null){
             if(modifiedEntity.getUser_token() == null){
