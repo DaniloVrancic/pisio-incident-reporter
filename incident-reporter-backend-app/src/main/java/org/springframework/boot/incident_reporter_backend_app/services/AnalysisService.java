@@ -3,9 +3,12 @@ package org.springframework.boot.incident_reporter_backend_app.services;
 import org.springframework.boot.incident_reporter_backend_app.entities.IncidentEntity;
 import org.springframework.boot.incident_reporter_backend_app.entities.analysis.Cluster;
 import org.springframework.boot.incident_reporter_backend_app.entities.analysis.Location;
+import org.springframework.boot.incident_reporter_backend_app.enums.Status;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,14 +23,28 @@ public class AnalysisService {
 
 
     public List<Cluster> allClusters(double eps, int minPts) {
-        // TODO: Later, grab only incidents within certain time frame
         List<IncidentEntity> allIncidentsList = incidentService.findAllEntities();
+        List<Cluster> allClusters = new ArrayList<>();
         Set<LocalDate> allUniqueDates = incidentService.findUniqueDatesOfIncidents(allIncidentsList);
 
-        allUniqueDates.forEach(System.out::println);
-        List<Location> locations = Location.locationsFromIncidents(allIncidentsList); //Change from allIncidentsList to list of incidents in given time interval
+        allUniqueDates.forEach(uniqueDate -> {
+            LocalDate lowerDate = uniqueDate.minusDays(4); //The range will be 4 under days
+            LocalDate upperDate = uniqueDate.plusDays(3); //And 3 days in advance (making it 7 days range)
 
-        return DBSCAN(locations, eps, minPts);
+            LocalDateTime lowerDateTime = lowerDate.atStartOfDay();
+            LocalDateTime upperDateTime = upperDate.atStartOfDay();
+
+            Timestamp t1 = Timestamp.valueOf(lowerDateTime);
+            Timestamp t2 = Timestamp.valueOf(upperDateTime);
+
+            List<IncidentEntity> incidentsInTimeRange = incidentService.findBetweenDatesAndStatus(t1, t2, Status.APPROVED);
+            List<Location> locations = Location.locationsFromIncidents(allIncidentsList);
+
+            allClusters.addAll(DBSCAN(locations, eps, minPts));
+        });
+         //Change from allIncidentsList to list of incidents in given time interval
+
+        return allClusters;
     }
 
     private List<Cluster> DBSCAN(List<Location> locations, double eps, int minPts) {
