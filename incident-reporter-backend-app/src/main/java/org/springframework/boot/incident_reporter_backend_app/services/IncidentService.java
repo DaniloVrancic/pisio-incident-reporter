@@ -17,11 +17,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.temporal.TemporalAccessor;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class IncidentService {
@@ -147,8 +146,18 @@ public class IncidentService {
      * @param t2 the end time
      * @return List of incidents that satisfy the confiditon of occuring between the two timestamps
      */
-    public List<IncidentEntity> findBetweenDates(Timestamp t1, Timestamp t2){
-        return this.incidentRepository.findIncidentEntitiesByTimeOfIncidentBetween(t1, t2); // Will return all Incidents in the time interval selected
+    public List<IncidentEntity> findBetweenDatesAndStatus(Timestamp t1, Timestamp t2, Status s){
+        return this.incidentRepository.findIncidentEntitiesByTimeOfIncidentBetweenAndStatus(t1, t2, s); // Will return all Incidents in the time interval selected
+    }
+
+    public Set<LocalDate> findUniqueDatesOfIncidents(List<IncidentEntity> incidents){
+        Set<LocalDate> result;
+
+        result = incidents.stream()
+                          .map(incident -> {return incident.getTimeOfIncident().toLocalDateTime().toLocalDate();})
+                          .collect(Collectors.toSet());
+
+        return result;
     }
 
     /**

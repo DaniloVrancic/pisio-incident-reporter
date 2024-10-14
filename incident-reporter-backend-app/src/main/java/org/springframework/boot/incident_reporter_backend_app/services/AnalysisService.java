@@ -1,12 +1,12 @@
 package org.springframework.boot.incident_reporter_backend_app.services;
 
+import org.springframework.boot.incident_reporter_backend_app.entities.IncidentEntity;
 import org.springframework.boot.incident_reporter_backend_app.entities.analysis.Cluster;
 import org.springframework.boot.incident_reporter_backend_app.entities.analysis.Location;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +21,11 @@ public class AnalysisService {
 
     public List<Cluster> allClusters(double eps, int minPts) {
         // TODO: Later, grab only incidents within certain time frame
-        List<Location> locations = Location.locationsFromIncidents(incidentService.findAllEntities());
+        List<IncidentEntity> allIncidentsList = incidentService.findAllEntities();
+        Set<LocalDate> allUniqueDates = incidentService.findUniqueDatesOfIncidents(allIncidentsList);
+
+        allUniqueDates.forEach(System.out::println);
+        List<Location> locations = Location.locationsFromIncidents(allIncidentsList); //Change from allIncidentsList to list of incidents in given time interval
 
         return DBSCAN(locations, eps, minPts);
     }
