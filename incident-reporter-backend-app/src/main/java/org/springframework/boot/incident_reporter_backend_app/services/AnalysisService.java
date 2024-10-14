@@ -37,20 +37,20 @@ public class AnalysisService {
             LocalDateTime upperDateTime = upperDate.atStartOfDay();
 
             Timestamp t1 = Timestamp.valueOf(lowerDateTime);
-            Timestamp t2 = Timestamp.valueOf(upperDateTime);
+            Timestamp t2 = Timestamp.valueOf(upperDateTime); //Need timestamps to be compatible with the repository method
 
-            List<IncidentEntity> incidentsInTimeRange = incidentService.findBetweenDatesAndStatus(t1, t2, Status.APPROVED);
-            List<Location> locations = Location.locationsFromIncidents(incidentsInTimeRange);
+            List<IncidentEntity> incidentsInTimeRange = incidentService.findBetweenDatesAndStatus(t1, t2, Status.APPROVED); //Gets only APPROVED incidents in the specified time slot between t1 and t2
+            List<Location> locations = Location.locationsFromIncidents(incidentsInTimeRange); //makes all those incidents into Locations
 
-            List<Cluster> clustersForSelectedTimeRangeIncidents = DBSCAN(locations, eps, minPts);
+            List<Cluster> clustersForSelectedTimeRangeIncidents = DBSCAN(locations, eps, minPts); //Returns clusters from the scan of only those Locations considered in the time slot
 
             clustersForSelectedTimeRangeIncidents = clustersForSelectedTimeRangeIncidents.stream()
-                                                    .filter(cluster -> {return cluster.id != -1;})
+                                                    .filter(cluster -> {return cluster.id != -1;}) //Those Locations that have the clusterId == -1 are UNCLUSTERED locations (not part of any neighbourhood that is above the minIncidents trashhold)
                                                     .collect(Collectors.toList()); //Will filter out the clusters that have an ID value of -1
             if(clustersForSelectedTimeRangeIncidents.size() > 0) //Not going to put empty lists into the HashMap
             {
-                 clustersOnDate.put(uniqueDate, clustersForSelectedTimeRangeIncidents);
-                 allClusters.addAll(clustersForSelectedTimeRangeIncidents);
+                 clustersOnDate.put(uniqueDate, clustersForSelectedTimeRangeIncidents); //dictionary Date-List<Cluster>
+                 allClusters.addAll(clustersForSelectedTimeRangeIncidents); //keep a list of All clusters at all times, just in case a user needs them later, for easy access
             }
         });
          //Change from allIncidentsList to list of incidents in given time interval
