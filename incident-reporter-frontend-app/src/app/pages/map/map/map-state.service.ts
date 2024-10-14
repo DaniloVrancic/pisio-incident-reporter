@@ -3,6 +3,8 @@ import { Incident, Status } from 'src/app/models/incident';
 import { MapService } from './map.service';
 import { formatNumber } from '@angular/common';
 import { AuthGoogleService } from 'src/app/services/auth-google.service';
+import { ClusterService } from 'src/app/services/analysis/cluster.service';
+import { Cluster } from 'src/app/services/analysis/cluster';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +23,7 @@ export class MapStateService {
   currentlyUsedMarkers: any[] = []; //Currently rendered markers
 
   allIncidents: Incident[] = [];
+  loadedClusters: Map<string, Cluster[]> | null = null;
   approvedIncidents: Incident[] = [];
   filteredIncidents: Incident[] = [];
   public currentlyUsedIncidents: Incident[] | undefined = undefined;
@@ -28,7 +31,7 @@ export class MapStateService {
   selectedMarker : any = null;
   isLocationSelected: boolean = false;
 
-  constructor(private mapService: MapService, private authService: AuthGoogleService) {}
+  constructor(private mapService: MapService, private authService: AuthGoogleService, private clusterService: ClusterService) {}
 
 
   tryUseFilteredIncidents(){
@@ -74,6 +77,7 @@ export class MapStateService {
         if(this.authService.isLoggedIn())
         {
             this.currentlyUsedIncidents = this.allIncidents;
+            
         }
         else{
             this.currentlyUsedIncidents = this.approvedIncidents;
@@ -83,7 +87,16 @@ export class MapStateService {
         
           this.loadMarkers(this.currentlyUsedIncidents);
       });
-    
+
+      if(this.authService.isLoggedIn()){
+        this.clusterService.findClusters().subscribe(result => {
+          this.loadedClusters = result;
+          console.log("LOADED CLUSTERS");
+          console.log(this.loadedClusters);
+          console.log("RESULT");
+          console.log(result);
+        })
+      }
     
   }
 

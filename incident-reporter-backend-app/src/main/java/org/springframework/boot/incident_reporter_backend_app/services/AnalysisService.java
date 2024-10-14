@@ -16,20 +16,22 @@ import java.util.stream.Collectors;
 public class AnalysisService {
 
     IncidentService incidentService;
+    private final int DAYS_BACK_TO_CHECK = 7;
 
     public AnalysisService(IncidentService incidentService){
         this.incidentService = incidentService;
     }
 
 
-    public List<Cluster> allClusters(double eps, int minPts) {
+    public HashMap<LocalDate, List<Cluster>> allClusters(double eps, int minPts) {
         List<IncidentEntity> allIncidentsList = incidentService.findAllEntities();
         List<Cluster> allClusters = new ArrayList<>();
         Set<LocalDate> allUniqueDates = incidentService.findUniqueDatesOfIncidents(allIncidentsList);
+        HashMap<LocalDate, List<Cluster>> clustersOnDate = new HashMap<>();
 
         allUniqueDates.forEach(uniqueDate -> {
-            LocalDate lowerDate = uniqueDate.minusDays(4); //The range will be 4 under days
-            LocalDate upperDate = uniqueDate.plusDays(3); //And 3 days in advance (making it 7 days range)
+            LocalDate lowerDate = uniqueDate.minusDays(DAYS_BACK_TO_CHECK); //The range will be 7 under days
+            LocalDate upperDate = uniqueDate.plusDays(1); //Plus one because it checks from midnight (the very start of next day)
 
             LocalDateTime lowerDateTime = lowerDate.atStartOfDay();
             LocalDateTime upperDateTime = upperDate.atStartOfDay();
@@ -38,13 +40,22 @@ public class AnalysisService {
             Timestamp t2 = Timestamp.valueOf(upperDateTime);
 
             List<IncidentEntity> incidentsInTimeRange = incidentService.findBetweenDatesAndStatus(t1, t2, Status.APPROVED);
-            List<Location> locations = Location.locationsFromIncidents(allIncidentsList);
+            List<Location> locations = Location.locationsFromIncidents(incidentsInTimeRange);
 
-            allClusters.addAll(DBSCAN(locations, eps, minPts));
+            List<Cluster> clustersForSelectedTimeRangeIncidents = DBSCAN(locations, eps, minPts);
+
+            clustersForSelectedTimeRangeIncidents = clustersForSelectedTimeRangeIncidents.stream()
+                                                    .filter(cluster -> {return cluster.id != -1;})
+                                                    .collect(Collectors.toList()); //Will filter out the clusters that have an ID value of -1
+            if(clustersForSelectedTimeRangeIncidents.size() > 0) //Not going to put empty lists into the HashMap
+            {
+                 clustersOnDate.put(uniqueDate, clustersForSelectedTimeRangeIncidents);
+                 allClusters.addAll(clustersForSelectedTimeRangeIncidents);
+            }
         });
          //Change from allIncidentsList to list of incidents in given time interval
 
-        return allClusters;
+        return clustersOnDate;
     }
 
     private List<Cluster> DBSCAN(List<Location> locations, double eps, int minPts) {

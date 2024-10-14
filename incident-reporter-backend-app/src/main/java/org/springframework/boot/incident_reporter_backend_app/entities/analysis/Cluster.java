@@ -1,5 +1,6 @@
 package org.springframework.boot.incident_reporter_backend_app.entities.analysis;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.boot.incident_reporter_backend_app.entities.IncidentEntity;
 
 import java.math.BigDecimal;
@@ -8,6 +9,7 @@ import java.util.List;
 
 public class Cluster {
     public int id;
+    @JsonIgnore
     public List<Location> items =new ArrayList<>();
     public double latitude;
     public double longitude;
