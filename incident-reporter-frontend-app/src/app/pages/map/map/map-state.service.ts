@@ -117,6 +117,7 @@ export class MapStateService {
   }
 
   clearClusters(){
+    this.loadedClusters = null;
     if(this.currentlyUsedClusters.length > 0){
       this.currentlyUsedClusters.forEach((cluster: any) => {
         cluster.map = null;
@@ -144,17 +145,17 @@ export class MapStateService {
           });
 
           let furthestDistance = Math.max(...distances);
-          console.log(furthestDistance);
+          
 
           const clusterCircle = new google.maps.Circle({
             map: this.map,
-            strokeColor: '#FFDD00',
-            strokeOpacity: 0.7,
+            strokeColor: '#FF00DD',
+            strokeOpacity: 0.9,
             strokeWeight: 2,
-            fillColor: '#FFAA00',
-            fillOpacity: 0.4,
-            center: { lat: cluster.latitude, lng: cluster.longitude},
-            radius: furthestDistance / 10
+            fillColor: '#FF00AA',
+            fillOpacity: 0.55,
+            center: new google.maps.LatLng(cluster.latitude, cluster.longitude),
+            radius: furthestDistance
           });
 
           this.currentlyUsedClusters.push(clusterCircle);

@@ -145,7 +145,7 @@ public class AnalysisService {
 
         for(Cluster cluster : clusters.values()){
             double lat = cluster.items.stream().map(x -> x.incident.getLatitude().doubleValue()).reduce(Double::sum).get();
-            double lng = cluster.items.stream().map(x -> x.incident.getLatitude().doubleValue()).reduce(Double::sum).get();
+            double lng = cluster.items.stream().map(x -> x.incident.getLongitude().doubleValue()).reduce(Double::sum).get();
             lat /= cluster.items.size();
             lng /= cluster.items.size();
             cluster.latitude = lat;
