@@ -4,13 +4,13 @@ export class Cluster{
     id: number;
     latitude: number;
     longitude: number;
-    locations: Location[];
+    items: Location[];
 
-    constructor(id: number, latitude: number, longitude: number, locations: Location[]){
+    constructor(id: number, latitude: number, longitude: number, items: Location[]){
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.locations = locations;
+        this.items = items;
     }
 
 }

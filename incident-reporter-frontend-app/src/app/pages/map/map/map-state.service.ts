@@ -126,17 +126,25 @@ export class MapStateService {
   }
 
   public async loadClusters(clusters: Map<string,Cluster[]>){
-    const { Map, Circle } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    const { Map: GoogleMap, Circle } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    const {spherical}: any = await google.maps.importLibrary("geometry");
     if(this.authService.isLoggedIn()){
       // TODO: Here I need to load notifications for moderators about the dates and incidents attached to the dates
       
       for(const [key, value] of clusters){
         value.forEach((cluster: Cluster) => {
+          let clusterCenter = new google.maps.LatLng(cluster.latitude,cluster.longitude);
+          let distances: number[] = [];
+          
+          cluster.items.forEach((location: any) => {
+          
+            let locationCenter = new google.maps.LatLng(location.incident.latitude, location.incident.longitude);
+            let radius: number = google.maps.geometry.spherical.computeDistanceBetween(clusterCenter , locationCenter);
+            distances.push(radius);
+          });
 
-          console.log("CLUSTER LAT AND LNG: " + cluster.latitude + "  " + cluster.longitude);
-          console.log("CLUSTER RADIUS: " + this.eps * 1000);
-          console.log("MAP INSIDE CLUSTER: ");
-          console.log(this.map);
+          let furthestDistance = Math.max(...distances);
+          console.log(furthestDistance);
 
           const clusterCircle = new google.maps.Circle({
             map: this.map,
@@ -146,15 +154,14 @@ export class MapStateService {
             fillColor: '#FFAA00',
             fillOpacity: 0.4,
             center: { lat: cluster.latitude, lng: cluster.longitude},
-            radius: this.eps*1000
+            radius: furthestDistance / 10
           });
-
-          console.log(clusterCircle);
 
           this.currentlyUsedClusters.push(clusterCircle);
         })
         
       }
+      console.log(this.currentlyUsedClusters);
     } 
   }
 
@@ -193,9 +200,6 @@ export class MapStateService {
       };
       incident.content = imgTag;
 
-      console.log("MAP INSIDE MARKER INIT:");
-      console.log(this.map);
-
       const marker = new AdvancedMarkerElement({
         map: this.map,
         position: {lat: incident.latitude, lng: incident.longitude},
@@ -210,7 +214,6 @@ export class MapStateService {
         
         const { target } = domEvent;
 
-        console.log(target);
         if(infoWindow.isOpen){
           infoWindow.close();
           return;
@@ -287,7 +290,7 @@ export class MapStateService {
       this.currentlyUsedMarkers.push(marker);
     });
 
-    this.clearClusters();
+      this.clearClusters();
       if(this.authService.isLoggedIn()){
 
         this.clusterService.findClusters(this.eps, this.minIncidents).subscribe((result: Map<number,any>) => {

@@ -109,7 +109,7 @@ async onConfirmClicked() {
 
     let filteredIncidents = this.mapStateService.allIncidents;
     if (selectedFilters.radius != null) { //Apply the radius filter on this
-    const {spherical}: any = await google.maps.importLibrary("geometry")
+    const {spherical}: any = await google.maps.importLibrary("geometry");
     this.mapStateService.isFilterOn = true;
 
     const allowedDistance : number = this.selectedRadius as number;
