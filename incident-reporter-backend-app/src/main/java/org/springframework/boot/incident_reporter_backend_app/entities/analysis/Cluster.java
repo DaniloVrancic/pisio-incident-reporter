@@ -9,20 +9,23 @@ import java.util.List;
 
 public class Cluster {
     public int id;
-    @JsonIgnore
     public List<Location> items =new ArrayList<>();
     public double latitude;
     public double longitude;
+
+    public String date;
 
     public Cluster(){
         id = -999;
         latitude = 0.0;
         longitude = 0.0;
+        date = null;
     };
 
-    public Cluster(int id, double latitude, double longitude){
+    public Cluster(int id, double latitude, double longitude, String date){
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.date = date;
     }
 }

@@ -13,7 +13,7 @@ export class ClusterService {
 
   constructor(private http: HttpClient) { }
 
-  findClusters(eps: number = 0.4, minIncidents: number = 4) : Observable<Map<string, Cluster[]>>//will be searching for minimally this number of incidents to form clusters
+  findClusters(eps: number = 0.4, minIncidents: number = 4) : Observable<Map<number,Map<string, Cluster[]>>>//will be searching for minimally this number of incidents to form clusters
   {
     return this.http.get<any>(this.apiUrl + `/clusters?eps=${eps}&minIncidents=${minIncidents}`);
   }

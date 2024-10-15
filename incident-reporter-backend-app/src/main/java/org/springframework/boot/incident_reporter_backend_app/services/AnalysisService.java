@@ -42,11 +42,12 @@ public class AnalysisService {
             List<IncidentEntity> incidentsInTimeRange = incidentService.findBetweenDatesAndStatus(t1, t2, Status.APPROVED); //Gets only APPROVED incidents in the specified time slot between t1 and t2
             List<Location> locations = Location.locationsFromIncidents(incidentsInTimeRange); //makes all those incidents into Locations
 
-            List<Cluster> clustersForSelectedTimeRangeIncidents = DBSCAN(locations, eps, minPts); //Returns clusters from the scan of only those Locations considered in the time slot
+            List<Cluster> clustersForSelectedTimeRangeIncidents = DBSCAN(locations, eps, minPts, uniqueDate.toString()); //Returns clusters from the scan of only those Locations considered in the time slot
 
             clustersForSelectedTimeRangeIncidents = clustersForSelectedTimeRangeIncidents.stream()
                                                     .filter(cluster -> {return cluster.id != -1;}) //Those Locations that have the clusterId == -1 are UNCLUSTERED locations (not part of any neighbourhood that is above the minIncidents trashhold)
                                                     .collect(Collectors.toList()); //Will filter out the clusters that have an ID value of -1
+
             if(clustersForSelectedTimeRangeIncidents.size() > 0) //Not going to put empty lists into the HashMap
             {
                  clustersOnDate.put(uniqueDate, clustersForSelectedTimeRangeIncidents); //dictionary Date-List<Cluster>
@@ -58,7 +59,7 @@ public class AnalysisService {
         return clustersOnDate;
     }
 
-    private List<Cluster> DBSCAN(List<Location> locations, double eps, int minPts) {
+    private List<Cluster> DBSCAN(List<Location> locations, double eps, int minPts, String date) {
         int clusterId = 0;
 
         for(int i = 0; i < locations.size(); ++i){
@@ -103,7 +104,7 @@ public class AnalysisService {
             }
         }
 
-        return createClusters(locations);
+        return createClusters(locations, date);
     }
 
     private List<Location> getNeighbours(List<Location> locations, int index, double eps){
@@ -122,7 +123,7 @@ public class AnalysisService {
         }).collect(Collectors.toList());
     }
 
-    public List<Cluster> createClusters(List<Location> locations) {
+    public List<Cluster> createClusters(List<Location> locations, String date) {
         HashMap<Integer, Cluster> clusters = new HashMap<>();
         List<Location> unclustered = new ArrayList<>();
         List<Cluster> result = new ArrayList<>();
@@ -135,7 +136,7 @@ public class AnalysisService {
             }
             else {
                 if(clusters.get(location.clusterId) == null){
-                    clusters.put(location.clusterId, new Cluster(location.clusterId, 0, 0));
+                    clusters.put(location.clusterId, new Cluster(location.clusterId, 0, 0, date));
                 }
 
                 clusters.get(location.clusterId).items.add(location);
@@ -153,7 +154,7 @@ public class AnalysisService {
         }
 
         if(unclustered.size() > 0){
-            Cluster c = new Cluster(-1, 0, 0);
+            Cluster c = new Cluster(-1, 0, 0, date);
             c.items = unclustered;
             result.add(c);
         }

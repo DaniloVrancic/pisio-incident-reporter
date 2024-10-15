@@ -32,7 +32,7 @@ public class AnalysisController {
             System.out.println("eps: " + eps);
             System.out.println("minIncidents: " + minIncidents);
             HashMap<LocalDate, List<Cluster>> result = analysisService.allClusters(eps, minIncidents);
-            return new ResponseEntity<HashMap<LocalDate, List<Cluster>>>(result, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
 
 
         }

@@ -21,6 +21,7 @@ export class MapStateService {
   public mapStateChanged: EventEmitter<void> = new EventEmitter<void>();
 
   currentlyUsedMarkers: any[] = []; //Currently rendered markers
+  currentlyUsedClusters: any[] = [];
 
   allIncidents: Incident[] = [];
   loadedClusters: Map<string, Cluster[]> | null = null;
@@ -30,6 +31,9 @@ export class MapStateService {
 
   selectedMarker : any = null;
   isLocationSelected: boolean = false;
+
+  eps: number = 0.4;
+  minIncidents: number = 4;
 
   constructor(private mapService: MapService, private authService: AuthGoogleService, private clusterService: ClusterService) {}
 
@@ -41,6 +45,7 @@ export class MapStateService {
   }
 
   initializeMap(startLatitude: number, startLongitude: number, containerDiv: any){
+
     if(this.selectedLongitude == undefined && this.selectedLatitude == undefined)
     {
       this.selectedLongitude = startLongitude;
@@ -68,6 +73,7 @@ export class MapStateService {
 
   public readIncidentsAndLoadMarkers() //gets all incidents, and based on the login status it will assign allIncidents to be shown or only approved incidents
   {
+
       this.mapService.getAllIncidents().subscribe((result: Incident[]) => {
         this.allIncidents = result;
   
@@ -88,15 +94,16 @@ export class MapStateService {
           this.loadMarkers(this.currentlyUsedIncidents);
       });
 
+      this.clearClusters();
       if(this.authService.isLoggedIn()){
-        this.clusterService.findClusters().subscribe(result => {
-          this.loadedClusters = result;
-          console.log("LOADED CLUSTERS");
-          console.log(this.loadedClusters);
-          console.log("RESULT");
-          console.log(result);
-        })
+
+        this.clusterService.findClusters(this.eps, this.minIncidents).subscribe((result: Map<number,any>) => {
+          this.loadedClusters = new Map<string, Cluster[]>(Object.entries(result));
+         
+          this.loadClusters(this.loadedClusters);
+        });
       }
+      
     
   }
 
@@ -116,6 +123,43 @@ export class MapStateService {
   
     return img.src;
   }
+
+  clearClusters(){
+    if(this.currentlyUsedClusters.length > 0){
+      this.currentlyUsedClusters.forEach((cluster: any) => {
+        cluster.map = null;
+      })
+      this.currentlyUsedClusters = [];
+    }
+  }
+
+  public async loadClusters(clusters: Map<string,Cluster[]>){
+    const { Map, Circle } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    if(this.authService.isLoggedIn()){
+
+      // TODO: Here I need to load notifications for moderators about the dates and incidents attached to the dates
+      
+      for(const [key, value] of clusters){
+        value.forEach((cluster: Cluster) => {
+
+          const clusterCircle = new google.maps.Circle({
+            strokeColor: '#FFDD00',
+            strokeOpacity: 0.7,
+            strokeWeight: 2,
+            fillColor: '#FFAA00',
+            fillOpacity: 0.4,
+            map: this.map,
+            center: {lat: cluster.latitude, lng: cluster.longitude},
+            radius: this.eps
+          })
+        })
+        
+      }
+    }
+
+      
+  }
+
 
   /**
    * 
