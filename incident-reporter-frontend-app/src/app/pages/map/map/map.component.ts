@@ -139,7 +139,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
     
       const centerLatitude: number = 44.79807782849736;
       const centerLongitude: number = 20.45847839252972;
-    this.mapStateService.initializeMap(centerLatitude, centerLongitude, document.getElementById('map'));
+      await this.mapStateService.initializeMap(centerLatitude, centerLongitude, document.getElementById('map'));
 
 
     const map = this.mapStateService.map;

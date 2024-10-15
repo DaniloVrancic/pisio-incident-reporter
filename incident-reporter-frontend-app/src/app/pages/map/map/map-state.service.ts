@@ -94,15 +94,7 @@ export class MapStateService {
           this.loadMarkers(this.currentlyUsedIncidents);
       });
 
-      this.clearClusters();
-      if(this.authService.isLoggedIn()){
-
-        this.clusterService.findClusters(this.eps, this.minIncidents).subscribe((result: Map<number,any>) => {
-          this.loadedClusters = new Map<string, Cluster[]>(Object.entries(result));
-         
-          this.loadClusters(this.loadedClusters);
-        });
-      }
+      
       
     
   }
@@ -136,28 +128,34 @@ export class MapStateService {
   public async loadClusters(clusters: Map<string,Cluster[]>){
     const { Map, Circle } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
     if(this.authService.isLoggedIn()){
-
       // TODO: Here I need to load notifications for moderators about the dates and incidents attached to the dates
       
       for(const [key, value] of clusters){
         value.forEach((cluster: Cluster) => {
 
+          console.log("CLUSTER LAT AND LNG: " + cluster.latitude + "  " + cluster.longitude);
+          console.log("CLUSTER RADIUS: " + this.eps * 1000);
+          console.log("MAP INSIDE CLUSTER: ");
+          console.log(this.map);
+
           const clusterCircle = new google.maps.Circle({
+            map: this.map,
             strokeColor: '#FFDD00',
             strokeOpacity: 0.7,
             strokeWeight: 2,
             fillColor: '#FFAA00',
             fillOpacity: 0.4,
-            map: this.map,
-            center: {lat: cluster.latitude, lng: cluster.longitude},
-            radius: this.eps
-          })
+            center: { lat: cluster.latitude, lng: cluster.longitude},
+            radius: this.eps*1000
+          });
+
+          console.log(clusterCircle);
+
+          this.currentlyUsedClusters.push(clusterCircle);
         })
         
       }
-    }
-
-      
+    } 
   }
 
 
@@ -167,7 +165,7 @@ export class MapStateService {
    */
   public async loadMarkers(incidents: Incident[]) { 
 
-    const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    const { Map: GoogleMap, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
     const { AdvancedMarkerElement, PinElement  } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
 
     if(this.currentlyUsedMarkers.length > 0){
@@ -194,6 +192,9 @@ export class MapStateService {
         imgTag.src = `assets/markers/type_icons/other-marker.png`;
       };
       incident.content = imgTag;
+
+      console.log("MAP INSIDE MARKER INIT:");
+      console.log(this.map);
 
       const marker = new AdvancedMarkerElement({
         map: this.map,
@@ -285,6 +286,16 @@ export class MapStateService {
       });
       this.currentlyUsedMarkers.push(marker);
     });
+
+    this.clearClusters();
+      if(this.authService.isLoggedIn()){
+
+        this.clusterService.findClusters(this.eps, this.minIncidents).subscribe((result: Map<number,any>) => {
+          this.loadedClusters = new Map<string, Cluster[]>(Object.entries(result));
+         
+          this.loadClusters(this.loadedClusters);
+        });
+      }
 }
   selectCoordinates(latitude: number, longitude: number){
     this.selectedLatitude = latitude;
