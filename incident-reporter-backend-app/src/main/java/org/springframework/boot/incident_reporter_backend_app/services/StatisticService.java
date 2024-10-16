@@ -37,20 +37,20 @@ public class StatisticService {
     }
 
 
-    final String typeCountStatistic = "SELECT new IndexValue(inc_type.name, COUNT(*)) FROM incident inc " +
+    final String typeCountStatistic = "SELECT inc_type.name AS 'index', COUNT(*) AS 'value' FROM incident inc " +
             "INNER JOIN incident_subtype inc_sub ON inc.incident_subtype_id=inc_sub.id " +
             "INNER JOIN incident_type inc_type ON inc_sub.incident_type_id = inc_type.id " +
             "WHERE inc.status='APPROVED' " +
             "GROUP BY inc_sub.incident_type_id;";
 
-    final String subtypeCountStatistic = "SELECT new IndexValue(inc_sub.subtype, COUNT(*)) FROM incident inc " +
+    final String subtypeCountStatistic = "SELECT inc_sub.subtype AS 'index', COUNT(*) AS 'value' FROM incident inc " +
             "INNER JOIN incident_subtype inc_sub ON inc.incident_subtype_id=inc_sub.id " +
             "INNER JOIN incident_type inc_type ON inc_sub.incident_type_id = inc_type.id " +
             "WHERE inc.status='APPROVED' " +
             "GROUP BY inc.incident_subtype_id " +
             "ORDER BY inc_sub.subtype; ";
 
-    final String incidentsCountByDayOfWeek = "SELECT new IndexValue(DAYNAME(time_of_incident), COUNT(*)) " +
+    final String incidentsCountByDayOfWeek = "SELECT DAYNAME(time_of_incident) AS 'index', COUNT(*) AS 'value' " +
             "FROM incident " +
             "WHERE status = 'APPROVED' " +
             "GROUP BY DAYOFWEEK(time_of_incident) " +
@@ -66,6 +66,7 @@ public class StatisticService {
             "    COUNT(*) AS 'value' " +
             "FROM " +
             "    incident " +
+            "    WHERE status='APPROVED' " +
             "GROUP BY " +
             "    `index`" +
             "ORDER BY " +
