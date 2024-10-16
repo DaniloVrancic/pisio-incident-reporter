@@ -1,9 +1,21 @@
 package org.springframework.boot.incident_reporter_backend_app.entities.statistics;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+
 public class IndexValue {
 
     String index;
     Integer value;
+
+    protected IndexValue(){}
+
+    public IndexValue(String index, Integer value){
+        this.index = index;
+        this.value = value;
+    }
 
     public void setIndex(String index){
         this.index = index;
