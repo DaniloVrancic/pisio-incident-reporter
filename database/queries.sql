@@ -40,3 +40,31 @@ ORDER BY
         WHEN HOUR(time_of_incident) < 18 THEN 3
         ELSE 4
     END;
+    
+    
+DELIMITER $$
+CREATE PROCEDURE GetIncidentCounts(IN start_date DATE, IN end_date DATE)
+BEGIN
+    WITH RECURSIVE date_series AS (
+        SELECT start_date AS `date`
+        UNION ALL
+        SELECT DATE_ADD(`date`, INTERVAL 1 DAY)
+        FROM date_series
+        WHERE `date` < end_date
+    )
+    SELECT 
+        ds.`date` AS `index`, 
+        IFNULL(COUNT(inc.time_of_incident), 0) AS `value`
+    FROM 
+        date_series ds
+    LEFT JOIN 
+        incident inc 
+    ON 
+        DATE(inc.time_of_incident) = ds.`date`
+        AND inc.`status` = 'APPROVED'
+    GROUP BY 
+        ds.`date`
+    ORDER BY 
+        ds.`date`;
+END $$
+DELIMITER ;

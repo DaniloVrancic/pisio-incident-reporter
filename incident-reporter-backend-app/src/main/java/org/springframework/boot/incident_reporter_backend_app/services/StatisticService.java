@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -34,6 +35,10 @@ public class StatisticService {
 
     public List<IndexValue> getIncidentsCountByPartOfDay(){
         return this.jdbcTemplate.query(incidentsCountByPartOfDay, rowMapper);
+    }
+
+    public List<IndexValue> getIncidentsBetweenDates(LocalDate startDate, LocalDate endDate){
+        return this.jdbcTemplate.query(callGetIncidentsCountsForDates(startDate,endDate), rowMapper);
     }
 
 
@@ -77,4 +82,8 @@ public class StatisticService {
             "        ELSE 4" +
             "    END;";
 
+    private String callGetIncidentsCountsForDates(LocalDate startDate, LocalDate endDate)
+    {
+        return  "call GetIncidentCounts(' "+ startDate.toString() + " ', ' "+ endDate.toString() +" ');";
+    }
 }
