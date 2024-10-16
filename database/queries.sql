@@ -20,7 +20,7 @@ WHERE status = 'APPROVED'
 GROUP BY DAYOFWEEK(time_of_incident)
 ORDER BY DAYOFWEEK(time_of_incident);
 
-#Counts how many crimes happen in a given time of day (day has been split in 4 parts, starting from midnight 00:00)
+#Counts how many incidents happen in a given time of day (day has been split in 4 parts, starting from midnight 00:00)
 SELECT 
     CASE 
         WHEN HOUR(time_of_incident) < 6 THEN '00:00 - 05:59'

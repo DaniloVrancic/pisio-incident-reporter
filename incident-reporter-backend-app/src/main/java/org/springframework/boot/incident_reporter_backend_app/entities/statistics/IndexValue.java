@@ -1,6 +1,6 @@
 package org.springframework.boot.incident_reporter_backend_app.entities.statistics;
 
-public class IndexValueEntity {
+public class IndexValue {
 
     String index;
     Integer value;
