@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
+import { CommonModule, formatDate } from '@angular/common';
+import { Component, ViewEncapsulation, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +23,9 @@ import {
   ApexResponsive,
   NgApexchartsModule,
 } from 'ng-apexcharts';
+import { StatisticService } from './statistic.service';
+import { IndexValue } from 'src/app/models/index-value';
+import { MapsSubscriptionContainer } from '../map/map/map-subscriptions-container';
 
 interface month {
   value: string;
@@ -149,12 +152,18 @@ const ELEMENT_DATA: productsData[] = [
     CommonModule,
   ],
 })
-export class AppDashboardComponent {
+export class AppDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
   public profitExpanceChart!: Partial<profitExpanceChart> | any;
   public trafficChart!: Partial<trafficChart> | any;
   public salesChart!: Partial<salesChart> | any;
+
+  public lastMonthOfIncidentsCounts: IndexValue[] | any;
+  public incidentTypesCounts: IndexValue[] | any;
+  public incidentSubypesCounts: IndexValue[] | any;
+  public incidentsInDaysOfWeekCounts: IndexValue[] | any;
+  public incidentsInPartOfDayCounts: IndexValue[] | any;
 
   displayedColumns: string[] = ['profile', 'hrate', 'exclasses', 'status'];
   dataSource = ELEMENT_DATA;
@@ -240,7 +249,7 @@ export class AppDashboardComponent {
     },
   ];
 
-  constructor() {
+  constructor(private statisticService: StatisticService) {
     // sales overview chart
     this.profitExpanceChart = {
       series: [
@@ -414,5 +423,54 @@ export class AppDashboardComponent {
         },
       },
     };
+  }
+
+  subs: MapsSubscriptionContainer = new MapsSubscriptionContainer();
+
+
+  ngOnInit(): void {
+    const today = new Date();
+    let previousMonth = new Date(today);
+    previousMonth.setMonth(previousMonth.getMonth() - 1);
+
+    const formattedDate1 = formatDate(previousMonth, 'yyyy-MM-dd', 'en-US');
+    const formattedDate2 = formatDate(today, 'yyyy-MM-dd', 'en-US');
+    
+
+    this.subs.add = this.statisticService.getIncidentsBetweenDates(formattedDate1, formattedDate2)
+        .subscribe((result: IndexValue[]) => {
+          this.lastMonthOfIncidentsCounts = result;
+          console.log("getIncidentsBetweenDates: ");
+          console.log(result);
+        });
+    this.subs.add = this.statisticService.getTypeGroupCount()
+        .subscribe((result: IndexValue[]) => { 
+          this.incidentTypesCounts = result;
+          console.log("getTypeGroupCount: ");
+          console.log(result);
+        });
+
+    this.subs.add = this.statisticService.getSubtypeGroupCount()
+        .subscribe((result: IndexValue[]) => { 
+          this.incidentSubypesCounts = result;
+          console.log("getSubtypeGroupCount: ");
+          console.log(result);
+        });
+    this.subs.add = this.statisticService.getDaysInWeekCount()
+        .subscribe((result: IndexValue[]) => { 
+        this.incidentsInDaysOfWeekCounts = result;
+        console.log("getDaysInWeekCount: ");
+        console.log(result);
+      });
+    this.subs.add = this.statisticService.getPartOfDayGroups()
+        .subscribe((result: IndexValue[]) => { 
+        this.incidentsInPartOfDayCounts = result;
+        console.log("getPartOfDayGroups: ");
+        console.log(result);
+      });
+  }
+
+  ngOnDestroy(): void {
+      this.subs.dispose();
   }
 }

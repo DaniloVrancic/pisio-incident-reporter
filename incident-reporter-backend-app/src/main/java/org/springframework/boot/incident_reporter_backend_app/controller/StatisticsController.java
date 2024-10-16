@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/statistics")
+    @RequestMapping("/statistics")
 public class StatisticsController {
 
     private final StatisticService statisticService;
