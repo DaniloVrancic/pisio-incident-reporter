@@ -145,15 +145,28 @@ export class MapStateService {
           });
 
           let furthestDistance = Math.max(...distances);
-          
 
+          let circleStrokeColor: string;
+          let circleFillColor: string;
+
+          console.log(value);
+          
+          if(value.length < (this.minIncidents * 1.5))
+          {
+            circleStrokeColor = "#FF00DD";
+            circleFillColor = '#FF00AA';
+          }
+          else{
+            circleStrokeColor = "#FF0000";
+            circleFillColor = '#EE0000';
+          }
           const clusterCircle = new google.maps.Circle({
             map: this.map,
-            strokeColor: '#FF00DD',
+            strokeColor: circleStrokeColor,
             strokeOpacity: 0.9,
             strokeWeight: 2,
-            fillColor: '#FF00AA',
-            fillOpacity: 0.55,
+            fillColor: circleFillColor,
+            fillOpacity: 0.4,
             center: new google.maps.LatLng(cluster.latitude, cluster.longitude),
             radius: furthestDistance
           });
