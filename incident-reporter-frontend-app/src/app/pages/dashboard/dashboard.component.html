@@ -2,11 +2,11 @@
   <!-- --------------------------------------------------------------------------- -->
   <!-- Profit & Expenses -->
   <!-- --------------------------------------------------------------------------- -->
-  <div class="col-lg-8">
+  <div style="width: 100%; min-width: 90%; max-width: 99%; margin: 1rem; margin-right: 2rem;">
     <mat-card class="cardWithShadow">
       <mat-card-content class="p-24">
         <div class="d-flex w-100">
-          <mat-card-title>Profit & Expenses</mat-card-title>
+          <mat-card-title>Incidents in Parts of Day</mat-card-title>
           <div class="m-l-auto">
             <button
               mat-icon-button
@@ -17,32 +17,34 @@
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
               <button mat-menu-item>
-                <span>Action</span>
+                <span>Last Week</span>
               </button>
               <button mat-menu-item>
-                <span>Another Action</span>
+                <span>Last Month</span>
               </button>
               <button mat-menu-item>
-                <span>Something else here</span>
+                <span>Last Year</span>
               </button>
             </mat-menu>
           </div>
         </div>
         <apx-chart
-          [series]="profitExpanceChart.series"
-          [dataLabels]="profitExpanceChart.dataLabels"
-          [chart]="profitExpanceChart.chart"
-          [legend]="profitExpanceChart.legend"
-          [xaxis]="profitExpanceChart.xaxis"
-          [yaxis]="profitExpanceChart.yaxis"
-          [grid]="profitExpanceChart.grid"
-          [stroke]="profitExpanceChart.stroke"
-          [tooltip]="profitExpanceChart.tooltip"
-          [plotOptions]="profitExpanceChart.plotOptions"
+            [series]="incidentsInPartsOfDayChart?.series"
+            [dataLabels]="incidentsInPartsOfDayChart?.dataLabels"
+            [chart]="incidentsInPartsOfDayChart?.chart"
+            [legend]="incidentsInPartsOfDayChart?.legend"
+            [xaxis]="incidentsInPartsOfDayChart?.xaxis"
+            [yaxis]="incidentsInPartsOfDayChart?.yaxis"
+            [grid]="incidentsInPartsOfDayChart?.grid"
+            [stroke]="incidentsInPartsOfDayChart?.stroke"
+            [tooltip]="incidentsInPartsOfDayChart?.tooltip"
+            [plotOptions]="incidentsInPartsOfDayChart?.plotOptions"
+            [noData]="incidentsInDaysOfWeekCounts?.noData"
         ></apx-chart>
       </mat-card-content>
     </mat-card>
   </div>
+
   <!-- --------------------------------------------------------------------------- -->
   <!-- end Profit & Expenses -->
   <!-- --------------------------------------------------------------------------- -->

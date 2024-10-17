@@ -32,7 +32,7 @@ interface month {
   viewValue: string;
 }
 
-export interface profitExpanceChart {
+export interface incidentsInPartsOfDayChart {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
@@ -88,14 +88,6 @@ export interface productsData {
   priority: string;
 }
 
-// ecommerce card
-interface productcards {
-  id: number;
-  imgSrc: string;
-  title: string;
-  price: string;
-  rprice: string;
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -116,7 +108,7 @@ interface productcards {
 export class AppDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
-  public profitExpanceChart!: Partial<profitExpanceChart> | any;
+  public incidentsInPartsOfDayChart!: Partial<incidentsInPartsOfDayChart> | any;
   public trafficChart!: Partial<trafficChart> | any;
   public salesChart!: Partial<salesChart> | any;
 
@@ -129,118 +121,10 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   public incidentsInPartOfDayCounts: IndexValue[] | any;
 
 
-  months: month[] = [
-    { value: 'mar', viewValue: 'March 2023' },
-    { value: 'apr', viewValue: 'April 2023' },
-    { value: 'june', viewValue: 'June 2023' },
-  ];
-
-
-
-  // ecommerce card
-  productcards: productcards[] = [
-    {
-      id: 1,
-      imgSrc: '/assets/images/products/p1.jpg',
-      title: 'Boat Headphone',
-      price: '285',
-      rprice: '375',
-    },
-    {
-      id: 2,
-      imgSrc: '/assets/images/products/p2.jpg',
-      title: 'MacBook Air Pro',
-      price: '285',
-      rprice: '375',
-    },
-    {
-      id: 3,
-      imgSrc: '/assets/images/products/p3.jpg',
-      title: 'Red Valvet Dress',
-      price: '285',
-      rprice: '375',
-    },
-    {
-      id: 4,
-      imgSrc: '/assets/images/products/p4.jpg',
-      title: 'Cute Soft Teddybear',
-      price: '285',
-      rprice: '375',
-    },
-  ];
 
   constructor(private statisticService: StatisticService) {
-    // sales overview chart
-    this.profitExpanceChart = {
-      series: [
-        {
-          name: 'Eanings this month',
-          data: [9, 5, 3, 7, 5, 10, 3],
-          color: '#0085db',
-        },
-        {
-          name: 'Expense this month',
-          data: [6, 3, 9, 5, 4, 6, 4],
-          color: '#fb977d',
-        },
-      ],
 
-      grid: {
-        borderColor: 'rgba(0,0,0,0.1)',
-        strokeDashArray: 3,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '30%',
-          borderRadius: 4,
-          endingShape: "rounded",
-        },
-      },
-      chart: {
-        type: 'bar',
-        height: 390,
-        offsetY: 10,
-        foreColor: '#adb0bb',
-        fontFamily: 'inherit',
-        toolbar: { show: false },
-      },
-      dataLabels: { enabled: false },
-      markers: { size: 0 },
-      legend: { show: false },
-      xaxis: {
-        type: 'category',
-        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        axisTicks: {
-          show: false,
-        },
-        axisBorder: {
-          show: false,
-        },
-        labels: {
-          style: { cssClass: 'grey--text lighten-2--text fill-color' },
-        },
-      },
-      stroke: {
-        show: true,
-        width: 5,
-        colors: ['transparent'],
-      },
-      tooltip: { theme: 'light' },
-
-      responsive: [
-        {
-          breakpoint: 600,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 3,
-              },
-            },
-          },
-        },
-      ],
-    };
+    
 
     // yearly breakup chart
     this.trafficChart = {
@@ -345,6 +229,87 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     };
   }
 
+  loadIncidentsInPartsOfDayChart(){
+    const incidentsInPartsOfDayValues: number[] = (this.incidentsInPartOfDayCounts as IndexValue[]).map(inc => {return inc.value});
+    const incidentsInPartsOfDayLabels: string[] = (this.incidentsInPartOfDayCounts as IndexValue[]).map(inc => {return inc.index});
+
+    console.log("LOADED VALUES AND LABELS");
+    console.log(incidentsInPartsOfDayValues)
+    console.log(incidentsInPartsOfDayLabels);
+
+    this.incidentsInPartsOfDayChart = {
+      chart: {
+        height: '400rem',
+        type: 'bar',
+        foreColor: '#adb0bb',
+        fontFamily: 'inherit',
+        toolbar: { show: false },
+      },
+      grid: {
+        borderColor: 'rgba(0,0,0,0.1)',
+        strokeDashArray: 3,
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%',
+          borderRadius: 4,
+          endingShape: "rounded",
+        },
+      },
+      dataLabels: {
+          enabled: true
+      },
+      series: [
+        {
+          name: 'Incidents in Quarter of Day',
+          data: incidentsInPartsOfDayValues,
+          color: '#00bfff',
+        }
+      ],
+      title: {
+          text: 'Incidents per Day',
+      },
+      noData: {
+        text: 'Loading...'
+      },
+      xaxis: {
+        type: 'category',
+        categories: incidentsInPartsOfDayLabels,
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+        labels: {
+          style: { cssClass: 'grey--text lighten-2--text fill-color' },
+        },
+      },
+      markers: { size: 0 },
+      legend: { show: false },
+      stroke: {
+        show: true,
+        width: 5,
+        colors: ['transparent'],
+      },
+      tooltip: { theme: 'light' },
+      responsive: [
+        {
+          breakpoint: 600,
+          options: {
+            plotOptions: {
+              bar: {
+                borderRadius: 3,
+              },
+            },
+          },
+        },
+      ],
+      }
+      
+  }
+
   subs: MapsSubscriptionContainer = new MapsSubscriptionContainer();
 
 
@@ -359,17 +324,18 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
 
     this.subs.add = this.statisticService.getIncidentsBetweenDates(formattedDate1, formattedDate2)
     .subscribe((result: IndexValue[]) => {
-        if(this.lastYearOfIncidentsCounts != undefined || this.lastYearOfIncidentsCounts != null){
+        
           this.lastYearOfIncidentsCounts = result;
           this.last30DaysOfIncidentsCounts = (this.lastYearOfIncidentsCounts as IndexValue[]).slice(-30);
           this.last7DaysOfIncidents = (this.last30DaysOfIncidentsCounts as IndexValue[]).slice(-7);
-          }
+          
           console.log("getIncidentsBetweenDates: ");
           console.log(result);
           console.log("last30Days:");
           console.log(this.last30DaysOfIncidentsCounts);
           console.log("last7Days");
           console.log(this.last7DaysOfIncidents);
+          
         });
     this.subs.add = this.statisticService.getTypeGroupCount()
         .subscribe((result: IndexValue[]) => { 
@@ -395,6 +361,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
         this.incidentsInPartOfDayCounts = result;
         console.log("getPartOfDayGroups: ");
         console.log(result);
+        this.loadIncidentsInPartsOfDayChart();
       });
   }
 
