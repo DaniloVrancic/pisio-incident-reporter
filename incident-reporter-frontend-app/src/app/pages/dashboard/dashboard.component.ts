@@ -120,11 +120,14 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   public trafficChart!: Partial<trafficChart> | any;
   public salesChart!: Partial<salesChart> | any;
 
-  public lastMonthOfIncidentsCounts: IndexValue[] | any;
+  public lastYearOfIncidentsCounts: IndexValue[] | any;
+  public last30DaysOfIncidentsCounts: IndexValue[] | any;
+  public last7DaysOfIncidents: IndexValue[] | any;
   public incidentTypesCounts: IndexValue[] | any;
   public incidentSubypesCounts: IndexValue[] | any;
   public incidentsInDaysOfWeekCounts: IndexValue[] | any;
   public incidentsInPartOfDayCounts: IndexValue[] | any;
+
 
   months: month[] = [
     { value: 'mar', viewValue: 'March 2023' },
@@ -348,17 +351,25 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const today = new Date();
     let previousMonth = new Date(today);
-    previousMonth.setMonth(previousMonth.getMonth() - 1);
+    previousMonth.setFullYear(previousMonth.getFullYear() - 1);
 
     const formattedDate1 = formatDate(previousMonth, 'yyyy-MM-dd', 'en-US');
     const formattedDate2 = formatDate(today, 'yyyy-MM-dd', 'en-US');
     
 
     this.subs.add = this.statisticService.getIncidentsBetweenDates(formattedDate1, formattedDate2)
-        .subscribe((result: IndexValue[]) => {
-          this.lastMonthOfIncidentsCounts = result;
+    .subscribe((result: IndexValue[]) => {
+        if(this.lastYearOfIncidentsCounts != undefined || this.lastYearOfIncidentsCounts != null){
+          this.lastYearOfIncidentsCounts = result;
+          this.last30DaysOfIncidentsCounts = (this.lastYearOfIncidentsCounts as IndexValue[]).slice(-30);
+          this.last7DaysOfIncidents = (this.last30DaysOfIncidentsCounts as IndexValue[]).slice(-7);
+          }
           console.log("getIncidentsBetweenDates: ");
           console.log(result);
+          console.log("last30Days:");
+          console.log(this.last30DaysOfIncidentsCounts);
+          console.log("last7Days");
+          console.log(this.last7DaysOfIncidents);
         });
     this.subs.add = this.statisticService.getTypeGroupCount()
         .subscribe((result: IndexValue[]) => { 
