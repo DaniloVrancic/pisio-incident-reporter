@@ -310,6 +310,15 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
       
   }
 
+  loadTypeOfIncidentDonutChart(){
+    const incidentTypeValues: number[] = (this.incidentTypesCounts as IndexValue[]).map(inc => {return inc.value});
+    const incidentTypeLabels: string[] = (this.incidentTypesCounts as IndexValue[]).map(inc => {return inc.index});
+  }
+
+  loadSubtypeOfIncidentDonutChart(){
+    
+  }
+
   subs: MapsSubscriptionContainer = new MapsSubscriptionContainer();
 
 

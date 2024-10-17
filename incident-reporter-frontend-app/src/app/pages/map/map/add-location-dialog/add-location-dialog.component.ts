@@ -77,16 +77,6 @@ export class AddLocationDialogComponent {
     }
   }
 
-  capitalizeFirstLetter(sentence: string | null) {
-    let mySentence: string = sentence as string;
-
-    if(mySentence == undefined || mySentence == null){
-      return undefined;
-    }
-
-    return mySentence.charAt(0).toUpperCase() + mySentence.slice(1);
-}
-
 assignDescription(event: any){
   
   this.selectedDescription = event.target.value;

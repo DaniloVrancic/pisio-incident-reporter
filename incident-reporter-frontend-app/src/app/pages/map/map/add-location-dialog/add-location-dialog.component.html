@@ -12,7 +12,7 @@
             <img [src]="'assets/markers/type_icons/' + type.name + '-marker.png'" alt="{{ type.name }}" 
             width="35" 
             height="35" />
-            {{ this.capitalizeFirstLetter(type.name) }}
+            {{ type.name | titlecase }}
           </mat-panel-title>
         </mat-expansion-panel-header>
       
@@ -29,7 +29,7 @@
                           >
               <img [src]="'assets/markers/' + subtype.subtype + '-marker-pending.png'" alt="{{ subtype.subtype }}" 
               width="30" height="30" />
-                {{ this.capitalizeFirstLetter(subtype.subtype) }}
+                {{ subtype.subtype | titlecase  }}
              
             </mat-list-item>
             <mat-divider/>
