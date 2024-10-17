@@ -1,4 +1,4 @@
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule, formatDate, TitleCasePipe } from '@angular/common';
 import { Component, ViewEncapsulation, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -47,7 +47,7 @@ export interface incidentsInPartsOfDayChart {
   marker: ApexMarkers;
 }
 
-export interface trafficChart {
+export interface typeOfIncidentChart {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
@@ -109,7 +109,8 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
   public incidentsInPartsOfDayChart!: Partial<incidentsInPartsOfDayChart> | any;
-  public trafficChart!: Partial<trafficChart> | any;
+  public typeOfIncidentChart!: Partial<typeOfIncidentChart> | any;
+  public subtypeOfIncidentChart!: Partial<typeOfIncidentChart> | any;
   public salesChart!: Partial<salesChart> | any;
 
   public lastYearOfIncidentsCounts: IndexValue[] | any;
@@ -123,69 +124,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
 
 
   constructor(private statisticService: StatisticService) {
-
-    
-
-    // yearly breakup chart
-    this.trafficChart = {
-      series: [5368, 3500, 9000],
-      labels: ['5368', 'Refferal Traffic', 'Oragnic Traffic'],
-      chart: {
-        type: 'donut',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
-        foreColor: '#adb0bb',
-        toolbar: {
-          show: false,
-        },
-        height: 160,
-      },
-      colors: ['#e7ecf0', '#fb977d', '#0085db'],
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '80%',
-            background: 'none',
-            labels: {
-              show: true,
-              name: {
-                show: true,
-                fontSize: '12px',
-                color: undefined,
-                offsetY: 5,
-              },
-              value: {
-                show: false,
-                color: '#98aab4',
-              },
-            },
-          },
-        },
-      },
-      stroke: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      legend: {
-        show: false,
-      },
-      responsive: [
-        {
-          breakpoint: 991,
-          options: {
-            chart: {
-              width: 120,
-            },
-          },
-        },
-      ],
-      tooltip: {
-        enabled: false,
-      },
-    };
-
-    // mohtly earnings chart
+    // monthly earnings chart
     this.salesChart = {
       series: [
         {
@@ -311,12 +250,218 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   }
 
   loadTypeOfIncidentDonutChart(){
+    let titleCasePipe = new TitleCasePipe();
+
     const incidentTypeValues: number[] = (this.incidentTypesCounts as IndexValue[]).map(inc => {return inc.value});
-    const incidentTypeLabels: string[] = (this.incidentTypesCounts as IndexValue[]).map(inc => {return inc.index});
+    const incidentTypeLabels: string[] = (this.incidentTypesCounts as IndexValue[]).map(inc => {return titleCasePipe.transform(inc.index);});
+
+    this.typeOfIncidentChart = {
+      series: incidentTypeValues,
+      labels: incidentTypeLabels,
+      chart: {
+        type: 'donut',
+        fontFamily: "'Plus Jakarta Sans', sans-serif;",
+        foreColor: '#adb0bb',
+        toolbar: {
+          show: false,
+        },
+        width: 700,
+        height: 320,
+      },
+      colors: ['#fb977d', '#0085db', '#d8eb26', '#e7ecf0'],
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '70%',
+            background: 'none',
+            labels: {
+              show: true,
+              name: {
+                show: true,
+                fontSize: '12px',
+                color: undefined,
+                offsetY: 5,
+              },
+              value: {
+                show: true,
+                color: 'inherit',
+              },
+            },
+          },
+        },
+      },
+      stroke: {
+        show: false,
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontSize: '11px',
+          fontWeight: 'bolder',
+        },
+      },
+      legend: {
+        show: true,
+        position: 'right',
+        horizontalAlign: 'center', 
+        floating: true,
+        fontSize: '18px',
+        fontWeight: 400,
+        formatter: undefined,
+        inverseOrder: false,
+        width: 400,
+        height: undefined,
+        tooltipHoverFormatter: undefined,
+        customLegendItems: [],
+        offsetX: 250,  // Increased this to move the legend to the left
+        offsetY: 0,
+        labels: {
+          colors: undefined,
+          useSeriesColors: false
+        },
+        markers: {
+          size: 7,
+          shape: undefined,
+          strokeWidth: 1,
+          fillColors: undefined,
+          customHTML: undefined,
+          onClick: undefined,
+          offsetX: 0,
+          offsetY: 0
+        },
+        itemMargin: {
+          horizontal: 20,
+          vertical: 3
+        },
+      },
+      responsive: [
+        {
+          breakpoint: 991,
+          options: {
+            chart: {
+              width: 300,
+            },
+          },
+        },
+      ],
+      tooltip: {
+        enabled: false,
+      },
+    };
   }
 
   loadSubtypeOfIncidentDonutChart(){
-    
+    let titleCasePipe = new TitleCasePipe();
+
+    const incidentSubtypeValues: number[] = (this.incidentSubypesCounts as IndexValue[]).map(inc => {return inc.value});
+    const incidentSubtypeLabels: string[] = (this.incidentSubypesCounts as IndexValue[]).map(inc => {return titleCasePipe.transform(inc.index);});
+
+    this.subtypeOfIncidentChart = {
+      series: incidentSubtypeValues,
+      labels: incidentSubtypeLabels,
+      chart: {
+        type: 'donut',
+        fontFamily: "'Plus Jakarta Sans', sans-serif;",
+        foreColor: '#adb0bb',
+        toolbar: {
+          show: false,
+        },
+        width: 700,
+        height: 320,
+      },
+      colors: [
+        '#fb977d',  // Soft coral
+        '#0085db',  // Bright blue
+        '#d8eb26',  // Lime green
+        '#e7ecf0',  // Light gray-blue
+        '#f05454',  // Red-orange
+        '#00b894',  // Teal green
+        '#ffeaa7',  // Light yellow
+        '#6c5ce7',  // Purple
+        '#ff7675',  // Soft red
+        '#55efc4',  // Mint green
+        '#fdcb6e',  // Amber
+        '#74b9ff'   // Sky blue
+      ],
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '75%',
+            background: 'none',
+            labels: {
+              show: true,
+              name: {
+                show: true,
+                fontSize: '12px',
+                color: undefined,
+                offsetY: 2,
+              },
+              value: {
+                show: true,
+                color: 'inherit',
+              },
+            },
+          },
+        },
+      },
+      stroke: {
+        show: false,
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontSize: '11px',
+          fontWeight: 'bolder',
+        },
+      },
+      legend: {
+        show: true,
+        position: 'right',
+        horizontalAlign: 'center', 
+        floating: true,
+        fontSize: '18px',
+        fontWeight: 400,
+        formatter: undefined,
+        inverseOrder: false,
+        width: 400,
+        height: undefined,
+        tooltipHoverFormatter: undefined,
+        customLegendItems: [],
+        offsetX: 250,  // Increased this to move the legend to the left
+        offsetY: -25,
+        labels: {
+          colors: undefined,
+          useSeriesColors: false
+        },
+        markers: {
+          size: 7,
+          shape: undefined,
+          strokeWidth: 1,
+          fillColors: undefined,
+          customHTML: undefined,
+          onClick: undefined,
+          offsetX: 0,
+          offsetY: 0
+        },
+        itemMargin: {
+          horizontal: 20,
+          vertical: 3
+        },
+      },
+      responsive: [
+        {
+          breakpoint: 991,
+          options: {
+            chart: {
+              width: 300,
+            },
+          },
+        },
+      ],
+      tooltip: {
+        enabled: false,
+      },
+    };
   }
 
   subs: MapsSubscriptionContainer = new MapsSubscriptionContainer();
@@ -349,15 +494,17 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     this.subs.add = this.statisticService.getTypeGroupCount()
         .subscribe((result: IndexValue[]) => { 
           this.incidentTypesCounts = result;
-          console.log("getTypeGroupCount: ");
-          console.log(result);
+          //console.log("getTypeGroupCount: ");
+          //console.log(result);
+          this.loadTypeOfIncidentDonutChart()
         });
 
     this.subs.add = this.statisticService.getSubtypeGroupCount()
         .subscribe((result: IndexValue[]) => { 
           this.incidentSubypesCounts = result;
-          console.log("getSubtypeGroupCount: ");
-          console.log(result);
+          //console.log("getSubtypeGroupCount: ");
+          //console.log(result);
+          this.loadSubtypeOfIncidentDonutChart();
         });
     this.subs.add = this.statisticService.getDaysInWeekCount()
         .subscribe((result: IndexValue[]) => { 
@@ -368,8 +515,8 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     this.subs.add = this.statisticService.getPartOfDayGroups()
         .subscribe((result: IndexValue[]) => { 
         this.incidentsInPartOfDayCounts = result;
-        console.log("getPartOfDayGroups: ");
-        console.log(result);
+        //console.log("getPartOfDayGroups: ");
+        //console.log(result);
         this.loadIncidentsInPartsOfDayChart();
       });
   }
