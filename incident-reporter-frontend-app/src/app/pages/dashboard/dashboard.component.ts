@@ -97,45 +97,6 @@ interface productcards {
   rprice: string;
 }
 
-const ELEMENT_DATA: productsData[] = [
-  {
-    id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
-    uname: 'Mark J. Freeman',
-    position: 'English',
-    hourRate: 150,
-    classes: 53,
-    priority: 'Available',
-  },
-  {
-    id: 2,
-    imagePath: 'assets/images/profile/user-2.jpg',
-    uname: 'Andrew McDownland',
-    position: 'Project Manager',
-    hourRate: 150,
-    classes: 68,
-    priority: 'In Class',
-  },
-  {
-    id: 3,
-    imagePath: 'assets/images/profile/user-3.jpg',
-    uname: 'Christopher Jamil',
-    position: 'Project Manager',
-    hourRate: 150,
-    classes: 94,
-    priority: 'Absent',
-  },
-  {
-    id: 4,
-    imagePath: 'assets/images/profile/user-4.jpg',
-    uname: 'Nirav Joshi',
-    position: 'Frontend Engineer',
-    hourRate: 150,
-    classes: 27,
-    priority: 'On Leave',
-  },
-];
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -165,57 +126,13 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   public incidentsInDaysOfWeekCounts: IndexValue[] | any;
   public incidentsInPartOfDayCounts: IndexValue[] | any;
 
-  displayedColumns: string[] = ['profile', 'hrate', 'exclasses', 'status'];
-  dataSource = ELEMENT_DATA;
-
   months: month[] = [
     { value: 'mar', viewValue: 'March 2023' },
     { value: 'apr', viewValue: 'April 2023' },
     { value: 'june', viewValue: 'June 2023' },
   ];
 
-  // recent transaction
-  stats: stats[] = [
-    {
-      id: 1,
-      time: '09.30 am',
-      color: 'primary',
-      subtext: 'Payment received from John Doe of $385.90',
-    },
-    {
-      id: 2,
-      time: '10.30 am',
-      color: 'accent',
-      title: 'New sale recorded',
-      link: '#ML-3467',
-    },
-    {
-      id: 3,
-      time: '12.30 pm',
-      color: 'success',
-      subtext: 'Payment was made of $64.95 to Michael',
-    },
-    {
-      id: 4,
-      time: '12.30 pm',
-      color: 'warning',
-      title: 'New sale recorded',
-      link: '#ML-3467',
-    },
-    {
-      id: 5,
-      time: '12.30 pm',
-      color: 'error',
-      title: 'New arrival recorded',
-      link: '#ML-3467',
-    },
-    {
-      id: 6,
-      time: '12.30 pm',
-      color: 'success',
-      subtext: 'Payment Done',
-    },
-  ];
+
 
   // ecommerce card
   productcards: productcards[] = [
@@ -324,7 +241,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
 
     // yearly breakup chart
     this.trafficChart = {
-      series: [5368, 3500, 4106],
+      series: [5368, 3500, 9000],
       labels: ['5368', 'Refferal Traffic', 'Oragnic Traffic'],
       chart: {
         type: 'donut',
