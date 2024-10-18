@@ -87,7 +87,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   public typeOfIncidentChart!: Partial<typeOfIncidentChart> | any;
   public subtypeOfIncidentChart!: Partial<typeOfIncidentChart> | any;
   public lastYearIncidentsChart!: Partial<lastYearIncidentsChart> | any;
-  public incidentPerDayOfWeekChart!: Partial<lastYearIncidentsChart> | any;
+  public incidentPerDayOfWeekChart!: Partial<incidentsInPartsOfDayChart> | any;
 
   public lastYearOfIncidentsCounts: IndexValue[] | any;
   //public last30DaysOfIncidentsCounts: IndexValue[] | any;
@@ -131,7 +131,10 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
         },
       },
       dataLabels: {
-          enabled: true
+          enabled: true,
+          style: {
+            fontSize: 22
+          }
       },
       series: [
         {
@@ -487,78 +490,62 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     const incidentsPerDayOfWeekLabels: string[] = (this.incidentsInDaysOfWeekCounts as IndexValue[]).map(inc => {return inc.index});
 
     //console.log("LOADED VALUES AND LABELS");
-    //console.log(incidentsPerDayOfWeekValues)
+    //console.log(incidentsPerDayOfWeekValues);
     //console.log(incidentsPerDayOfWeekLabels);
 
     this.incidentPerDayOfWeekChart = {
+      series: [
+        {
+          name: "Incidents per Day of Week",
+          data: incidentsPerDayOfWeekValues,
+          color: "#23d950"
+        }
+      ],
       chart: {
+        type: "bar",
         height: 400,
-        type: 'bar',
-        foreColor: '#adb0bb',
+        foreColor: '#9ca0aa',
         fontFamily: 'inherit',
-        toolbar: { show: false },
-      },
-      grid: {
-        borderColor: 'rgba(0,0,0,0.1)',
-        strokeDashArray: 3,
       },
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: '50%',
-          borderRadius: 4,
-          endingShape: "rounded",
-        },
+          columnWidth: "45%",
+          endingShape: "rounded"
+        }
       },
       dataLabels: {
-          enabled: true
-      },
-      series: [
-        {
-          name: 'Incidents in Quarter of Day',
-          data: incidentsPerDayOfWeekValues,
-          color: '#00bfff',
+        enabled: true,
+        style: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          fontFamily: 'inherit'
         }
-      ],
-      title: {
-          text: 'Incidents per Day',
+      },
+      stroke: {
+        show: true,
+        width: 3,
+        colors: ["transparent"]
+      },
+      xaxis: {
+        categories: incidentsPerDayOfWeekLabels,
+      },
+      yaxis: {
+        title: {
+          text: "Occurrences"
+          
+        }
       },
       noData: {
         text: 'Loading...'
       },
-      xaxis: {
-        type: 'category',
-        categories: incidentsPerDayOfWeekLabels,
-        axisTicks: {
-          show: false,
-        },
-        axisBorder: {
-          show: false,
-        },
-        labels: {
-          style: { cssClass: 'grey--text lighten-2--text fill-color' },
-        },
+      labels: {
+        style: { cssClass: 'grey--text lighten-2--text fill-color' },
       },
-      markers: { size: 0 },
-      legend: { show: false },
-      stroke: {
-        show: true,
-        width: 5,
-        colors: ['transparent'],
+      fill: {
+        opacity: 1,
       },
-      tooltip: { theme: 'light' },
-      responsive: [
-        {
-          breakpoint: 600,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 3,
-              },
-            },
-          },
-        },
-      ],
+      tooltip: {}
     };
   }
 

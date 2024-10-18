@@ -14,11 +14,28 @@ GROUP BY inc.incident_subtype_id
 ORDER BY inc_sub.`subtype`;
 
 #Counts how many incidents happen on a given day in the week, Monday-Sunday
-SELECT DAYNAME(time_of_incident) AS 'index', COUNT(*) AS 'value'
-FROM incident
-WHERE status = 'APPROVED'
-GROUP BY DAYOFWEEK(time_of_incident)
-ORDER BY DAYOFWEEK(time_of_incident);
+WITH week_days AS (
+  SELECT 1 AS day_num, 'Monday' AS day_name
+  UNION SELECT 2, 'Tuesday'
+  UNION SELECT 3, 'Wednesday'
+  UNION SELECT 4, 'Thursday'
+  UNION SELECT 5, 'Friday'
+  UNION SELECT 6, 'Saturday'
+  UNION SELECT 7, 'Sunday'
+)
+SELECT wd.day_name AS 'index', 
+       COALESCE(COUNT(i.time_of_incident), 0) AS 'value'
+FROM week_days wd
+LEFT JOIN incident i 
+  ON (CASE 
+        WHEN DAYOFWEEK(i.time_of_incident) = 1 THEN 7  -- Sunday becomes 7
+        ELSE DAYOFWEEK(i.time_of_incident) - 1  -- Shift the rest by 1
+      END) = wd.day_num
+  AND i.status = 'APPROVED'
+GROUP BY wd.day_num, wd.day_name
+ORDER BY wd.day_num;
+
+
 
 #Counts how many incidents happen in a given time of day (day has been split in 4 parts, starting from midnight 00:00)
 SELECT 

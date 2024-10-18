@@ -42,7 +42,7 @@
             [stroke]="incidentsInPartsOfDayChart?.stroke"
             [tooltip]="incidentsInPartsOfDayChart?.tooltip"
             [plotOptions]="incidentsInPartsOfDayChart?.plotOptions"
-            [noData]="incidentsInDaysOfWeekCounts?.noData"
+            [noData]="incidentsInPartsOfDayChart?.noData"
         ></apx-chart>
       </mat-card-content>
     </mat-card>
@@ -51,7 +51,7 @@
   <!-- --------------------------------------------------------------------------- -->
   <!-- Incidents Types Distribution -->
   <!-- --------------------------------------------------------------------------- -->
-  <div class="card-container" style="display: flex; justify-content: space-between; width: 100%;">
+  <div class="card-container" style="display: flex; justify-content: space-between; width: 100%; flex-wrap: wrap;">
     <div class="col-lg-6 col-sm-12">
       <mat-card class="cardWithShadow" style="width: 100%; align-items: center;">
         <mat-card-content class="p-24">
@@ -133,27 +133,56 @@
   <!-- --------------------------------------------------------------------------- -->
   <!-- Incidents in the Week -->
   <!-- --------------------------------------------------------------------------- -->
-  <div class="col-lg-12 col-sm-6">
-    <mat-card class="cardWithShadow" style="width: 100%; max-width: 100%; align-items: center;" class="w-100">
+  
+
+
+  <div style="width: 100%; min-width: 90%; max-width: 99%; margin: 1rem; margin-right: 2rem;">
+    <mat-card class="cardWithShadow">
       <mat-card-content class="p-24">
         <div class="d-flex w-100">
-          <mat-card-title>Incidents Per Day in Week</mat-card-title>
+          <mat-card-title>Incidents in Days of Week</mat-card-title>
+          <!--
+          <div class="m-l-auto">
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="menu"
+              aria-label="Example icon-button with a menu"
+            >
+              <i-tabler name="dots-vertical"></i-tabler>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item>
+                <span>Last Week</span>
+              </button>
+              <button mat-menu-item>
+                <span>Last Month</span>
+              </button>
+              <button mat-menu-item>
+                <span>Last Year</span>
+              </button>
+            </mat-menu>
+          </div>
+          -->
+          <!-- Commented out the menu with 3 dots photo, could be useful to have  -->
         </div>
         <apx-chart
-            [series]="this.incidentPerDayOfWeekChart?.series"
-            [dataLabels]="this.incidentPerDayOfWeekChart?.dataLabels"
-            [chart]="this.incidentPerDayOfWeekChart?.chart"
-            [legend]="this.incidentPerDayOfWeekChart?.legend"
-            [xaxis]="this.incidentPerDayOfWeekChart?.xaxis"
-            [yaxis]="this.incidentPerDayOfWeekChart?.yaxis"
-            [grid]="this.incidentPerDayOfWeekChart?.grid"
-            [stroke]="this.incidentPerDayOfWeekChart?.stroke"
-            [tooltip]="this.incidentPerDayOfWeekChart?.tooltip"
-            [plotOptions]="this.incidentPerDayOfWeekChart?.plotOptions"
-            [noData]="this.incidentPerDayOfWeekChart?.noData"
+            [series]="incidentPerDayOfWeekChart?.series"
+            [dataLabels]="incidentPerDayOfWeekChart?.dataLabels"
+            [chart]="incidentPerDayOfWeekChart?.chart"
+            [legend]="incidentPerDayOfWeekChart?.legend"
+            [xaxis]="incidentPerDayOfWeekChart?.xaxis"
+            [yaxis]="incidentPerDayOfWeekChart?.yaxis"
+            [grid]="incidentPerDayOfWeekChart?.grid"
+            [stroke]="incidentPerDayOfWeekChart?.stroke"
+            [tooltip]="incidentPerDayOfWeekChart?.tooltip"
+            [plotOptions]="incidentPerDayOfWeekChart?.plotOptions"
+            [noData]="incidentPerDayOfWeekChart?.noData"
         ></apx-chart>
       </mat-card-content>
     </mat-card>
   </div>
+
+
+
 
 

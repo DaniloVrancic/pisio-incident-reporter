@@ -55,11 +55,26 @@ public class StatisticService {
             "GROUP BY inc.incident_subtype_id " +
             "ORDER BY inc_sub.subtype; ";
 
-    final String incidentsCountByDayOfWeek = "SELECT DAYNAME(time_of_incident) AS 'index', COUNT(*) AS 'value' " +
-            "FROM incident " +
-            "WHERE status = 'APPROVED' " +
-            "GROUP BY DAYOFWEEK(time_of_incident) " +
-            "ORDER BY DAYOFWEEK(time_of_incident);";
+    final String incidentsCountByDayOfWeek = "WITH week_days AS (\n" +
+            "  SELECT 1 AS day_num, 'Monday' AS day_name\n" +
+            "  UNION SELECT 2, 'Tuesday'\n" +
+            "  UNION SELECT 3, 'Wednesday'\n" +
+            "  UNION SELECT 4, 'Thursday'\n" +
+            "  UNION SELECT 5, 'Friday'\n" +
+            "  UNION SELECT 6, 'Saturday'\n" +
+            "  UNION SELECT 7, 'Sunday'\n" +
+            ")\n" +
+            "SELECT wd.day_name AS 'index', \n" +
+            "       COALESCE(COUNT(i.time_of_incident), 0) AS 'value'\n" +
+            "FROM week_days wd\n" +
+            "LEFT JOIN incident i \n" +
+            "  ON (CASE \n" +
+            "        WHEN DAYOFWEEK(i.time_of_incident) = 1 THEN 7  -- Sunday becomes 7\n" +
+            "        ELSE DAYOFWEEK(i.time_of_incident) - 1  -- Shift the rest by 1\n" +
+            "      END) = wd.day_num\n" +
+            "  AND i.status = 'APPROVED'\n" +
+            "GROUP BY wd.day_num, wd.day_name\n" +
+            "ORDER BY wd.day_num;\n";
 
     final String incidentsCountByPartOfDay = "SELECT " +
             "    CASE " +
