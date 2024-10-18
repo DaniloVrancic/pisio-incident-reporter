@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MapsSubscriptionContainer } from 'src/app/pages/map/map/map-subscriptions-container';
+import { ClusterService } from 'src/app/services/analysis/cluster.service';
 import { AuthGoogleService } from 'src/app/services/auth-google.service';
 
 
@@ -42,7 +43,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   
 
   constructor(public dialog: MatDialog, public authService: AuthGoogleService, private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef, public clusterService: ClusterService
   ) {}
 
   ngOnInit(): void {

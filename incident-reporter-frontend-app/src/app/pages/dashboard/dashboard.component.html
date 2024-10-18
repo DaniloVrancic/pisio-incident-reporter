@@ -1,12 +1,13 @@
 <div class="row" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
   <!-- --------------------------------------------------------------------------- -->
-  <!-- Profit & Expenses -->
+  <!-- Incidents in Parts of Day -->
   <!-- --------------------------------------------------------------------------- -->
   <div style="width: 100%; min-width: 90%; max-width: 99%; margin: 1rem; margin-right: 2rem;">
     <mat-card class="cardWithShadow">
       <mat-card-content class="p-24">
         <div class="d-flex w-100">
           <mat-card-title>Incidents in Parts of Day</mat-card-title>
+          <!--
           <div class="m-l-auto">
             <button
               mat-icon-button
@@ -27,6 +28,8 @@
               </button>
             </mat-menu>
           </div>
+          -->
+          <!-- Commented out the menu with 3 dots photo, could be useful to have  -->
         </div>
         <apx-chart
             [series]="incidentsInPartsOfDayChart?.series"
@@ -50,7 +53,7 @@
   <!-- --------------------------------------------------------------------------- -->
   <div class="card-container" style="display: flex; justify-content: space-between; width: 100%;">
     <div class="col-lg-6 col-sm-12">
-      <mat-card class="cardWithShadow" style="width: 100%;">
+      <mat-card class="cardWithShadow" style="width: 100%; align-items: center;">
         <mat-card-content class="p-24">
           <mat-card-title>Incidents Types Distribution</mat-card-title>
           <div class="row m-t-24 w-100" style="margin-left: 2rem;">
@@ -76,8 +79,8 @@
     <!-- --------------------------------------------------------------------------- -->
     <!-- Incidents Subtypes Distribution -->
     <!-- --------------------------------------------------------------------------- -->
-    <div class="col-lg-6 col-sm-12">
-      <mat-card class="cardWithShadow" style="width: 100%;">
+    <div class="col-lg-6 col-sm-12 w-100">
+      <mat-card class="cardWithShadow" style="width: 100%; align-items: center;">
         <mat-card-content class="p-24">
           <mat-card-title style="text-align: right;">Incidents Subtypes Distribution</mat-card-title>
           <div class="row m-t-24 w-100" style="margin-left: 2rem;">
@@ -102,46 +105,55 @@
   </div>
 </div>
       <!-- --------------------------------------------------------------------------- -->
-      <!-- Subtype Distribution -->
+      <!-- Incidents per Year Distribution -->
       <!-- --------------------------------------------------------------------------- -->
       <div class="col-lg-12 col-sm-6">
-        <mat-card class="cardWithShadow overflow-hidden" style="width: 100%; max-width: 500px;">
+        <mat-card class="cardWithShadow overflow-hidden" style="width: 100%; max-width: 100%; align-items: center;" class="w-100">
           <mat-card-header class="d-flex align-items-center p-x-24">
-            <mat-card-title>Product Sales</mat-card-title>
-            <div class="m-l-auto">
-              <button mat-fab color="warn" class="shadow-none icon-48">
-                <i-tabler
-                  name="currency-dollar"
-                  class="text-white d-flex"
-                ></i-tabler>
-              </button>
-            </div>
+            <mat-card-title>Incidents in Previous Days</mat-card-title>
           </mat-card-header>
           <mat-card-content class="m-b-32 p-x-24">
-            <h4 class="mat-headline-5">$6,820</h4>
-            <div class="d-flex align-items-center m-t-16">
-              <button
-                mat-mini-fab
-                class="bg-light-error text-error shadow-none icon-27"
-              >
-                <i-tabler name="arrow-down-right" class="icon-20"></i-tabler>
-              </button>
-              <div class="mat-body-1 f-w-600 m-l-12">+9%</div>
-              <div class="mat-body-1 m-l-4">last year</div>
-            </div>
           </mat-card-content>
-          <apx-chart
-            [series]="salesChart.series"
-            [dataLabels]="salesChart.dataLabels"
-            [chart]="salesChart.chart"
-            [legend]="salesChart.legend"
-            [colors]="salesChart.colors"
-            [stroke]="salesChart.stroke"
-            [tooltip]="salesChart.tooltip"
-            [plotOptions]="salesChart.plotOptions"
-            [responsive]="salesChart.responsive"
+          <apx-chart 
+            [series]="lastYearIncidentsChart?.series"
+            [dataLabels]="lastYearIncidentsChart?.dataLabels"
+            [chart]="lastYearIncidentsChart?.chart"
+            [xaxis]="lastYearIncidentsChart?.xaxis"
+            [yaxis]="lastYearIncidentsChart?.yaxis"
+            [legend]="lastYearIncidentsChart?.legend"
+            [colors]="lastYearIncidentsChart?.colors"
+            [stroke]="lastYearIncidentsChart?.stroke"
+            [tooltip]="lastYearIncidentsChart?.tooltip"
+            [plotOptions]="lastYearIncidentsChart?.plotOptions"
+            [responsive]="lastYearIncidentsChart?.responsive"
           ></apx-chart>
         </mat-card>
       </div>
+
+  <!-- --------------------------------------------------------------------------- -->
+  <!-- Incidents in the Week -->
+  <!-- --------------------------------------------------------------------------- -->
+  <div class="col-lg-12 col-sm-6">
+    <mat-card class="cardWithShadow" style="width: 100%; max-width: 100%; align-items: center;" class="w-100">
+      <mat-card-content class="p-24">
+        <div class="d-flex w-100">
+          <mat-card-title>Incidents Per Day in Week</mat-card-title>
+        </div>
+        <apx-chart
+            [series]="this.incidentPerDayOfWeekChart?.series"
+            [dataLabels]="this.incidentPerDayOfWeekChart?.dataLabels"
+            [chart]="this.incidentPerDayOfWeekChart?.chart"
+            [legend]="this.incidentPerDayOfWeekChart?.legend"
+            [xaxis]="this.incidentPerDayOfWeekChart?.xaxis"
+            [yaxis]="this.incidentPerDayOfWeekChart?.yaxis"
+            [grid]="this.incidentPerDayOfWeekChart?.grid"
+            [stroke]="this.incidentPerDayOfWeekChart?.stroke"
+            [tooltip]="this.incidentPerDayOfWeekChart?.tooltip"
+            [plotOptions]="this.incidentPerDayOfWeekChart?.plotOptions"
+            [noData]="this.incidentPerDayOfWeekChart?.noData"
+        ></apx-chart>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
 

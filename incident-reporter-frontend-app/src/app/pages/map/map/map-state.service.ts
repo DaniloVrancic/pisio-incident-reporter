@@ -168,7 +168,8 @@ export class MapStateService {
             fillColor: circleFillColor,
             fillOpacity: 0.4,
             center: new google.maps.LatLng(cluster.latitude, cluster.longitude),
-            radius: furthestDistance
+            radius: furthestDistance,
+            clickable: false
           });
 
           this.currentlyUsedClusters.push(clusterCircle);
@@ -309,7 +310,7 @@ export class MapStateService {
 
         this.clusterService.findClusters(this.eps, this.minIncidents).subscribe((result: Map<number,any>) => {
           this.loadedClusters = new Map<string, Cluster[]>(Object.entries(result));
-         
+          this.clusterService.numberOfClusters = this.loadedClusters.size;
           this.loadClusters(this.loadedClusters);
         });
       }

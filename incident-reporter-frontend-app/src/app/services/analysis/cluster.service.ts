@@ -11,6 +11,8 @@ export class ClusterService {
 
   private apiUrl = environment.analysisUrl;
 
+  public numberOfClusters: number = 0;
+
   constructor(private http: HttpClient) { }
 
   findClusters(eps: number = 0.4, minIncidents: number = 4) : Observable<Map<number,Map<string, Cluster[]>>>//will be searching for minimally this number of incidents to form clusters

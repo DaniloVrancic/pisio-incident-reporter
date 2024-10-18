@@ -11,7 +11,12 @@
 @if(this.authService.isLoggedIn())
 {
   <button mat-icon-button aria-label="Notifications">
-    <i-tabler class="d-flex" name="bell" matBadge="0" matBadgeColor="primary"></i-tabler>
+    @if(this.clusterService.numberOfClusters > 0){
+      <i-tabler class="d-flex" name="bell" matBadge={{this.clusterService.numberOfClusters}} matBadgeColor="warn"></i-tabler>
+    }
+    @else {
+      <i-tabler class="d-flex" name="bell" matBadge="0" matBadgeColor="primary"></i-tabler>
+    }
   </button>
 }
 

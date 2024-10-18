@@ -1,5 +1,5 @@
 import { CommonModule, formatDate, TitleCasePipe } from '@angular/common';
-import { Component, ViewEncapsulation, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewEncapsulation, ViewChild, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,11 +27,6 @@ import { StatisticService } from './statistic.service';
 import { IndexValue } from 'src/app/models/index-value';
 import { MapsSubscriptionContainer } from '../map/map/map-subscriptions-container';
 
-interface month {
-  value: string;
-  viewValue: string;
-}
-
 export interface incidentsInPartsOfDayChart {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -58,7 +53,7 @@ export interface typeOfIncidentChart {
   responsive: ApexResponsive;
 }
 
-export interface salesChart {
+export interface lastYearIncidentsChart {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
@@ -68,26 +63,6 @@ export interface salesChart {
   legend: ApexLegend;
   responsive: ApexResponsive;
 }
-
-interface stats {
-  id: number;
-  time: string;
-  color: string;
-  title?: string;
-  subtext?: string;
-  link?: string;
-}
-
-export interface productsData {
-  id: number;
-  imagePath: string;
-  uname: string;
-  position: string;
-  hourRate: number;
-  classes: number;
-  priority: string;
-}
-
 
 @Component({
   selector: 'app-dashboard',
@@ -111,74 +86,33 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   public incidentsInPartsOfDayChart!: Partial<incidentsInPartsOfDayChart> | any;
   public typeOfIncidentChart!: Partial<typeOfIncidentChart> | any;
   public subtypeOfIncidentChart!: Partial<typeOfIncidentChart> | any;
-  public salesChart!: Partial<salesChart> | any;
+  public lastYearIncidentsChart!: Partial<lastYearIncidentsChart> | any;
+  public incidentPerDayOfWeekChart!: Partial<lastYearIncidentsChart> | any;
 
   public lastYearOfIncidentsCounts: IndexValue[] | any;
-  public last30DaysOfIncidentsCounts: IndexValue[] | any;
-  public last7DaysOfIncidents: IndexValue[] | any;
+  //public last30DaysOfIncidentsCounts: IndexValue[] | any;
+  //public last7DaysOfIncidents: IndexValue[] | any;
   public incidentTypesCounts: IndexValue[] | any;
   public incidentSubypesCounts: IndexValue[] | any;
   public incidentsInDaysOfWeekCounts: IndexValue[] | any;
   public incidentsInPartOfDayCounts: IndexValue[] | any;
 
 
+  subs: MapsSubscriptionContainer = new MapsSubscriptionContainer();
 
-  constructor(private statisticService: StatisticService) {
-    // monthly earnings chart
-    this.salesChart = {
-      series: [
-        {
-          name: '',
-          color: '#8763da',
-          data: [25, 66, 20, 40, 12, 58, 20],
-        },
-      ],
-
-      chart: {
-        type: 'area',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
-        foreColor: '#adb0bb',
-        toolbar: {
-          show: false,
-        },
-        height: 60,
-        sparkline: {
-          enabled: true,
-        },
-        group: 'sparklines',
-      },
-      stroke: {
-        curve: 'smooth',
-        width: 2,
-      },
-      fill: {
-        colors: ['#8763da'],
-        type: 'solid',
-        opacity: 0.05,
-      },
-      markers: {
-        size: 0,
-      },
-      tooltip: {
-        theme: 'dark',
-        x: {
-          show: false,
-        },
-      },
-    };
-  }
+  constructor(private statisticService: StatisticService, private cdr: ChangeDetectorRef) {}
 
   loadIncidentsInPartsOfDayChart(){
     const incidentsInPartsOfDayValues: number[] = (this.incidentsInPartOfDayCounts as IndexValue[]).map(inc => {return inc.value});
     const incidentsInPartsOfDayLabels: string[] = (this.incidentsInPartOfDayCounts as IndexValue[]).map(inc => {return inc.index});
 
-    console.log("LOADED VALUES AND LABELS");
-    console.log(incidentsInPartsOfDayValues)
-    console.log(incidentsInPartsOfDayLabels);
+    //console.log("LOADED VALUES AND LABELS");
+    //console.log(incidentsInPartsOfDayValues)
+    //console.log(incidentsInPartsOfDayLabels);
 
     this.incidentsInPartsOfDayChart = {
       chart: {
-        height: '400rem',
+        height: 400,
         type: 'bar',
         foreColor: '#adb0bb',
         fontFamily: 'inherit',
@@ -464,7 +398,171 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     };
   }
 
-  subs: MapsSubscriptionContainer = new MapsSubscriptionContainer();
+  loadYearOfIncidentsAreaChart(){
+    const lastYearIncidentsLabel: number[] = (this.lastYearOfIncidentsCounts as IndexValue[]).map(incident => {
+      
+      return new Date(formatDate(incident.index, 'dd MMM yyyy', 'en-US')).getTime(); 
+    });
+
+    const lastYearIncidentsValues: number[] = (this.lastYearOfIncidentsCounts as IndexValue[]).map(incident => {return incident.value;});
+    //console.log(lastYearIncidentsLabel);
+
+    const today = new Date();
+
+    // Get the date 7 days ago
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    
+    this.lastYearIncidentsChart= {
+      series: [
+        {
+          name: "Incidents",
+          data: lastYearIncidentsValues,
+          color: '#FF00AA'
+        },
+      ],
+      chart: {
+        height: 500,
+        width: 1200,
+        type: "area",
+        stacked: true,
+      },
+      xaxis: {
+        type: 'datetime',
+        categories: lastYearIncidentsLabel,
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+        min: thirtyDaysAgo.getTime(),
+        max: today.getTime(),
+        labels: {
+          style: { cssClass: 'grey--text lighten-2--text fill-color' },
+          datetimeFormatter: {
+            year: 'yyyy',
+            month: 'MMM \'yy',
+            day: 'dd MMM',
+            hour: 'HH:mm'
+          }
+        },
+      },
+      plotOptions: {
+        area: {
+          fillTo: "origin",
+          line: {
+            curve: "smooth",
+          },
+        },
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: "smooth"
+      },
+      tooltip: {
+        enabled: true,
+        x: {
+          format: "dd/MM/yy"
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 991,
+          options: {
+            chart: {
+              width: 300,
+            },
+          },
+        },
+      ],
+      
+    };
+  }
+
+  loadIncidentsPerDayOfWeekChart(){
+    const incidentsPerDayOfWeekValues: number[] = (this.incidentsInDaysOfWeekCounts as IndexValue[]).map(inc => {return inc.value});
+    const incidentsPerDayOfWeekLabels: string[] = (this.incidentsInDaysOfWeekCounts as IndexValue[]).map(inc => {return inc.index});
+
+    //console.log("LOADED VALUES AND LABELS");
+    //console.log(incidentsPerDayOfWeekValues)
+    //console.log(incidentsPerDayOfWeekLabels);
+
+    this.incidentPerDayOfWeekChart = {
+      chart: {
+        height: 400,
+        type: 'bar',
+        foreColor: '#adb0bb',
+        fontFamily: 'inherit',
+        toolbar: { show: false },
+      },
+      grid: {
+        borderColor: 'rgba(0,0,0,0.1)',
+        strokeDashArray: 3,
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%',
+          borderRadius: 4,
+          endingShape: "rounded",
+        },
+      },
+      dataLabels: {
+          enabled: true
+      },
+      series: [
+        {
+          name: 'Incidents in Quarter of Day',
+          data: incidentsPerDayOfWeekValues,
+          color: '#00bfff',
+        }
+      ],
+      title: {
+          text: 'Incidents per Day',
+      },
+      noData: {
+        text: 'Loading...'
+      },
+      xaxis: {
+        type: 'category',
+        categories: incidentsPerDayOfWeekLabels,
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+        labels: {
+          style: { cssClass: 'grey--text lighten-2--text fill-color' },
+        },
+      },
+      markers: { size: 0 },
+      legend: { show: false },
+      stroke: {
+        show: true,
+        width: 5,
+        colors: ['transparent'],
+      },
+      tooltip: { theme: 'light' },
+      responsive: [
+        {
+          breakpoint: 600,
+          options: {
+            plotOptions: {
+              bar: {
+                borderRadius: 3,
+              },
+            },
+          },
+        },
+      ],
+    };
+  }
+
+
 
 
   ngOnInit(): void {
@@ -480,23 +578,26 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     .subscribe((result: IndexValue[]) => {
         
           this.lastYearOfIncidentsCounts = result;
-          this.last30DaysOfIncidentsCounts = (this.lastYearOfIncidentsCounts as IndexValue[]).slice(-30);
-          this.last7DaysOfIncidents = (this.last30DaysOfIncidentsCounts as IndexValue[]).slice(-7);
+          //this.last30DaysOfIncidentsCounts = (this.lastYearOfIncidentsCounts as IndexValue[]).slice(-30);
+          //this.last7DaysOfIncidents = (this.last30DaysOfIncidentsCounts as IndexValue[]).slice(-7);
           
-          console.log("getIncidentsBetweenDates: ");
-          console.log(result);
-          console.log("last30Days:");
-          console.log(this.last30DaysOfIncidentsCounts);
-          console.log("last7Days");
-          console.log(this.last7DaysOfIncidents);
+          //console.log("getIncidentsBetweenDates: ");
+          //console.log(result);
+          //console.log("last30Days:");
+          //console.log(this.last30DaysOfIncidentsCounts);
+          //console.log("last7Days");
+          //console.log(this.last7DaysOfIncidents);
           
+          this.loadYearOfIncidentsAreaChart();
+          this.cdr.detectChanges();
         });
     this.subs.add = this.statisticService.getTypeGroupCount()
         .subscribe((result: IndexValue[]) => { 
           this.incidentTypesCounts = result;
           //console.log("getTypeGroupCount: ");
           //console.log(result);
-          this.loadTypeOfIncidentDonutChart()
+          this.loadTypeOfIncidentDonutChart();
+          this.cdr.detectChanges();
         });
 
     this.subs.add = this.statisticService.getSubtypeGroupCount()
@@ -505,12 +606,15 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
           //console.log("getSubtypeGroupCount: ");
           //console.log(result);
           this.loadSubtypeOfIncidentDonutChart();
+          this.cdr.detectChanges();
         });
     this.subs.add = this.statisticService.getDaysInWeekCount()
         .subscribe((result: IndexValue[]) => { 
         this.incidentsInDaysOfWeekCounts = result;
-        console.log("getDaysInWeekCount: ");
-        console.log(result);
+        //console.log("getDaysInWeekCount: ");
+        //console.log(result);
+        this.loadIncidentsPerDayOfWeekChart();
+        this.cdr.detectChanges();
       });
     this.subs.add = this.statisticService.getPartOfDayGroups()
         .subscribe((result: IndexValue[]) => { 
@@ -518,6 +622,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
         //console.log("getPartOfDayGroups: ");
         //console.log(result);
         this.loadIncidentsInPartsOfDayChart();
+        this.cdr.detectChanges();
       });
   }
 
