@@ -14,9 +14,7 @@ public class Pipeline {
 
     private static StanfordCoreNLP stanfordCoreNLP;
 
-    public Pipeline() {
-
-    }
+    private Pipeline() {}
 
     static {
         properties = new Properties();
@@ -24,7 +22,7 @@ public class Pipeline {
         properties.setProperty("ner.useSUTime", "false");
     }
 
-    @Bean
+    @Bean(name="stanfordCoreNLP")
     public static StanfordCoreNLP getInstance(){
         if(stanfordCoreNLP == null) {
             stanfordCoreNLP = new StanfordCoreNLP(properties);
