@@ -5,17 +5,17 @@ export const navItems: NavItem[] = [
     navCap: 'Home',
   },
   {
-    displayName: 'Statistika',
+    displayName: 'Statistics',
     iconName: 'layout-dashboard',
     route: '/dashboard',
   },
   {
-    displayName: 'Mapa',
+    displayName: 'Map',
     iconName: 'map-2',
     route: '/map',
   },
   {
-    displayName: 'Opis',
+    displayName: 'Description',
     iconName: 'file-description',
     route: '/description',
   },
