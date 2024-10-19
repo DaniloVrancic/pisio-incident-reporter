@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.incident_reporter_backend_app.enums.NLPType;
 import org.springframework.boot.incident_reporter_backend_app.nlp_core.Pipeline;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,15 +24,15 @@ public class NLPController {
 
 
 
-    @Autowired
+
     private StanfordCoreNLP stanfordCoreNLP;
 
-
-    public NLPController(){
-        this.stanfordCoreNLP = Pipeline.getInstance();
+    @Autowired
+    public NLPController(StanfordCoreNLP stanfordCoreNLP){
+        this.stanfordCoreNLP = stanfordCoreNLP;
     }
 
-
+    @PostMapping
     public Set<String> doNlp(@RequestBody final String input, @RequestParam final NLPType type){
 
         CoreDocument coreDocument = new CoreDocument(input);

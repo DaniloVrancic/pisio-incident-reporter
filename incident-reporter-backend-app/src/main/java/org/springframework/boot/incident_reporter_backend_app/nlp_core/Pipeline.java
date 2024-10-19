@@ -2,9 +2,11 @@ package org.springframework.boot.incident_reporter_backend_app.nlp_core;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
+@Component
 public class Pipeline {
 
     private static Properties properties;
@@ -18,7 +20,8 @@ public class Pipeline {
 
     static {
         properties = new Properties();
-        properties.setProperty("annotators", propertiesName);
+        properties.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        properties.setProperty("ner.useSUTime", "false");
     }
 
     @Bean
