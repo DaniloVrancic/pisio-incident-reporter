@@ -63,7 +63,6 @@ public class NLPController {
     public ResponseEntity<?> getSentimentsForAllDescriptions(){
         try
         {
-
             List<IncidentEntity> listOfIncidents = incidentService.findAllEntities();
 
             Map<String, List<IncidentSentiment>> mapOfIncidentSentiments = descriptionSentimentService.getIncidentSentiments(listOfIncidents);

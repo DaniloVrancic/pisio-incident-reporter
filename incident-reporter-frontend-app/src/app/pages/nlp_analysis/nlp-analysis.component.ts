@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NplAnalysisService } from './npl-analysis.service';
 
 @Component({
   selector: 'app-nlp-analysis',
@@ -10,8 +11,8 @@ import { Component, OnInit } from '@angular/core';
 export class AppNLPAnalysisComponent implements OnInit{
 
   
-  constructor(){}
-  
+  constructor(public nlpService: NplAnalysisService){}
+
   ngOnInit(): void {
       
   }

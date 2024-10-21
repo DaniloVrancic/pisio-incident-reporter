@@ -11,7 +11,7 @@ export class NplAnalysisService implements OnInit, OnDestroy{
 
   private nlpUrl = environment.nlpUrl;
 
-  mapOfSentiments: Map<string, any[]> = new Map<string, any[]>();
+  public mapOfSentiments: Map<string, any[]> = new Map<string, any[]>();
 
   subs = new MapsSubscriptionContainer();
 
