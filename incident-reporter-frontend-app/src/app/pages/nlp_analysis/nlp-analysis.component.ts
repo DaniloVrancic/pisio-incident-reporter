@@ -10,11 +10,16 @@ import { NplAnalysisService } from './npl-analysis.service';
 })
 export class AppNLPAnalysisComponent implements OnInit{
 
+  public incidentSentiments: Map<string, any[]> = new Map<string, any[]>();
   
   constructor(public nlpService: NplAnalysisService){}
 
   ngOnInit(): void {
-      
+    if(this.incidentSentiments.size == 0){
+      this.nlpService.getSentimentsForAllIncidents().subscribe((result: Map<string, any[]>) => {
+        console.log(result);
+        this.incidentSentiments = result;
+      });
+    }
   }
-
 }

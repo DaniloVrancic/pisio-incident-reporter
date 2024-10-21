@@ -1,11 +1,11 @@
 
-@if(this.nlpService == undefined || this.nlpService.mapOfSentiments.size == 0)
+@if(this.incidentSentiments == undefined || this.incidentSentiments.size == 0)
 {
     <h1>Loading...</h1>
 }
 @else {
     
-    @for(element of this.nlpService.mapOfSentiments; track element){
+    @for(element of this.incidentSentiments; track element){
         <p>{{element.toString()}}</p>
     }
 }
