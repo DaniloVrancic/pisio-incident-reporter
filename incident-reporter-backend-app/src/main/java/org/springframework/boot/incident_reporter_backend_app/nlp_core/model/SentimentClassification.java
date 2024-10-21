@@ -8,34 +8,34 @@ public class SentimentClassification {
     Double veryNegative;
 
 
-    public Double getVeryPositive() {
+    public double getVeryPositive() {
         return veryPositive;
     }
-    public void setVeryPositive(Double veryPositive) {
+    public void setVeryPositive(double veryPositive) {
         this.veryPositive = veryPositive;
     }
-    public Double getPositive() {
+    public double getPositive() {
         return positive;
     }
-    public void setPositive(Double positive) {
+    public void setPositive(double positive) {
         this.positive = positive;
     }
-    public Double getNeutral() {
+    public double getNeutral() {
         return neutral;
     }
-    public void setNeutral(Double neutral) {
+    public void setNeutral(double neutral) {
         this.neutral = neutral;
     }
-    public Double getNegative() {
+    public double getNegative() {
         return negative;
     }
-    public void setNegative(Double negative) {
+    public void setNegative(double negative) {
         this.negative = negative;
     }
-    public Double getVeryNegative() {
+    public double getVeryNegative() {
         return veryNegative;
     }
-    public void setVeryNegative(Double veryNegative) {
+    public void setVeryNegative(double veryNegative) {
         this.veryNegative = veryNegative;
     }
 }
