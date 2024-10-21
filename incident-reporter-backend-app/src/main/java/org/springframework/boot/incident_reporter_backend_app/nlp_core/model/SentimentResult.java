@@ -9,11 +9,11 @@ public class SentimentResult {
         return sentimentScore;
     }
 
-    public Double getSentimentScore() {
+    public double getSentimentScore() {
         return sentimentScore;
     }
 
-    public void setSentimentScore(Double sentimentScore) {
+    public void setSentimentScore(double sentimentScore) {
         this.sentimentScore = sentimentScore;
     }
 
