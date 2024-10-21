@@ -34,7 +34,7 @@ public class SentimentAnalyzer {
         SentimentResult sentimentResult = new SentimentResult();
         SentimentClassification sentimentClass = new SentimentClassification();
 
-        if (text != null && text.length() > 0) {
+        if (text != null && !text.isEmpty()) {
 
             // run all Annotators on the text
             Annotation annotation = pipeline.process(text);

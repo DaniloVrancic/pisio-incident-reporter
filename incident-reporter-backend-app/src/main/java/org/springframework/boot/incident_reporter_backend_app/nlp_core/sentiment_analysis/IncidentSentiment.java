@@ -2,7 +2,9 @@ package org.springframework.boot.incident_reporter_backend_app.nlp_core.sentimen
 
 import org.springframework.boot.incident_reporter_backend_app.entities.IncidentEntity;
 import org.springframework.boot.incident_reporter_backend_app.nlp_core.model.SentimentResult;
+import org.springframework.stereotype.Component;
 
+@Component
 public class IncidentSentiment {
     IncidentEntity incidentEntity;
     SentimentResult sentimentResult;

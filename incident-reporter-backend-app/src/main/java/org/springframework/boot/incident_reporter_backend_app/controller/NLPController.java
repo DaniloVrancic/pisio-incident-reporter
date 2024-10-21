@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,9 +66,9 @@ public class NLPController {
 
             List<IncidentEntity> listOfIncidents = incidentService.findAllEntities();
 
-            List<IncidentSentiment> listOfIncidentSentiments = descriptionSentimentService.getIncidentSentiments(listOfIncidents);
+            Map<String, List<IncidentSentiment>> mapOfIncidentSentiments = descriptionSentimentService.getIncidentSentiments(listOfIncidents);
 
-            return new ResponseEntity<>(listOfIncidentSentiments, HttpStatus.OK);
+            return new ResponseEntity<>(mapOfIncidentSentiments, HttpStatus.OK);
 
         }
         catch (Exception ex){
