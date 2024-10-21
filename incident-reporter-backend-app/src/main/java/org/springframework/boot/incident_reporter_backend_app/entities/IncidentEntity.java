@@ -108,17 +108,17 @@ public class IncidentEntity {
         this.longitude = longitude;
     }
 
-    @ManyToOne
-    @JoinColumn(name="user_id", referencedColumnName = "id", nullable = true)
-    private UserEntity user;
+    @Basic
+    @Column(name = "user_token")
+    private String user_token; //TOKEN value of the logged in user
 
 
-    public UserEntity getUserId() {
-        return this.user;
+    public String getUser_token() {
+        return this.user_token;
     }
 
-    public void setUserId(UserEntity user) {
-        this.user = user;
+    public void setUser_token(String user) {
+        this.user_token = user;
     }
 
 

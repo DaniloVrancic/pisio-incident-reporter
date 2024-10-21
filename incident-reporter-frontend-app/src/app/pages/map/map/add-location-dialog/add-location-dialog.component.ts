@@ -16,6 +16,7 @@ import { Incident } from 'src/app/models/incident';
 import { IncidentSubtype } from 'src/app/models/incident-subtype';
 import { IncidentType } from 'src/app/models/incident-type';
 import { MapService } from '../map.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-location-dialog',
@@ -44,6 +45,7 @@ export class AddLocationDialogComponent {
   selectedDescription: string | null = "";
   selectedImage: string | null = null;
   expanded: number | null = null;
+  user_token: string | null = null;
 
   selectedDate: any = null;
 
@@ -54,11 +56,12 @@ export class AddLocationDialogComponent {
   profilePictureFormControl = new FormControl(null);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { incidentTypes: IncidentType[], incidentSubtypes: IncidentSubtype[],
-    latitude: number, longitude: number}, private mapService: MapService) {
+    latitude: number, longitude: number, userId: string | null}, private mapService: MapService, private router: Router) {
     this.incidentTypes = data.incidentTypes;
     this.incidentSubtypes = data.incidentSubtypes;
     this.selectedLongitude = data.longitude;
     this.selectedLatitude = data.latitude;
+    this.user_token = data.userId;
   }
 
   getSubtypes(typeId: number): IncidentSubtype[] {
@@ -74,33 +77,19 @@ export class AddLocationDialogComponent {
     }
   }
 
-  capitalizeFirstLetter(sentence: string | null) {
-    let mySentence: string = sentence as string;
-
-    if(mySentence == undefined || mySentence == null){
-      return undefined;
-    }
-
-    return mySentence.charAt(0).toUpperCase() + mySentence.slice(1);
-}
-
 assignDescription(event: any){
   
   this.selectedDescription = event.target.value;
 }
 
 dateTimeInput(event: any){
-
-
-
   this.selectedDate = event.target.value;
-  console.log(this.selectedDate);
 }
 
 onChangeFile(event: any)
   {
     const file = event.target.files[0];
-    const reader = new FileReader();
+    let reader = new FileReader();
     let selectedImage = this.selectedImage;
 
     let fileNameElement = document.getElementById("file-name") as HTMLElement | null;
@@ -118,11 +107,14 @@ onChangeFile(event: any)
     }
     
 
-    reader.onloadend = function(event : any) {
+  reader.onloadend = (event : any) => {
         const imgBase64 = event.target.result as string | null;
         
         // Assign the BASE64 string to this.userForRegister.avatar
-        selectedImage = imgBase64
+        selectedImage = imgBase64;
+        this.selectedImage = imgBase64;
+        document.getElementById("displayed-photo")?.setAttribute("src", imgBase64 as string);
+        
     };
 
     if(file != undefined)
@@ -140,8 +132,6 @@ onChangeFile(event: any)
   onConfirmClicked() : void {
     let incidentToSend : Incident = {} as Incident;
 
-
-
     incidentToSend.latitude = this.selectedLatitude;
     incidentToSend.longitude = this.selectedLongitude;
 
@@ -151,6 +141,7 @@ onChangeFile(event: any)
     }
     else if(this.selectedDescription === null || this.selectedDescription === ""){
       this.errorMessage = "Can't input an empty description.";
+      this.selectedDescription=""
       return;
     }
     else{
@@ -169,11 +160,19 @@ onChangeFile(event: any)
     incidentToSend.description = this.selectedDescription;
     incidentToSend.incidentSubtype = {id: this.selectedSubtypeId} as IncidentSubtype;
 
+    if(this.user_token){
+      incidentToSend.user_token = this.user_token;
+    }
+
     try{
-      console.log("SENDING THIS INCIDENT!");
-      console.log(incidentToSend);
       this.mapService.addIncident(incidentToSend).subscribe({
-        next: result => {console.log(result);},
+        next: result => {
+          if(this.user_token)
+          {
+            this.refreshMap();
+          }
+          window.alert("A new incident report request has been sent!");
+        },
         error: error => {console.error(error);}
       });
     }
@@ -183,6 +182,9 @@ onChangeFile(event: any)
     }
     
 
+    refreshMap(){ //Navigates to component that redirects back to route: '', useful for reloading markers
+      this.router.navigateByUrl('/refresh');
+    }
     
 
     

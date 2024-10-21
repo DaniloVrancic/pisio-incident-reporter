@@ -1,0 +1,15 @@
+.selected-subtype {
+    background-color: #0088FF;
+    color: white !important;
+    border-radius: 1rem;
+  }
+
+.horizontal-items{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+mat-dialog-actions {
+    justify-content: right;
+}

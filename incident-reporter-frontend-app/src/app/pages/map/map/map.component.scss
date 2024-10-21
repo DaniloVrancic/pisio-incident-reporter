@@ -1,5 +1,52 @@
-button:disabled {
-    background-color: rgba(255, 0, 0, 1.0); /* Custom text color for disabled button */
-    color: rgba(255, 0, 0, 0.5);
-    cursor: not-allowed; /* Optional: Change cursor style */
+.map-container {
+    height: 85vh;
+    width: 100%;
+}
+
+/* Base styles for the buttons */
+@mixin button {
+  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+
+  /* When the button is enabled, keep the regular pointer */
+  
+  mat-icon {
+    transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition for color changes */
+    scale: 1.5;
   }
+}
+
+/* Styles when the button is disabled */
+button:disabled {
+  /* Change cursor to 'not-allowed' */
+
+  cursor: not-allowed !important;
+  pointer-events: auto !important; /* Allow pointer events on disabled buttons */
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  
+
+  /* Make the icon red when disabled */
+  mat-icon {
+    color: red !important;
+    scale: 1.5;
+  }
+}
+
+/* Individual mat-icon color styles when buttons are enabled */
+#filterButton {
+  @include button;
+  mat-icon{
+    color: gold;
+    scale: 1.5;
+  }
+}
+
+#addButton {
+  @include button;
+  mat-icon{
+    color: lime;
+    scale: 1.5;
+    
+  }
+  
+}

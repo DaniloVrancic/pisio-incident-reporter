@@ -9,7 +9,7 @@ export interface Incident {
     timeOfIncident: string; // ISO 8601 format
     latitude: number;
     longitude: number;
-    userId: number | null;
+    user_token: string | null;
     content: any;
   }
 

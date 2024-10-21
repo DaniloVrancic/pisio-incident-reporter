@@ -39,6 +39,10 @@ export class MapService {
     return this.http.put<Incident>(`${this.incidentUrl}/update`, incident, { headers });
   }
 
+  deleteIncident(incidentId: number): Observable<number> {
+    return this.http.delete<number>(`${this.incidentUrl}/delete/${incidentId}`);
+  }
+
   // Get all incident subtypes
   getAllIncidentSubtypes(): Observable<IncidentSubtype[]> {
     return this.http.get<IncidentSubtype[]>(`${this.incidentSubtypeUrl}/all`);
@@ -81,6 +85,10 @@ export class MapService {
   updateIncidentType(type: IncidentType): Observable<IncidentType> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<IncidentType>(`${this.incidentTypeUrl}/update`, type, { headers });
+  }
+
+  getPhotoGetRequestString(incidentId: number): string{
+    return environment.apiBaseUrl + `/photo/incident/${incidentId}`;
   }
 
 
