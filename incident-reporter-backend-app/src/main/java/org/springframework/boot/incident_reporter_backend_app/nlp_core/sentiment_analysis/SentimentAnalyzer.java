@@ -15,7 +15,10 @@ import java.util.Properties;
 
 public class SentimentAnalyzer {
     /*
-     * "Very negative" = 0 "Negative" = 1 "Neutral" = 2 "Positive" = 3
+     * "Very negative" = 0
+     * "Negative" = 1
+     * "Neutral" = 2
+     * "Positive" = 3
      * "Very positive" = 4
      */
 

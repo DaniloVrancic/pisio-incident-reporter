@@ -1,10 +1,17 @@
 package org.springframework.boot.incident_reporter_backend_app.nlp_core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SentimentClassification {
+    @JsonProperty("very_positive")
     Double veryPositive;
+    @JsonProperty("positive")
     Double positive;
+    @JsonProperty("neutral")
     Double neutral;
+    @JsonProperty("negative")
     Double negative;
+    @JsonProperty("very_negative")
     Double veryNegative;
 
 

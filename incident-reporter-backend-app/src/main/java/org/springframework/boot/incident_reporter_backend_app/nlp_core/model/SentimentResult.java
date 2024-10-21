@@ -1,8 +1,13 @@
 package org.springframework.boot.incident_reporter_backend_app.nlp_core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SentimentResult {
+    @JsonProperty("score")
     Double sentimentScore;
+    @JsonProperty("type")
     String sentimentType;
+    @JsonProperty("class")
     SentimentClassification sentimentClass;
 
     public double getSentiment() {
