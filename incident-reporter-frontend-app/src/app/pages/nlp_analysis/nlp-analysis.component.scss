@@ -1,0 +1,49 @@
+.my-flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.my-flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.first-row-custom {
+    justify-content: space-between;
+}
+
+.accordion-container{
+    min-width: 45%;
+    max-width: 50%;
+}
+
+mat-expansion-panel {
+    max-height: 20rem;
+}
+
+
+.expanded-panel {
+    max-height: 30rem;
+    overflow-y: scroll;
+  }
+
+.expansion-panel-header{
+    height: 6vh;
+}
+
+.expansion-panel-title{
+    font-weight: 600;
+    font-size: x-large;
+    padding-bottom: 0.3rem;
+}
+
+.selected-sentiment{
+    background-color: red;
+    height: 20rem;
+    opacity: 1;
+}
+
+mat-list-item{
+    transition: height 0.25s ease-in-out, opacity 0.4s ease;
+}
+

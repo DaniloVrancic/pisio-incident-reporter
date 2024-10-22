@@ -4,8 +4,63 @@
     <h1>Loading...</h1>
 }
 @else {
-    
-    @for(element of this.incidentSentiments; track element){
-        <p>{{element.toString()}}</p>
-    }
+    <div class="my-flex-column">
+        <div class="my-flex-row first-row-custom">
+            <article>
+                <h2>Chart of Groupings:</h2>
+                <div class="chart-container">
+                    Here goes the chart
+                </div>
+            </article>
+            <article class="accordion-container">
+                <h2>All Groupings:</h2>
+                <mat-accordion class="accordion-custom">
+                    @for(key of this.incidentSentiments.keys(); track key)
+                    {
+                
+                    <mat-expansion-panel 
+                    [expanded]="expanded === key" 
+                    (opened)="expanded = key" 
+                    (closed)="expanded = null"
+                    [ngClass]="{'expanded-panel': expanded === key}">
+                        <mat-expansion-panel-header class="expansion-panel-header">
+                        <mat-panel-title>
+                            <span class="expansion-panel-title">{{key}}</span>
+                        </mat-panel-title>
+                        </mat-expansion-panel-header>
+                    
+                
+                    <!-- Subtypes List -->
+                    @if(this.incidentSentiments.get(key) != undefined)
+                    {
+                        <mat-list>
+                        @for(incidentSentiment of this.incidentSentiments.get(key); track incidentSentiment.incident.id)
+                        {
+                            <mat-list-item style="justify-items: center; align-items: center;"  
+                                        [ngClass]="{ 'selected-sentiment': this.selectedIncidentSentimentId === incidentSentiment.incident.id }"
+                                        (click)="this.selectedIncidentSentimentId = (this.selectedIncidentSentimentId == incidentSentiment.incident.id) ? null : incidentSentiment.incident.id"
+                                        >
+                                        
+                                        {{ "ID: " + incidentSentiment.incident.id + " " + incidentSentiment.incident.incidentSubtype.subtype | titlecase  }}
+                                        <section [hidden]="this.selectedIncidentSentimentId != incidentSentiment.incident.id">
+                                            <p><span><em>Type: </em>{{incidentSentiment.incident.incidentSubtype.incidentType.name | titlecase}}</span></p>
+                                            <p><span><em>Description: </em>{{incidentSentiment.incident.description}}</span></p>
+                                        </section>
+                            </mat-list-item>
+                            <mat-divider/>
+                        }
+                        </mat-list>
+                    }
+                    @else{
+                
+                        <p>No subtypes available</p>
+                    }
+                    </mat-expansion-panel>
+                }
+                </mat-accordion>
+
+
+            </article>
+        </div>
+    </div>
 }
