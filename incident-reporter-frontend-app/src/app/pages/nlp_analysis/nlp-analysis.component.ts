@@ -49,7 +49,9 @@ export class AppNLPAnalysisComponent implements OnInit, OnDestroy{
    
       if(!this.authService.isLoggedIn())
       {
+        alert("User needs to be logged in!")
         this.router.navigate(['']);
+        return;
       }
       this.subs.add = this.nlpService.getSentimentsForAllIncidents().subscribe((result: Map<string, any[]>) => {
        
