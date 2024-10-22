@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexLegend, ApexPlotOptions, ApexResponsive, ApexStroke, ApexTooltip, NgApexchartsModule } from 'ng-apexcharts';
 import { MatCardModule } from '@angular/material/card';
 import { MapsSubscriptionContainer } from '../map/map/map-subscriptions-container';
+import { AuthGoogleService } from 'src/app/services/auth-google.service';
+import { Router } from '@angular/router';
 
 
 export interface sentimentsChart {
@@ -40,10 +42,15 @@ export class AppNLPAnalysisComponent implements OnInit, OnDestroy{
 
   public incidentSentiments: Map<string, any[]> = new Map<string, any[]>();
   
-  constructor(public nlpService: NplAnalysisService, private cdr: ChangeDetectorRef){}
+  constructor(public nlpService: NplAnalysisService, private cdr: ChangeDetectorRef, 
+    private authService: AuthGoogleService, private router: Router){}
 
   ngOnInit(): void {
    
+      if(!this.authService.isLoggedIn())
+      {
+        this.router.navigate(['']);
+      }
       this.subs.add = this.nlpService.getSentimentsForAllIncidents().subscribe((result: Map<string, any[]>) => {
        
         this.incidentSentiments = new Map(Object.entries(result));
