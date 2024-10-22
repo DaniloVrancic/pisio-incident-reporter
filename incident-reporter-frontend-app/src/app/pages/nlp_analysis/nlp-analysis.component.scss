@@ -1,0 +1,84 @@
+.chart-container{
+    max-width: 55%;
+}
+
+.my-flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.my-flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.first-row-custom {
+    justify-content: space-evenly;
+}
+
+.accordion-container{
+    min-width: 40%;
+    max-width: 45%;
+}
+
+mat-expansion-panel {
+    max-height: 20rem;
+}
+
+
+.expanded-panel {
+    max-height: 30rem;
+    overflow-y: scroll;
+  }
+
+.expansion-panel-header{
+    height: 6vh;
+}
+
+.expansion-panel-title{
+    font-weight: 600;
+    font-size: x-large;
+    padding-bottom: 0.3rem;
+}
+
+mat-list-item.selected-sentiment{
+    height: 30rem;
+    opacity: 1;
+}
+
+
+mat-list-item{
+    transition: height 0.25s ease-in-out;
+}
+
+.mat-list-item-title{
+    font-weight: 700;
+    font-size: medium;
+}
+
+mat-list-item[hidden=true] .section-details{
+    opacity: 0;
+    visibility: collapse;
+    transition: opacity 0.25s ease;
+}
+
+mat-list-item[hidden=false] .section-details{
+    opacity: 1;
+    visibility: visible;
+    overflow: auto;
+    text-wrap: wrap;
+}
+
+.section-details{
+    
+}
+
+section{
+    em{
+        font-weight: 700;
+        font-size: 14;
+    }
+}
+
+
+

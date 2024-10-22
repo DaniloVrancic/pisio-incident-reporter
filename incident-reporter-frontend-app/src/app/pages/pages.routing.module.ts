@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AppDashboardComponent } from './dashboard/dashboard.component';
 import { AppMapComponent } from './map/map/map.component';
 import { AppDescriptionComponent } from './description/description/description.component';
+import { AppNLPAnalysisComponent } from './nlp_analysis/nlp-analysis.component';
 
 export const PagesRoutes: Routes = [
   {
@@ -25,4 +26,11 @@ export const PagesRoutes: Routes = [
       title: 'Description',
     },
   },
+  {
+    path: 'nlp',
+    component: AppNLPAnalysisComponent,
+    data: {
+      title: 'NLP Analysis'
+    }
+  }
 ];

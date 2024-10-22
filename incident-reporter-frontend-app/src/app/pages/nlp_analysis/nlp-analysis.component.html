@@ -1,0 +1,106 @@
+
+@if(this.incidentSentiments == undefined || this.incidentSentiments.size == 0)
+{
+    <h1>Loading...</h1>
+}
+@else {
+    <div class="my-flex-column" style="border-bottom: 2px solid rgba(0, 0, 0, 0.3)">
+        <div class="my-flex-row first-row-custom" style="align-content: center;">
+            <article>
+                <h2>Chart of Groupings:</h2>
+                <div class="chart-container">
+                    <div>
+                        <mat-card class="cardWithShadow overflow-hidden" style="width: 100%; max-width: 100%; align-items: center;" class="w-100">
+                          <mat-card-header class="d-flex align-items-center p-x-24">
+                            <mat-card-title>Incidents in Previous Days</mat-card-title>
+                          </mat-card-header>
+                          <mat-card-content class="m-b-32 p-x-24">
+                          </mat-card-content>
+                          <apx-chart 
+                            [series]="sentimentsChart?.series"
+                            [dataLabels]="sentimentsChart?.dataLabels"
+                            [chart]="   sentimentsChart?.chart"
+                            [xaxis]="sentimentsChart?.xaxis"
+                            [yaxis]="sentimentsChart?.yaxis"
+                            [legend]="sentimentsChart?.legend"
+                            [colors]="sentimentsChart?.colors"
+                            [stroke]="sentimentsChart?.stroke"
+                            [tooltip]="sentimentsChart?.tooltip"
+                            [labels]="sentimentsChart?.labels"
+                            [plotOptions]="sentimentsChart?.plotOptions"
+                            [responsive]="sentimentsChart?.responsive"
+                          ></apx-chart>
+                        </mat-card>
+                      </div>
+                </div>
+            </article>
+            <article class="accordion-container">
+                <h2>All Groupings:</h2>
+                <mat-accordion class="accordion-custom">
+                    @for(key of this.incidentSentiments.keys(); track key)
+                    {
+                
+                    <mat-expansion-panel 
+                    [expanded]="expanded === key" 
+                    (opened)="expanded = key" 
+                    (closed)="expanded = null"
+                    [ngClass]="{'expanded-panel': expanded === key}">
+                        <mat-expansion-panel-header class="expansion-panel-header">
+                        <mat-panel-title>
+                            <span class="expansion-panel-title">{{key}}</span>
+                        </mat-panel-title>
+                        </mat-expansion-panel-header>
+                    
+                
+                    <!-- Subtypes List -->
+                    @if(this.incidentSentiments.get(key) != undefined)
+                    {
+                        <mat-list>
+                        @for(incidentSentiment of this.incidentSentiments.get(key); track incidentSentiment.incident.id)
+                        {
+                            <mat-list-item style="justify-items: center; align-items: center;"  
+                                        [ngClass]="{ 'selected-sentiment': this.selectedIncidentSentimentId === incidentSentiment.incident.id }"
+                                        (click)="this.selectedIncidentSentimentId = (this.selectedIncidentSentimentId == incidentSentiment.incident.id) ? null : incidentSentiment.incident.id"
+                                        >
+                                        
+                                        <span class="mat-list-item-title">{{ incidentSentiment.incident.incidentSubtype.subtype + '  [ID: '+ incidentSentiment.incident.id +']' | titlecase  }}</span>
+                                        <section [hidden]="this.selectedIncidentSentimentId != incidentSentiment.incident.id" class="section-details">
+                                            <div style="display: flex; flex-direction: row; justify-content: space-evenly;">
+                                                <div style="flex: 1; flex-wrap: wrap; text-wrap: wrap;">
+                                                    <p><span><em>Type: </em>{{incidentSentiment.incident.incidentSubtype.incidentType.name | titlecase}}</span></p>
+                                                    <p><span><em>Description: </em>{{incidentSentiment.incident.description}}</span></p>
+                                                    <p><span><em>Status: </em>{{incidentSentiment.incident.status}}</span></p>
+                                                </div>
+                                                <div style="flex: 1; flex-wrap: wrap; text-wrap: wrap;">
+                                                    <p><span><em>SENTIMENT ANALYSIS:</em></span></p><br/>
+                                                    <p><span><em>Type: </em>{{incidentSentiment.sentiment.type}}</span></p>
+                                                </div>
+                                                <div style="flex: 1; flex-wrap: wrap; text-wrap: wrap;">
+                                                    <p><span><em>Class: </em></span></p>
+                                                    <p><span><em>very negative: </em>{{incidentSentiment.sentiment.class.very_negative}}</span></p>
+                                                    <p><span><em>negative: </em>{{incidentSentiment.sentiment.class.negative}}</span></p>
+                                                    <p><span><em>neutral: </em>{{incidentSentiment.sentiment.class.neutral}}</span></p>
+                                                    <p><span><em>positive: </em>{{incidentSentiment.sentiment.class.positive}}</span></p>
+                                                    <p><span><em>very positive: </em>{{incidentSentiment.sentiment.class.very_positive}}</span></p>
+                                                </div>
+                                            </div>
+                                        </section>
+                            </mat-list-item>
+                            <mat-divider/>
+                        }
+                        </mat-list>
+                    }
+                    @else{
+                
+                        <p>No subtypes available</p>
+                    }
+                    </mat-expansion-panel>
+                }
+                </mat-accordion>
+
+
+            </article>
+        </div>
+    </div>
+}
+

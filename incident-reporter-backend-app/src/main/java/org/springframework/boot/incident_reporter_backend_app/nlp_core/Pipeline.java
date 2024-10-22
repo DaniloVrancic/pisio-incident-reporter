@@ -10,7 +10,7 @@ import java.util.Properties;
 public class Pipeline {
 
     private static Properties properties;
-    private static String propertiesName = "tokenize, ssplit, pos, lemma, ner";
+    private static String propertiesName = "tokenize, ssplit, parse, sentiment, pos, lemma, ner";
 
     private static StanfordCoreNLP stanfordCoreNLP;
 
@@ -18,7 +18,7 @@ public class Pipeline {
 
     static {
         properties = new Properties();
-        properties.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        properties.setProperty("annotators", propertiesName);
         properties.setProperty("ner.useSUTime", "false");
     }
 

@@ -5,6 +5,7 @@ import { FullComponent } from './layouts/full/full.component';
 import { AppMapComponent } from './pages/map/map/map.component';
 import { AppDescriptionComponent } from './pages/description/description/description.component';
 import { MagicRefreshComponent } from './layouts/blank/magic-refresh/magic-refresh.component';
+import { AppNLPAnalysisComponent } from './pages/nlp_analysis/nlp-analysis.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,11 @@ const routes: Routes = [
       {
         path: 'description',
         component: AppDescriptionComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: 'nlp',
+        component: AppNLPAnalysisComponent,
         pathMatch: 'full'
       },
       {

@@ -10,6 +10,11 @@ export const navItems: NavItem[] = [
     route: '/dashboard',
   },
   {
+    displayName: 'NLP Analysis',
+    iconName: 'analyze',
+    route: '/nlp',
+  },
+  {
     displayName: 'Map',
     iconName: 'map-2',
     route: '/map',
