@@ -41,10 +41,27 @@
                                         (click)="this.selectedIncidentSentimentId = (this.selectedIncidentSentimentId == incidentSentiment.incident.id) ? null : incidentSentiment.incident.id"
                                         >
                                         
-                                        {{ "ID: " + incidentSentiment.incident.id + " " + incidentSentiment.incident.incidentSubtype.subtype | titlecase  }}
-                                        <section [hidden]="this.selectedIncidentSentimentId != incidentSentiment.incident.id">
-                                            <p><span><em>Type: </em>{{incidentSentiment.incident.incidentSubtype.incidentType.name | titlecase}}</span></p>
-                                            <p><span><em>Description: </em>{{incidentSentiment.incident.description}}</span></p>
+                                        <span class="mat-list-item-title">{{ incidentSentiment.incident.incidentSubtype.subtype + '  [ID: '+ incidentSentiment.incident.id +']' | titlecase  }}</span>
+                                        <section [hidden]="this.selectedIncidentSentimentId != incidentSentiment.incident.id" class="section-details">
+                                            <div style="display: flex; flex-direction: row; justify-content: space-evenly;">
+                                                <div>
+                                                    <p><span><em>Type: </em>{{incidentSentiment.incident.incidentSubtype.incidentType.name | titlecase}}</span></p>
+                                                    <p><span><em>Description: </em>{{incidentSentiment.incident.description}}</span></p>
+                                                    <p><span><em>Status: </em>{{incidentSentiment.incident.status}}</span></p>
+                                                </div>
+                                                <div>
+                                                    <p><span><em>SENTIMENT ANALYSIS:</em></span></p><br/>
+                                                    <p><span><em>Type: </em>{{incidentSentiment.sentiment.type}}</span></p>
+                                                </div>
+                                                <div>
+                                                    <p><span><em>Class: </em></span></p>
+                                                    <p><span><em>very negative: </em>{{incidentSentiment.sentiment.class.very_negative}}</span></p>
+                                                    <p><span><em>negative: </em>{{incidentSentiment.sentiment.class.negative}}</span></p>
+                                                    <p><span><em>neutral: </em>{{incidentSentiment.sentiment.class.neutral}}</span></p>
+                                                    <p><span><em>positive: </em>{{incidentSentiment.sentiment.class.positive}}</span></p>
+                                                    <p><span><em>very positive: </em>{{incidentSentiment.sentiment.class.very_positive}}</span></p>
+                                                </div>
+                                            </div>
                                         </section>
                             </mat-list-item>
                             <mat-divider/>

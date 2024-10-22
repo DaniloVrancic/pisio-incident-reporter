@@ -37,13 +37,35 @@ mat-expansion-panel {
     padding-bottom: 0.3rem;
 }
 
-.selected-sentiment{
-    background-color: red;
-    height: 20rem;
+mat-list-item.selected-sentiment{
+    height: 30rem;
     opacity: 1;
 }
 
+
 mat-list-item{
-    transition: height 0.25s ease-in-out, opacity 0.4s ease;
+    transition: height 0.25s ease-in-out;
 }
+
+.mat-list-item-title{
+    font-weight: 700;
+    font-size: medium;
+}
+
+mat-list-item[hidden=true] .section-details{
+    opacity: 0;
+    visibility: collapse;
+    transition: opacity 0.25s ease;
+}
+
+mat-list-item[hidden=false] .section-details{
+    opacity: 1;
+    visibility: visible;
+}
+
+.section-details{
+    
+}
+
+
 
