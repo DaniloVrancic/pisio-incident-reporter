@@ -4,12 +4,34 @@
     <h1>Loading...</h1>
 }
 @else {
-    <div class="my-flex-column">
-        <div class="my-flex-row first-row-custom">
+    <div class="my-flex-column" style="border-bottom: 2px solid rgba(0, 0, 0, 0.3)">
+        <div class="my-flex-row first-row-custom" style="align-content: center;">
             <article>
                 <h2>Chart of Groupings:</h2>
                 <div class="chart-container">
-                    Here goes the chart
+                    <div>
+                        <mat-card class="cardWithShadow overflow-hidden" style="width: 100%; max-width: 100%; align-items: center;" class="w-100">
+                          <mat-card-header class="d-flex align-items-center p-x-24">
+                            <mat-card-title>Incidents in Previous Days</mat-card-title>
+                          </mat-card-header>
+                          <mat-card-content class="m-b-32 p-x-24">
+                          </mat-card-content>
+                          <apx-chart 
+                            [series]="sentimentsChart?.series"
+                            [dataLabels]="sentimentsChart?.dataLabels"
+                            [chart]="   sentimentsChart?.chart"
+                            [xaxis]="sentimentsChart?.xaxis"
+                            [yaxis]="sentimentsChart?.yaxis"
+                            [legend]="sentimentsChart?.legend"
+                            [colors]="sentimentsChart?.colors"
+                            [stroke]="sentimentsChart?.stroke"
+                            [tooltip]="sentimentsChart?.tooltip"
+                            [labels]="sentimentsChart?.labels"
+                            [plotOptions]="sentimentsChart?.plotOptions"
+                            [responsive]="sentimentsChart?.responsive"
+                          ></apx-chart>
+                        </mat-card>
+                      </div>
                 </div>
             </article>
             <article class="accordion-container">
@@ -44,16 +66,16 @@
                                         <span class="mat-list-item-title">{{ incidentSentiment.incident.incidentSubtype.subtype + '  [ID: '+ incidentSentiment.incident.id +']' | titlecase  }}</span>
                                         <section [hidden]="this.selectedIncidentSentimentId != incidentSentiment.incident.id" class="section-details">
                                             <div style="display: flex; flex-direction: row; justify-content: space-evenly;">
-                                                <div>
+                                                <div style="flex: 1; flex-wrap: wrap; text-wrap: wrap;">
                                                     <p><span><em>Type: </em>{{incidentSentiment.incident.incidentSubtype.incidentType.name | titlecase}}</span></p>
                                                     <p><span><em>Description: </em>{{incidentSentiment.incident.description}}</span></p>
                                                     <p><span><em>Status: </em>{{incidentSentiment.incident.status}}</span></p>
                                                 </div>
-                                                <div>
+                                                <div style="flex: 1; flex-wrap: wrap; text-wrap: wrap;">
                                                     <p><span><em>SENTIMENT ANALYSIS:</em></span></p><br/>
                                                     <p><span><em>Type: </em>{{incidentSentiment.sentiment.type}}</span></p>
                                                 </div>
-                                                <div>
+                                                <div style="flex: 1; flex-wrap: wrap; text-wrap: wrap;">
                                                     <p><span><em>Class: </em></span></p>
                                                     <p><span><em>very negative: </em>{{incidentSentiment.sentiment.class.very_negative}}</span></p>
                                                     <p><span><em>negative: </em>{{incidentSentiment.sentiment.class.negative}}</span></p>

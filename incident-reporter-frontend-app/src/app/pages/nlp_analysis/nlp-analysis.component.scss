@@ -1,3 +1,7 @@
+.chart-container{
+    max-width: 55%;
+}
+
 .my-flex-row {
     display: flex;
     flex-direction: row;
@@ -9,12 +13,12 @@
 }
 
 .first-row-custom {
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .accordion-container{
-    min-width: 45%;
-    max-width: 50%;
+    min-width: 40%;
+    max-width: 45%;
 }
 
 mat-expansion-panel {
@@ -61,10 +65,19 @@ mat-list-item[hidden=true] .section-details{
 mat-list-item[hidden=false] .section-details{
     opacity: 1;
     visibility: visible;
+    overflow: auto;
+    text-wrap: wrap;
 }
 
 .section-details{
     
+}
+
+section{
+    em{
+        font-weight: 700;
+        font-size: 14;
+    }
 }
 
 
