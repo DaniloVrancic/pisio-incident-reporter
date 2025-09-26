@@ -310,8 +310,9 @@ I like working at the intersection of **backend performance, frontend design, an
 🔗 Check out my other projects on GitHub:
 
 - [My Secure Internet Forum](https://github.com/DaniloVrancic/my-internet-forum) – A Full Stack Application where the focus was on security and implementing the best security practices using Spring Security.  
-- [S3 Flutter Client](https://github.com/DaniloVrancic/s3-client) – A cross-platform Flutter client for S3-compatible object storage services.  
-- [Rental Management System](https://github.com/your-username/rental-management) – Full-stack project for managing vehicles, pricing, and analytics with Angular + Spring Boot.  
+- [S3 Flutter Client](https://github.com/DaniloVrancic/s3-client) – A cross-platform Flutter client for S3-compatible object storage services.
+- [Basic Asset Registry](https://github.com/DaniloVrancic/basic-resources-registry-mobile-app) – A simple asset registry app built with React Native, focusing on clean UI and fundamental asset management features like creating, editing, and organizing records. 
+- [Gym Management System](https://github.com/DaniloVrancic/IP_Gym_Project_2024) – Full-stack project for managing gym with 3 different front-end apps written in different frameworks.
 
 _If you’ve read this far into the README — thanks! You’re either genuinely interested in incident reporting systems, or just love good documentation. Either way, hope you've enjoyed my presentation!_
 
