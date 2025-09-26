@@ -213,21 +213,106 @@ ng serve
 
 ---
 
-### 📸 Screenshots & GIFs
+## Detailed Overview
+
+This project is more than just CRUD + Maps. It combines **data visualization, NLP, geolocation, and security** to make incident reporting useful for both everyday users and system administrators. Here are some highlights:
+
+### Natural Language Processing (NLP)
+I've integrated **Stanford CoreNLP (`edu.stanford.nlp`)** to analyze the _sentiment of user-submitted comments_ on incidents.  
+The model classifies each string into one of five categories:
+
+- Very Negative  
+- Negative  
+- Neutral  
+- Positive  
+- Very Positive  
+
+This allows moderators to quickly get a “tone check” on reports and detect patterns in user submissions. For example, an increase in very negative reports in a specific area could indicate growing dissatisfaction or potential safety issues.
+
+### Statistics & Analytics
+The **Statistics Page** provides a deep dive into the reported data. Realized by **Angular Material** + **ApexCharts**, it includes:
+
+- **Incidents in Parts of Day**  
+  - Visualizes how incidents distribute across morning, afternoon, evening, and night.
+
+- **Incidents Types Distribution**  
+  - Pie chart showing proportions of high-level categories (e.g., Theft, Accident, Vandalism).
+
+- **Incidents Subtypes Distribution**  
+  - Granular breakdown of subcategories under each incident type.
+
+- **Incidents in Previous Days / Per Year**  
+  - Tracks historical trends to reveal spikes, unusual activity, or seasonal patterns.
+
+- **Incidents in Days of the Week**  
+  - Week-based heatmaps to discover if weekends or weekdays are riskier.
+
+This analytics module provides actionable insights, allowing moderators and admins to **make data-driven decisions** instead of relying only on raw incident lists.
+
+### Geolocation & Clustering
+- Incidents are shown on an **interactive map** (Google Maps API).  
+- **Marker clustering** groups together reports within close proximity.  
+- Magenta cluster circles highlight **frequent hotspots** — making it easy to spot recurring issues without digging through endless lists.
+
+### 🔒 Security & Authentication
+- Users can **report incidents anonymously**, ensuring privacy and participation.  
+- Moderators and admins log in securely via:  
+  - **Local Database Login**, or  
+  - **OAuth2 with University Accounts** (`*.etf.unibl.org`).  
+- Role-based access ensures that anonymous users, moderators, and admins only see what they’re supposed to.
+
+---
+
+---
+
+### Screenshots & GIFs
 
 Below are some screenshots showcasing key features of the application:
 
-#### 🗺️ Admin Map View
+#### 1️⃣ Admin Map View
 
-- ![Admin Map View](./screenshots/admin-map-view.png)
-- _A map interface for administrators to monitor incidents._
+![Admin Map View](./docs/frontend/map-admin-view.png)
+_A map interface for administrators to monitor incidents. What can also be seen are the clusters that form groups of incidents that happen often in a close enough radius (indicated by the magenta circles)._
 
-#### 🗺️ Incident Detail View
+#### 2️⃣ Incident Detail View
 
-- ![Incident Detail View](./screenshots/admin-incident-detail.png)
-- _Shows detailed information about a specific incident selected on the map._
+![Incident Detail View](./docs/frontend/map-admin-view-incident-details.png)
+_Shows detailed information about a specific incident selected on the map. Also the option to remove the incident is available._
 
-#### 🧠 NLP Analysis Screen
+#### 3️⃣ Incident Reporting by an anonymous user
 
-- ![NLP Analysis](./screenshots/nlp-analysis.png)
-- _Displays the results of Natural Language Processing (NLP) analysis for reported incidents._
+![Anonymous Incident Reporting](./docs/frontend/anonymous-user-report.gif)
+_Shows the procedure that the users go through to report an incident._
+
+#### 4️⃣ Incident Approval Procedure by a Moderator
+
+ ![Moderator Incident Approval](./docs/frontend/moderator-report-approval.gif)
+ _Displays the results of Natural Language Processing (NLP) analysis for reported incidents._
+
+#### 5️⃣ Statistics Page Preview
+
+ ![Statistics Page Preview](./docs/frontend/incident-statistics.gif)
+ _Showing the Statistics page with its features._
+
+ #### 6️⃣ NLP Page Preview
+
+ ![NLP Page Preview](./docs/frontend/nlp-analysis.gif)
+ _Showing the NLP page with its features._
+
+ ---
+
+#### About This Project
+
+This project is one of my deep dives into **full-stack engineering**, blending backend (Spring Boot), frontend (Angular), and data science (NLP).
+
+I like working at the intersection of **backend performance, frontend design, and smart services (AI, cloud, analytics)**.
+
+🔗 Check out my other projects on GitHub:
+
+- [My Secure Internet Forum](https://github.com/DaniloVrancic/my-internet-forum) – A Full Stack Application where the focus was on security and implementing the best security practices using Spring Security.  
+- [S3 Flutter Client](https://github.com/DaniloVrancic/s3-client) – A cross-platform Flutter client for S3-compatible object storage services.  
+- [Rental Management System](https://github.com/your-username/rental-management) – Full-stack project for managing vehicles, pricing, and analytics with Angular + Spring Boot.  
+
+_If you’ve read this far into the README — thanks! You’re either genuinely interested in incident reporting systems, or just love good documentation. Either way, hope you've enjoyed my presentation!_
+
+---
