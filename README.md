@@ -210,3 +210,24 @@ export const environment = {
 ```bash
 ng serve
 ```
+
+---
+
+### 📸 Screenshots & GIFs
+
+Below are some screenshots showcasing key features of the application:
+
+#### 🗺️ Admin Map View
+
+- ![Admin Map View](./screenshots/admin-map-view.png)
+- _A map interface for administrators to monitor incidents._
+
+#### 🗺️ Incident Detail View
+
+- ![Incident Detail View](./screenshots/admin-incident-detail.png)
+- _Shows detailed information about a specific incident selected on the map._
+
+#### 🧠 NLP Analysis Screen
+
+- ![NLP Analysis](./screenshots/nlp-analysis.png)
+- _Displays the results of Natural Language Processing (NLP) analysis for reported incidents._
